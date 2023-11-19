@@ -23,10 +23,6 @@ const routes: Routes = [
         path: 'cabinet',
         loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)
     },
-    // {
-    //     path: 'product', 
-    //     loadChildren: () => import('./product/product.module').then((m) => m.ProductModule)
-    // },
     {path: 'error', component: ErrorComponent},
     {path: '**', redirectTo: '/error'},
 ];

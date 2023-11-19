@@ -55,6 +55,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngOnInit() {
+    console.log(1)
     if (!this.productService.allCategories) {
       this.productService.getAllCategories()
     }
