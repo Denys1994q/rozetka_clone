@@ -14,17 +14,27 @@ export class CartService {
     constructor(private modalService: ModalService, private productService: ProductService) { }
 
     getCart(): any {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        this.productsFromStorage = JSON.parse(cartData) 
-        this.getTotal()
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
+        if (cartData) {
+            this.productsFromStorage = JSON.parse(cartData) 
+            this.getTotal()
+        }
         if (this.productService.product && this.productService.product._id) {
             this.checkIfProductInCart(this.productService.product._id)
         }
     }
 
     getTotal() {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        this.productsFromStorage = JSON.parse(cartData) 
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
+        if (cartData) {
+            this.productsFromStorage = JSON.parse(cartData) 
+        }
         // видалити не працюэ 
         let totalAmount = 0
         if ((this.productsFromStorage && this.productsFromStorage.length > 0)) {
@@ -37,8 +47,13 @@ export class CartService {
     }
 
     getTotalPrice() {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        this.productsFromStorage = JSON.parse(cartData) 
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
+        if (cartData) {
+            this.productsFromStorage = JSON.parse(cartData) 
+        }
         if (this.productsFromStorage && this.productsFromStorage.length > 0) {
             this.totalPrice = this.productsFromStorage.reduce((accumulator: number, product: any) => accumulator + product.amount * product.searchStatus.find((item: any) => item.searchPosition === 'price').option.new, 0);
         } else {
@@ -47,7 +62,10 @@ export class CartService {
     }
 
     addToShoppingCart(product: any): void {
-        const cartData: any = localStorage.getItem('shoppingCart');
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
         if (cartData) {
             const parsedCartData = JSON.parse(cartData)
             if (parsedCartData.find((prod: any) => prod._id === product._id)) {
@@ -87,8 +105,14 @@ export class CartService {
 
     
     checkIfProductInCart(id: string) {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        const productsFromStorage = JSON.parse(cartData) 
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
+        let productsFromStorage;
+        if (cartData) {
+            productsFromStorage = JSON.parse(cartData) 
+        }
         if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
             return true
         } else {
@@ -97,8 +121,14 @@ export class CartService {
     }
 
     removeFromCart(id: string) {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        const parsedCartData = JSON.parse(cartData);
+        let cartData;
+        if (typeof window !== 'undefined' && localStorage) {
+            cartData = localStorage.getItem('shoppingCart');
+        }
+        let parsedCartData;
+        if (cartData) {
+            parsedCartData = JSON.parse(cartData);
+        }
         const newData = parsedCartData.filter((prod: any) => prod._id !== id)
         localStorage.setItem('shoppingCart', JSON.stringify(newData));
         this.getCart()

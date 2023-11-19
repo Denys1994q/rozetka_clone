@@ -10,7 +10,10 @@ export class SideBannerComponent {
     timeoutId!: ReturnType<typeof setTimeout>;
 
     ngOnInit() {
-        const isActive = localStorage.getItem('side-banner')
+        let isActive;
+        if (typeof window !== 'undefined' && localStorage) {
+            isActive = localStorage.getItem('side-banner')
+        }
         if (isActive) {
             this.timeoutId = setTimeout(() => {
                 this.showBanner = true
@@ -24,7 +27,9 @@ export class SideBannerComponent {
     }
 
     ngOnDestroy() {
-        localStorage.removeItem('side-banner')
+        if (typeof window !== 'undefined' && localStorage) {
+            localStorage.removeItem('side-banner')
+        }
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }

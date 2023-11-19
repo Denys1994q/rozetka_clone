@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "routes": [
+      { "src": "/(.*\\..+)$", "dest": "/dist/angular-rozetka/browser/$1" },
+      { "src": "/.*", "dest": "/dist/angular-rozetka/browser/index.html" }
+    ]
+  }

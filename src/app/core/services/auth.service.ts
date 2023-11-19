@@ -59,7 +59,7 @@ export class AuthService {
                 return response;
                 }),
             tap(response => {
-                if (response) {
+                if (response && typeof window !== 'undefined' && localStorage) {
                     localStorage.setItem('authToken', response.token);
                     this.wishlistService.setWishlistItems(response.wishlist)
                     this.userDataSubject.next(response);
@@ -72,7 +72,7 @@ export class AuthService {
         const registerUrl = `${this.backendUrl}/auth/register`;
         return this.http.post<UserResponse>(registerUrl, userData).pipe(
         tap(response => {
-            if (response && response.token) {
+            if (response && response.token && typeof window !== 'undefined' && localStorage) {
                 localStorage.setItem('authToken', response.token);
                 this.userDataSubject.next(response);
             } 
@@ -81,7 +81,10 @@ export class AuthService {
     }
     
     getUser(): Observable<any> {
-        const token = localStorage.getItem('authToken');
+        let token;
+        if (typeof window !== 'undefined' && localStorage) {
+            token = localStorage.getItem('authToken');
+        }
         const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
         const url = `${this.backendUrl}/auth/me`;
         const options = {
@@ -114,7 +117,9 @@ export class AuthService {
         return this.http.get<any>(url,options).pipe(
             tap(response => {
                 this.userDataSubject.next(null);
-                localStorage.removeItem('authToken');
+                if (typeof window !== 'undefined' && localStorage) {
+                    localStorage.removeItem('authToken');
+                }
                 this.wishlistService.setWishlistItems([])
                 this.router.navigate(['/']);
             })
@@ -126,7 +131,10 @@ export class AuthService {
     }
 
     updateUser(userData: any): Observable<any> {
-        const token = localStorage.getItem('authToken');
+        let token;
+        if (typeof window !== 'undefined' && localStorage) {
+            token = localStorage.getItem('authToken');
+        }
         const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
         const options = {
             headers,
@@ -136,7 +144,10 @@ export class AuthService {
     }
 
     deleteUser() {
-        const token = localStorage.getItem('authToken');
+        let token;
+        if (typeof window !== 'undefined' && localStorage) {
+            token = localStorage.getItem('authToken');
+        }
         const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
         const options = {
             headers,
@@ -145,7 +156,9 @@ export class AuthService {
         return this.http.delete(`${this.backendUrl}/auth/delete`, options).pipe(
             tap(response => {
                     this.userDataSubject.next(null);
-                    localStorage.removeItem('authToken');
+                    if (typeof window !== 'undefined' && localStorage) {
+                        localStorage.removeItem('authToken');
+                    }
                     this.router.navigate(['/']);
                 })
             );

@@ -41,7 +41,9 @@ export class AppComponent implements OnInit {
                 console.log('Помилка при виконанні запиту:', error.error.message);
             }
         })
-        localStorage.setItem('side-banner', 'active')
+        if (typeof window !== 'undefined' && localStorage) {
+            localStorage.setItem('side-banner', 'active')
+        }
     }
 
 }
