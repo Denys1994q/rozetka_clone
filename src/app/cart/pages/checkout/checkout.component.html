@@ -4,7 +4,7 @@
             <img class="rozetka-logo" src="../../../../assets/rozetka-logo.svg" alt="rozetka-logo" />
         </a>
     </header>
-    <h1 *ngIf="orderConfirmed; else notConfirmed" class="order__subtitle thanks-title">
+    <h1 *ngIf="cartService.orderConfirmed; else notConfirmed" class="order__subtitle thanks-title">
         Дякуємо, ваше замовлення прийнято. 
     </h1>
     <ng-template #notConfirmed>
@@ -13,10 +13,10 @@
                 <h1 class="order__title">Замовлення</h1>
                 <div class="order__subtitleWrapper">
                     <h2 class="order__subtitle">Товари</h2>
-                    <button class="btn-link edit-btn" (click)="modalService.openDialog('cart')">
-                        <!-- <mat-icon class="burger-icon header-icon">
+                    <button *ngIf="cartService.totalProductsNumber > 0" class="btn-link edit-btn" (click)="modalService.openDialog('cart')">
+                        <mat-icon class="burger-icon header-icon">
                             edit
-                        </mat-icon> -->
+                        </mat-icon>
                         Редагувати
                     </button>
                 </div>
@@ -39,7 +39,7 @@
                     <p>До сплати</p>
                     <p class="total__price">{{cartService.totalPrice}} &#x20b4;</p>
                 </div>
-                <button class="order-btn" (click)="confirmOrder()">Замовлення підтверджую</button>
+                <button *ngIf="cartService.totalProductsNumber > 0" class="order-btn" (click)="confirmOrder()">Замовлення підтверджую</button>
             </div>
         </div>
     </ng-template>

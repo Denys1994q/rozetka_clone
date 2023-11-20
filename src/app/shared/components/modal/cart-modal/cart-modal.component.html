@@ -57,7 +57,9 @@
                         <div class="cart-item__price">
                             <app-counter
                                 [productId]="product._id"
-                                [startValue]="product.amount ? product.amount : 1"
+                                [startValue]="
+                                    product.amount ? product.amount : 1
+                                "
                                 (counterChange)="onCounterChange($event)">
                             </app-counter>
                             <div class="priceBlock">
@@ -67,23 +69,17 @@
                                         else normal
                                     ">
                                     <p class="price-old">
-                                        {{
-                                            getPrice(product).option.old
-                                        }}
+                                        {{ getPrice(product).option.old }}
                                         &#x20b4;
                                     </p>
                                     <p class="price-new">
-                                        {{
-                                            getPrice(product).option.new
-                                        }}
+                                        {{ getPrice(product).option.new }}
                                         &#x20b4;
                                     </p>
                                 </div>
                                 <ng-template #normal>
                                     <p class="price-normal">
-                                        {{
-                                            getPrice(product).option.new
-                                        }}
+                                        {{ getPrice(product).option.new }}
                                         &#x20b4;
                                     </p>
                                 </ng-template>
@@ -101,11 +97,11 @@
                         <p class="total-price">
                             {{ cartService.totalPrice }} &#x20b4;
                         </p>
-                        <a routerLink="/checkout">
-                            <button class="order-btn">
-                                Оформити замовлення
-                            </button>
-                        </a>
+                        <button
+                            class="order-btn"
+                            (click)="confirmOrder()">
+                            Оформити замовлення
+                        </button>
                     </div>
                 </div>
             </div>

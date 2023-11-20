@@ -1,12 +1,10 @@
-<div
-    *ngIf="cartService.totalProductsNumber > 0"
-    class="cart-notification">
+<div *ngIf="cartService.totalProductsNumber > 0" class="cart-notification">
     <div class="cart-notification__number">
-        <!-- <mat-icon
+        <mat-icon
             class="cart-notification__icon"
             aria-label="Додати до корзини">
             shopping_cart
-        </mat-icon> -->
+        </mat-icon>
         <p class="cart-notification__heading">
             У кошику <span>{{ cartService.totalProductsNumber }}</span> товари
             на суму <span>{{ cartService.totalPrice }} ₴</span>
@@ -14,7 +12,7 @@
     </div>
     <ul class="cart-notification__list">
         <li *ngFor="let product of cartService.productsFromStorage">
-            <!-- <button
+            <button
                 matBadge="{{ product.amount }}"
                 matBadgePosition="above after"
                 class="custom-badge"
@@ -23,7 +21,7 @@
                     src="{{ product.image }}"
                     alt="product-image"
                     class="cart-notification__image" />
-            </button> -->
+            </button>
         </li>
     </ul>
     <div>

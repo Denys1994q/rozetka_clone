@@ -10,6 +10,7 @@ export class CartService {
     totalProductsNumber = 0
     totalPrice = 0
     productInCart!: boolean 
+    orderConfirmed: boolean = false
 
     constructor(private modalService: ModalService, private productService: ProductService) { }
 
@@ -145,6 +146,11 @@ export class CartService {
         this.totalProductsNumber = 0
         this.totalPrice = 0
         this.productInCart = false
+    }
+
+    // Підтвердити замовлення
+    setOrderConfirmed(value: boolean): void {
+        this.orderConfirmed = value;
     }
     
 }

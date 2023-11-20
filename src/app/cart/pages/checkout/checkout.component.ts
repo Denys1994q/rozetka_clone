@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { OrdersService } from 'src/app/cabinet/services/orders.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-checkout-page',
@@ -14,9 +15,11 @@ export class CheckoutPage {
     constructor(
         public cartService: CartService, 
         private ordersService: OrdersService,
+        private authService: AuthService,
         public modalService: ModalService) {}
 
     ngOnInit() {
+        this.cartService.setOrderConfirmed(false)
         this.modalService.closeDialog()
     }
 
@@ -31,13 +34,18 @@ export class CheckoutPage {
     }
 
     confirmOrder() {
-        this.cartService.productsFromStorage.map(item => {
-            this.ordersService.addToOrdersList(item._id).subscribe({
-                next: response => this.orderConfirmed = true,
-                error: err => console.log(err),
-                complete: () => this.cartService.clearCart()
+        if (this.authService.isAuthenticated()) {
+            this.cartService.productsFromStorage.map(item => {
+                this.ordersService.addToOrdersList(item._id).subscribe({
+                    next: response => this.cartService.setOrderConfirmed(true),
+                    error: err => console.log(err),
+                    complete: () => this.cartService.clearCart()
+                })
             })
-        })
+        } else {
+            this.cartService.setOrderConfirmed(true)
+            this.cartService.clearCart()
+        }
     }
 
 }
