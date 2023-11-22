@@ -1,17 +1,18 @@
 @import 'mixins'
 
 .skeleton
-    // background: #f0f0f0
     animation: loading 1.5s infinite
     height: 30rem
     margin-top: 5rem
     padding: .5rem
+    @include respond(phoneL)
+        margin-top: 1rem
+        height: auto
     @include respond(phoneM)
         height: 24rem
     &-search
         margin-top: 2rem
 .skeleton-categories
-    // background: #f0f0f0
     animation: loading 1.5s infinite
     margin: 1rem 0
     ul
@@ -34,7 +35,8 @@
         width: 17%
         height: 20rem
         background: #b7b6bd
-        @include respond(phoneM)
+        @include respond(phoneL)
+            width: 35%
             height: 15rem
     &__title
         background: #b7b6bd

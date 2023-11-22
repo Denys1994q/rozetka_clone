@@ -7,5 +7,12 @@ import { Component, Input } from '@angular/core';
 })
 export class SkeletonComponent {
     @Input() variant!: string
+    mobile: boolean = false
+
+    ngOnInit() {
+        if (window.innerWidth < 700) {
+            this.mobile = true
+        }
+    }
 
 }

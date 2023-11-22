@@ -13,13 +13,8 @@
             <h2 class="widget__subtitle">Популярні категорії</h2>
             <ul class="widget__categoriesList">
                 <li *ngFor="let popular of category.popular">
-                    <a
-                        routerLink="{{
-                            '/' + popular.engName + '/' + popular.id
-                        }}">
-                        <img
-                            src="{{ popular.img }}"
-                            alt="{{ popular.name }}" />
+                    <a routerLink="{{'/' + popular.engName + '/' + popular.id}}">
+                        <img src="{{ popular.img }}" alt="{{ popular.name }}" />
                         <span>{{ popular.name }}</span>
                     </a>
                 </li>
