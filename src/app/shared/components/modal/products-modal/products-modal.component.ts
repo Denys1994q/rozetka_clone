@@ -13,21 +13,30 @@ import { ApiService } from 'src/app/core/services/api.service';
 export class ProductsModalComponent {
     activeCategoryIndex: number = 0
     products!: any[]
+    mobVersion: boolean = false
 
-    constructor(public modalService: ModalService, public SearchResultsService: SearchResultsService, public router: Router,  public route:ActivatedRoute, public apiService: ApiService) {}
+    constructor(
+        public modalService: ModalService, 
+        public SearchResultsService: SearchResultsService, 
+        public router: Router,  
+        public route:ActivatedRoute, 
+        public apiService: ApiService) {}
     
     ngOnInit() {
         this.apiService.getAllCategories().subscribe({
             next: (data) => this.products = data,
             error: (err) => console.log(err)
         })
+        if (window.innerWidth < 700) {
+            this.mobVersion = true
+        }
     }
 
     getSubcategories() {
         return this.products[this.activeCategoryIndex].subCategories.filter((data: any) => data.popular && data.popular.length > 0)
     }
 
-    onMouseEnter(i: any) {
+    onMouseEnter(i: number) {
         this.activeCategoryIndex = i
     }
   
@@ -56,15 +65,15 @@ export class ProductsModalComponent {
                 this.SearchResultsService.setBaseInput(value)
             }
         } else {
-            console.log(3)
             this.SearchResultsService.removeAll()
-            
             this.SearchResultsService.setBaseInput(value)
             this.SearchResultsService.getCurrentCategory(id)
-
-            // фільтрує правильно, але спочатку створює параметри, а потім фільтрує
         }
         this.modalService.closeDialog()
+    }
+    
+    mobSetActiveCategory(i: number) {
+        this.activeCategoryIndex = i
     }
 }
 

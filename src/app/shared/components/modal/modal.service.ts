@@ -14,6 +14,7 @@ import { CartModalComponent } from './cart-modal/cart-modal.component';
 export class ModalService {
     openedDialog:Subject<any> = new Subject<any>();
     data!: any
+
     constructor(public dialog: MatDialog) {}
     
     getData(data: any) {
@@ -28,9 +29,7 @@ export class ModalService {
                 if (variant == 'product') {
                     modalVariant = ProductsModalComponent
                     modalStyles = {
-                      width: '90vw',
-                      maxWidth: '90vw',
-                      minHeight: '500px',
+                      panelClass: 'modal-products',
                       data: this.data
                     }
                 } 

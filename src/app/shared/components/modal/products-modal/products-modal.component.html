@@ -1,64 +1,96 @@
-<mat-dialog-content>
-    <div class="modall-prod">
-        <!-- Список позицій -->
-        <div class="modall-prod__categories categories">
-            <ul class="categories__list">
-                <li
-                    class="categories__item"
-                    [class.categories__item-active]="i === activeCategoryIndex"
-                    *ngFor="let product of products; let i = index"
-                    (mouseenter)="onMouseEnter(i)">
-                    <!-- іконка -->
-                    <mat-icon class="categories__icon">{{
-                        product.icon
-                    }}</mat-icon>
-                    <!-- заголовок категорії -->
-                    <a
-                        routerLink="{{ product.engName + '/' + product.id }}"
-                        (click)="closeDialog()">
-                        {{ product.name }}
-                    </a>
-                    <!-- іконка стилю -->
-                    <mat-icon class="categories__icon-chevron"
-                        >chevron_right
-                    </mat-icon>
-                </li>
-            </ul>
-        </div>
-        <!-- Інфо по вибраній позиції -->
-        <div class="modall-prod__products products" *ngIf="products">
-            <div
-                *ngFor="let subcategory of getSubcategories()"
-                class="products__item product">
-                <h2 class="product__title">
-                    <a
-                        routerLink="{{
-                            subcategory.engName + '/' + subcategory.id
-                        }}"
-                        (click)="closeDialog2(subcategory.id)"
-                        >{{ subcategory.name }}</a
-                    >
-                </h2>
-                <ul class="product__list">
+<div *ngIf="!mobVersion; else mobile">
+    <mat-dialog-content>
+        <div class="modall-prod">
+            <!-- Список позицій -->
+            <div class="modall-prod__categories categories">
+                <ul class="categories__list">
                     <li
-                        *ngFor="let popularItem of subcategory.popular"
-                        class="product__item">
-                        <a
-                            routerLink="{{
-                                popularItem.engName + '/' + popularItem.id
-                            }}"
-                            (click)="
-                                takeValueAndCloseDialog(
-                                    popularItem.name,
-                                    popularItem.id,
-                                    subcategory.id
-                                )
-                            "
-                            >{{ popularItem.name }}</a
-                        >
+                        class="categories__item"
+                        [class.categories__item-active]="i === activeCategoryIndex"
+                        *ngFor="let product of products; let i = index"
+                        (mouseenter)="onMouseEnter(i)">
+                        <!-- іконка -->
+                        <mat-icon class="categories__icon">{{product.icon}}</mat-icon>
+                        <!-- заголовок категорії -->
+                        <a routerLink="{{ product.engName + '/' + product.id }}" (click)="closeDialog()">{{ product.name }}</a>
+                        <!-- іконка стилю -->
+                        <mat-icon class="categories__icon-chevron">chevron_right</mat-icon>
                     </li>
                 </ul>
             </div>
+            <!-- Інфо по вибраній позиції -->
+            <div class="modall-prod__products products" *ngIf="products">
+                <div *ngFor="let subcategory of getSubcategories()" class="products__item product">
+                    <h2 class="product__title">
+                        <a routerLink="{{subcategory.engName + '/' + subcategory.id}}" (click)="closeDialog2(subcategory.id)">
+                            {{ subcategory.name }}
+                        </a>
+                    </h2>
+                    <ul class="product__list">
+                        <li *ngFor="let popularItem of subcategory.popular" class="product__item">
+                            <a
+                                routerLink="{{popularItem.engName + '/' + popularItem.id}}"
+                                (click)="takeValueAndCloseDialog(popularItem.name, popularItem.id, subcategory.id)">
+                                    {{ popularItem.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-</mat-dialog-content>
+    </mat-dialog-content>
+</div>
+<!-- ось ця стає активною такою якщо розмір менше певного, основна перетворюється в моб -->
+<ng-template #mobile>
+    <mat-dialog-content>
+        <header class="mobileModal__header">
+            <h2 class="mobileModal__title">Каталог товарів</h2>
+            <mat-icon (click)="closeDialog()">close</mat-icon>
+        </header>
+        <div class="mobileModal__content">
+            <ul *ngIf="!activeCategoryIndex; else subCategories" class="categories__list">
+                <li
+                    class="categories__item"
+                    *ngFor="let product of products; let i = index"
+                    (click)="mobSetActiveCategory(i)">
+                    <!-- іконка -->
+                    <mat-icon class="categories__icon">{{product.icon}}</mat-icon>
+                    <!-- заголовок категорії -->
+                    <a routerLink="{{ product.engName + '/' + product.id }}" (click)="closeDialog()">{{ product.name }}</a>
+                    <!-- іконка шеврон вправо -->
+                    <mat-icon class="categories__icon-chevron">chevron_right</mat-icon>
+                </li>
+            </ul>
+            <ng-template #subCategories>
+                <div class="mobileModal__back">
+                    <mat-icon>chevron_left</mat-icon>
+                    <span>Усі категорії</span>
+                </div>
+                <div *ngFor="let subcategory of getSubcategories()" class="products__item product">
+                    <h2 class="product__title product__title-mobile">
+                        <a routerLink="{{subcategory.engName + '/' + subcategory.id}}" (click)="closeDialog2(subcategory.id)">
+                            {{ subcategory.name }}
+                        </a>
+                    </h2>
+                </div>
+                <p class="mobileModal__label">Категорії</p>
+                <div *ngFor="let subcategory of getSubcategories()" class="products__item product">
+                    <h2 class="product__title product__title-mobile">
+                        <a routerLink="{{subcategory.engName + '/' + subcategory.id}}" (click)="closeDialog2(subcategory.id)">
+                            {{ subcategory.name }}
+                        </a>
+                    </h2>
+                    <ul class="product__list">
+                        <li *ngFor="let popularItem of subcategory.popular" class="product__item product__item-mobile">
+                            <a
+                                routerLink="{{popularItem.engName + '/' + popularItem.id}}"
+                                (click)="takeValueAndCloseDialog(popularItem.name, popularItem.id, subcategory.id)">
+                                    {{ popularItem.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
+        </div>
+    </mat-dialog-content>
+</ng-template>

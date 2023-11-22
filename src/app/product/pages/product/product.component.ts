@@ -38,10 +38,8 @@ export class ProductComponent {
     ) {}
 
     ngOnInit() {
-        console.log('product init')
         this.scrollToTop()
         this.route.url.subscribe(route => {
-            console.log('route changes')
             // айді товару
             const lastLetterBeforeId = this.router.url.lastIndexOf('/')
             this.urlId = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)

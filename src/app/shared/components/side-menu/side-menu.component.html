@@ -97,11 +97,9 @@
         class="search search-wrapper">
         <header class="search__header">
             <div class="search__titleIcon">
-                <mat-icon
-                    class="breadcrumbs__chevronIcon"
-                    (click)="menuService.closeMenu()"
-                    >chevron_left</mat-icon
-                >
+                <mat-icon class="breadcrumbs__chevronIcon" (click)="menuService.closeMenu()">
+                    chevron_left
+                </mat-icon>
                 <h3>Фільтри</h3>
             </div>
             <button
@@ -152,28 +150,17 @@
             </ng-template>
         </footer>
     </div>
-
     <!-- бокова панель для пошуку в критеріях -->
-    <div
-        *ngSwitchCase="'search-deep'"
-        class="search search-wrapper">
+    <div *ngSwitchCase="'search-deep'" class="search search-wrapper">
         <header class="search__header">
             <div class="title-icon">
-                <mat-icon
-                    class="breadcrumbs__chevronIcon"
-                    (click)="menuService.openMenu('search')">
+                <mat-icon class="breadcrumbs__chevronIcon" (click)="menuService.openMenu('search')">
                     chevron_left
                 </mat-icon>
-                <h4
-                    *ngIf="
-                        showCancelBtn() && activeSearchParam.title.length > 14;
-                        else normal
-                    ">
+                <h4 *ngIf="showCancelBtn() && activeSearchParam.title.length > 14; else normal">
                     {{ activeSearchParam.title | slice : 0 : 14 }}{{ "..." }}
                 </h4>
-                <ng-template #normal
-                    ><h4>{{ activeSearchParam.title }}</h4></ng-template
-                >
+                <ng-template #normal><h4>{{ activeSearchParam.title }}</h4></ng-template>
             </div>
             <button
                 *ngIf="showCancelBtn()"
@@ -221,7 +208,9 @@
     <!-- дефолтна -->
     <div *ngSwitchDefault></div>
 </div>
+<!-- оверлей -->
 <div
     class="overlay"
     [class.overlay-active]="menuService.open | async"
-    (click)="menuService.closeMenu()"></div>
+    (click)="menuService.closeMenu()">
+</div>

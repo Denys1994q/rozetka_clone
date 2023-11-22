@@ -18,27 +18,19 @@
             <legend class="content__title bold">Оцінка користувачів</legend>
         </fieldset>
         <div class="content__list">
-            <div
-                class="content__item"
-                *ngFor="let item of items; let i = index">
+            <div class="content__item" *ngFor="let item of items; let i = index">
                 <input
-                    [checked]="
-                        i === SearchResultsService.selectedRaitingIndex - 1
-                    "
+                    [checked]="i === SearchResultsService.selectedRaitingIndex - 1"
                     type="radio"
                     id="rating{{ i }}"
                     name="rating"
                     value="{{ i }}" />
                 <label
                     for="rating{{ i }}"
-                    (click)="setRaiting(i)"
-                    >{{ item.label }}</label
-                >
-                <mat-icon
-                    *ngFor="let it of item.icons"
-                    class="content__icon"
-                    >star</mat-icon
-                >
+                    (click)="setRaiting(i)">
+                    {{ item.label }}
+                </label>
+                <mat-icon *ngFor="let it of item.icons" class="content__icon">star</mat-icon>
             </div>
         </div>
         <div class="content__btns">
