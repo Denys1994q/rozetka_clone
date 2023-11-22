@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 })
 
 export class ProductsModalComponent {
-    activeCategoryIndex: number = 0
+    activeCategoryIndex: number | boolean = false
     products!: any[]
     mobVersion: boolean = false
 
@@ -29,11 +29,15 @@ export class ProductsModalComponent {
         })
         if (window.innerWidth < 700) {
             this.mobVersion = true
+        } else {
+            this.activeCategoryIndex = 0
         }
     }
 
     getSubcategories() {
-        return this.products[this.activeCategoryIndex].subCategories.filter((data: any) => data.popular && data.popular.length > 0)
+        if (typeof(this.activeCategoryIndex) === 'number') {
+            return this.products[this.activeCategoryIndex].subCategories.filter((data: any) => data.popular && data.popular.length > 0)
+        }
     }
 
     onMouseEnter(i: number) {
@@ -75,5 +79,9 @@ export class ProductsModalComponent {
     mobSetActiveCategory(i: number) {
         this.activeCategoryIndex = i
     }
+
+    isBoolean(value: any): boolean {
+        return typeof value === 'boolean';
+      }
 }
 

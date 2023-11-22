@@ -34,7 +34,6 @@ export class HomeComponent implements AfterViewInit {
         rootMargin: '0px',
         threshold: 0.5 
         };
-
         const callback = (entries: any, observer: any) => {
         entries.forEach((entry: any) => {
             if (entry.isIntersecting) {

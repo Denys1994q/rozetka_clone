@@ -70,6 +70,10 @@ export class CardsComponent {
             error: err => console.log(err)
         })      
         this.getData(this.data.products)
+        // 
+        if (window.innerWidth < 700) {
+            this.endVal = 2
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -88,13 +92,6 @@ export class CardsComponent {
                 isAvailable: isAvailable
             };
         });
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize() {
-        if (window.innerWidth < 700) {
-            this.endVal = 2
-        }
     }
 
     getPriceObject(prod: any) {
@@ -155,7 +152,6 @@ export class CardsComponent {
     }
 
     onAddToWishlist(productId: string) {
-        console.log('onAddToWishlist')
         if (!this.authService.isAuthenticated()) {
             this.modalService.openDialog('login');
         }

@@ -40,7 +40,8 @@
         </div>
     </mat-dialog-content>
 </div>
-<!-- ось ця стає активною такою якщо розмір менше певного, основна перетворюється в моб -->
+
+<!-- адаптив -->
 <ng-template #mobile>
     <mat-dialog-content>
         <header class="mobileModal__header">
@@ -48,7 +49,7 @@
             <mat-icon (click)="closeDialog()">close</mat-icon>
         </header>
         <div class="mobileModal__content">
-            <ul *ngIf="!activeCategoryIndex; else subCategories" class="categories__list">
+            <ul *ngIf="activeCategoryIndex === false && isBoolean(activeCategoryIndex); else subCategories" class="categories__list">
                 <li
                     class="categories__item"
                     *ngFor="let product of products; let i = index"
@@ -63,7 +64,7 @@
             </ul>
             <ng-template #subCategories>
                 <div class="mobileModal__back">
-                    <mat-icon>chevron_left</mat-icon>
+                    <mat-icon (click)="activeCategoryIndex = false">chevron_left</mat-icon>
                     <span>Усі категорії</span>
                 </div>
                 <div *ngFor="let subcategory of getSubcategories()" class="products__item product">
