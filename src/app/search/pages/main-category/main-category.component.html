@@ -25,18 +25,13 @@
     <div class="category__row row">
         <ul class="row__list">
             <li *ngFor="let brand of category.brands">
-                <img
-                    class="row__image"
-                    src="{{ brand }}"
-                    alt="brend_image" />
+                <img class="row__image" src="{{ brand }}" alt="brend_image" />
             </li>
         </ul>
     </div>
     <!-- список всіх підкатегорій -->
     <ul class="category__list list">
-        <li
-            class="list__item"
-            *ngFor="let category of getCategories()">
+        <li class="list__item" *ngFor="let category of getCategories()">
             <app-category-card [data]="category"></app-category-card>
         </li>
     </ul>

@@ -23,6 +23,7 @@ export class ProductComponent {
     urlId!: any
     isInWishlist: boolean = false
     prodIdsInWishlist: string[] = [] 
+    mobile: boolean = false
 
     constructor(
         private router: Router, 
@@ -70,6 +71,9 @@ export class ProductComponent {
                 })
             }
         })
+        if (window.innerWidth < 700) {
+            this.mobile = true
+        }
     }
 
     addToCart() {

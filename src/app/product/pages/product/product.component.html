@@ -23,7 +23,7 @@
         </a>
         <p class="product__code">
             <span> Код: </span>
-            {{ ProductService.product._id }}
+            {{ mobile ? (ProductService.product._id | slice:0:10) + '...' : ProductService.product._id }}
         </p>
     </div>
     <!-- таби: коментарі, відгуки, фото, відео -->
@@ -145,5 +145,5 @@
     </ng-template>
 </section>
 <ng-template #skeleton>
-    <app-skeleton [variant]="'products'"></app-skeleton>
+    <app-skeleton [variant]="'category'"></app-skeleton>
 </ng-template>

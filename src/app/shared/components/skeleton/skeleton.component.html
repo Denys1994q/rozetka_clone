@@ -17,7 +17,7 @@
                 <div class="skeletonCategory__block skeletonCategory__block-search">&nbsp;</div>
                 <div class="skeletonCategory__block skeletonCategory__block-search">&nbsp;</div>
             </div>
-            <div class="skeletonCategory__cards">
+            <div *ngIf="!mobile" class="skeletonCategory__cards">
                 <div class="skeletonCategory__card">&nbsp;</div>
                 <div class="skeletonCategory__card">&nbsp;</div>
                 <div class="skeletonCategory__card">&nbsp;</div>
@@ -32,7 +32,7 @@
         <p class="skeletonCategory__title">&nbsp;</p>
         <div class="skeletonCategory__flexList">
             <div class="skeletonCategory__block">&nbsp;</div>
-            <div *ngIf="!mobile">
+            <div *ngIf="!tablet">
                 <div class="skeletonCategory__listTitle">&nbsp;</div>
                 <ul class="skeletonCategory__wrapper">
                     <div class="skeletonCategory__listTitle skeletonCategory__listTitle-big">&nbsp;</div>

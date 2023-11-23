@@ -4,8 +4,6 @@
 // breadcrumbs
 .breadcrumbs
     display: flex
-    flex-direction: row
-    flex-wrap: wrap
     align-items: center
     margin-top: 16px
     margin-bottom: 8px
@@ -18,9 +16,13 @@
         color: #d2d2d2
         width: 1.8rem
         margin-right: 1rem
+        display: flex
+        justify-content: center
     &__item
         display: flex
         align-items: center
         margin-left: .8rem
         @include respond(phoneL)
             width: 100%
+        p
+            text-align: center
