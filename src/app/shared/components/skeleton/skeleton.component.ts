@@ -12,7 +12,8 @@ export class SkeletonComponent {
     
     @Input() variant!: string
     tablet: boolean = false
-    mobile: boolean = false    
+    mobile: boolean = false  
+    onServer: boolean = false  
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
@@ -21,6 +22,8 @@ export class SkeletonComponent {
             } else if (window.innerWidth < 700) {
                 this.mobile = true;
             }
+        } else {
+            this.onServer = true
         }
     }
 

@@ -4,7 +4,8 @@ import { Slide } from 'src/app/shared/components/carousel/carousel.component';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from 'src/app/product/services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformServer, isPlatformBrowser } from '@angular/common';
+import { makeStateKey, TransferState } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -13,17 +14,23 @@ import { isPlatformServer } from '@angular/common';
 })
 export class HomeComponent implements AfterViewInit {
 
+    // private transferState!: TransferState
+    private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
+
     constructor(
+        private transferState: TransferState,
         @Inject(PLATFORM_ID) private platformId: Object,
         public modalService: ModalService, 
         public productService: ProductService, 
         public apiService: ApiService,
         private elementRef: ElementRef,
-        public cartService: CartService) 
+        public cartService: CartService)
     {}
 
+
+
     ngAfterViewInit() {
-        if (!isPlatformServer(this.platformId)) {
+        if (isPlatformBrowser(this.platformId)) {
           this.observeNewProds();
         }
     }
@@ -58,10 +65,17 @@ export class HomeComponent implements AfterViewInit {
     }
 
     ngOnInit() {
-        if (!this.productService.allCategories) {
-            this.productService.getAllCategories()
+        if (isPlatformServer(this.platformId)) {
+            this.apiService.getAllCategories().subscribe({
+                next: data => this.transferState.set(this.ALL_CATEGORIES_KEY, data),
+                error: error => console.log(error)
+            })
         }
-        this.cartService.getCart()
+        else {
+            const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
+            this.productService.setAllCategories(cachedCategories)
+            this.cartService.getCart()
+        }
     }
 
 

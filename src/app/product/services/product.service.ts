@@ -135,6 +135,10 @@ export class ProductService {
       this.foundedProducts = []
     }
 
+    setAllCategories(data: any) {
+      this.allCategories = JSON.parse(JSON.stringify(data)) 
+    }
+
     getAllCategories() {
       this.apiService.getAllCategories().subscribe({
         next: (data) => this.allCategories = data,

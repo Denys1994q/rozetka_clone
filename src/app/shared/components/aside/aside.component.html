@@ -1,6 +1,4 @@
-<aside
-    class="products__catalog"
-    *ngIf="full">
+<aside class="products__catalog" *ngIf="full">
     <!-- список категорій -->
     <ng-container *ngIf="data && data.length > 0; else skeleton">
         <ul class="categories__list">

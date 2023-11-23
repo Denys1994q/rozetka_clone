@@ -4,6 +4,7 @@
         [data]="productService.allCategories"
         [full]="true">
     </app-aside>
+    <!-- основна частина -->
     <main class="products__list prodlist">
         <app-cart-notification></app-cart-notification>
         <app-carousel
@@ -18,15 +19,9 @@
                 <li
                     *ngFor="let product of productService.allCategories"
                     class="categories-mini__item">
-                    <mat-icon class="categories-mini__icon">{{
-                        product.icon
-                    }}</mat-icon>
-                    <a routerLink="{{ product.engName + '/' + product.id }}">
-                        {{ product.name }}
-                    </a>
-                    <mat-icon class="categories-mini__icon">
-                        chevron_right
-                    </mat-icon>
+                    <mat-icon class="categories-mini__icon">{{product.icon}}</mat-icon>
+                    <a routerLink="{{ product.engName + '/' + product.id }}">{{ product.name }}</a>
+                    <mat-icon class="categories-mini__icon">chevron_right</mat-icon>
                 </li>
             </ul>
         </div>
@@ -39,22 +34,12 @@
             Каталог товарів
         </button>
         <!-- картки -->
-        <ng-container
-            *ngIf="
-                productService.newProds && productService.newProds.length > 0
-            ">
-            <app-cards
-                [data]="{
-                    category: 'Гарячі новинки',
-                    products: productService.newProds
-                }">
-            </app-cards>
+        <ng-container *ngIf="productService.newProds && productService.newProds.length > 0">
+            <app-cards [data]="{category: 'Гарячі новинки', products: productService.newProds}"></app-cards>
         </ng-container>
         <div
             class="newProds"
-            [hidden]="
-                productService.newProds && productService.newProds.length !== 0
-            ">
+            [hidden]="productService.newProds && productService.newProds.length !== 0">
             <app-skeleton [variant]="'products'"></app-skeleton>
         </div>
         <ng-container
