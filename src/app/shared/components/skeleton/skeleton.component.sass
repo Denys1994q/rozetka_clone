@@ -50,6 +50,10 @@
     height: 3rem
     width: 35rem
     margin: 2rem
+    @include respond(phoneXL)
+        width: 29rem
+    @include respond(phoneL)
+        width: 26rem
     &-search
         margin: 1rem 1rem 3rem 2rem
 .skeletonCategory__title-small
@@ -57,12 +61,16 @@
     height: 2rem
     width: 25rem
     margin: 1rem 1rem 1rem 2rem
+    @include respond(phoneXL)
+        width: 19rem
 .skeletonCategory__block
     background: #b7b6bd
     height: 17rem
     width: 60rem
     margin-left: 2rem
     margin-right: 4rem
+    @include respond(phoneXL)
+        height: 15rem
     &-search
         width: 25rem
         height: 1rem

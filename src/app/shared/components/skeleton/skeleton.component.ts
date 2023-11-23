@@ -16,8 +16,7 @@ export class SkeletonComponent {
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
-            console.log('browser')
-            if (window.innerWidth < 1200) {
+            if (window.innerWidth < 1200 && window.innerWidth > 700) {
                 this.tablet = true;
             } else if (window.innerWidth < 700) {
                 this.mobile = true;

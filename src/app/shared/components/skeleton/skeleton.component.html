@@ -32,7 +32,7 @@
         <p class="skeletonCategory__title">&nbsp;</p>
         <div class="skeletonCategory__flexList">
             <div class="skeletonCategory__block">&nbsp;</div>
-            <div *ngIf="!tablet">
+            <div *ngIf="!tablet && !mobile">
                 <div class="skeletonCategory__listTitle">&nbsp;</div>
                 <ul class="skeletonCategory__wrapper">
                     <div class="skeletonCategory__listTitle skeletonCategory__listTitle-big">&nbsp;</div>
@@ -44,9 +44,9 @@
                 </ul>
             </div>
         </div>
-     </div>
-     <!-- скелетон для списку продуктів -->
-     <div *ngSwitchCase="'products'" class="skeleton newProds">
+    </div>
+    <!-- скелетон для списку продуктів -->
+    <div *ngSwitchCase="'products'" class="skeleton newProds">
         <p class="skeletonProds__title">&nbsp;</p>
         <ul *ngIf="!mobile; else mobProducts" class="skeletonProds">
             <li class="skeletonProds__item">&nbsp;</li>
@@ -57,6 +57,7 @@
         </ul>
         <ng-template #mobProducts>
             <ul class="skeletonProds">
+                <li class="skeletonProds__item">&nbsp;</li>
                 <li class="skeletonProds__item">&nbsp;</li>
                 <li class="skeletonProds__item">&nbsp;</li>
             </ul>

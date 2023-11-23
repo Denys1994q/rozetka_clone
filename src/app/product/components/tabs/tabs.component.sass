@@ -11,11 +11,13 @@
     top: 72px
     z-index: 11
     @include respond(tab-port)
-        margin-right: -16px
+        margin-right: -8px
     &__list
         display: flex
         overflow-x: auto
         white-space: nowrap
+        @include respond(phoneL)
+            width: 108%
     &__item
         height: 40px
         line-height: 40px
