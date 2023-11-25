@@ -65,9 +65,9 @@ export class CarouselComponent implements  OnDestroy {
         this.slideWidth = this.slideImg.nativeElement.offsetWidth;
         this.slideHeight = this.slideImg.nativeElement.offsetHeight;
         if (this.autoSlidesOpening) {
-        this.int = setInterval(() => {
-            this.showNext()
-        }, 4000)
+            this.int = setInterval(() => {
+                this.showNext()
+            }, 4000)
         }
     }
 

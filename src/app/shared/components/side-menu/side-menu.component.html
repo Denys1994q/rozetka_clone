@@ -92,22 +92,13 @@
         </div>
     </div>
     <!-- бокова панель для пошуку -->
-    <div
-        *ngSwitchCase="'search'"
-        class="search search-wrapper">
+    <div *ngSwitchCase="'search'" class="search search-wrapper">
         <header class="search__header">
             <div class="search__titleIcon">
-                <mat-icon class="breadcrumbs__chevronIcon" (click)="menuService.closeMenu()">
-                    chevron_left
-                </mat-icon>
+                <mat-icon class="breadcrumbs__chevronIcon" (click)="menuService.closeMenu()">chevron_left</mat-icon>
                 <h3>Фільтри</h3>
             </div>
-            <button
-                *ngIf="showCancelBtn()"
-                (click)="resetAll()"
-                class="reset-btn">
-                Скасувати все
-            </button>
+            <button *ngIf="showCancelAllBtn()" (click)="resetAll()" class="reset-btn">Скасувати все</button>
         </header>
         <ul class="main">
             <li
@@ -179,6 +170,7 @@
             <ng-template #others>
                 <li *ngFor="let option of activeSearchParam.options">
                     <app-checkbox
+                        (checkboxChange)="onCheckboxChange($event)"
                         [search]="true"
                         [label]="option.label"
                         [searchId]="option.id" />

@@ -73,7 +73,11 @@ export class HomeComponent implements AfterViewInit {
         }
         else {
             const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
-            this.productService.setAllCategories(cachedCategories)
+            if (cachedCategories) {
+                this.productService.setAllCategories(cachedCategories)
+            } else {
+                this.productService.getAllCategories()
+            }
             this.cartService.getCart()
         }
     }

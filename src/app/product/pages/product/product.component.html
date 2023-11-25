@@ -1,6 +1,4 @@
-<section
-    class="product"
-    *ngIf="ProductService.product; else skeleton">
+<section class="product" *ngIf="ProductService.product; else skeleton">
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="ProductService.category && ProductService.subCategory">
         <app-breadcrumbs 

@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class SideMenuComponent {
   activeSearchParam!: any
+  // showCancelBtn: boolean = false
 
   constructor(
     public menuService: MenuService, 
@@ -20,6 +21,32 @@ export class SideMenuComponent {
     public authService: AuthService,
     private router: Router
   ) {}
+
+ 
+  ngOnInit() {
+    // if (this.searchResultsService.selectedInputs.find(item => item.title === this.activeSearchParam.title)) {
+    //   this.showCancelBtn = true
+    // } else {
+    //   this.showCancelBtn = false
+    // }
+  }
+
+  showCancelBtn() {
+    console.log(this.activeSearchParam, 'this.activeSearchParam')
+    if (this.searchResultsService.selectedInputs.length > 0) {
+      return this.searchResultsService.selectedInputs.find(item => item.title === this.activeSearchParam.title)
+    } else {
+      return false
+    }
+  }
+
+  showCancelAllBtn() {
+    if (this.searchResultsService.selectedInputs.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   openProductsDialog() {
     this.modalService.openDialog('product')
@@ -36,14 +63,6 @@ export class SideMenuComponent {
     this.searchResultsService.addInput(val)
   }
 
-  showCancelBtn() {
-    if (this.searchResultsService.selectedInputs.find(item => item.title === this.activeSearchParam.title)) {
-      return true
-    } else {
-      return false
-    }
-  }
-
   resetOne(searchParam: any) {
     searchParam.options.map((option: any) => {
       this.searchResultsService.removeOne(option.label)
@@ -55,7 +74,11 @@ export class SideMenuComponent {
   }
 
   getNumActiveOptions(activeSearchParam: any) {
-    return this.searchResultsService.selectedInputs.find(input => input.title === activeSearchParam.title).options.length
+    if (this.searchResultsService.selectedInputs.length > 0) {
+      return this.searchResultsService.selectedInputs.find(input => input.title === activeSearchParam.title).options.length
+    } else {
+      return false
+    }
   }
 
   getSelectedPositions(searchParam: any) {
@@ -80,6 +103,10 @@ export class SideMenuComponent {
   openCart() {
     this.modalService.openDialog('cart')
     this.menuService.closeMenu()
+  }
+
+  onCheckboxChange(e: string) {
+    this.searchResultsService.addInput(e)
   }
 
 }
