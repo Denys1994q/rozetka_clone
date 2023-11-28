@@ -22,15 +22,6 @@ export class SideMenuComponent {
     private router: Router
   ) {}
 
- 
-  ngOnInit() {
-    // if (this.searchResultsService.selectedInputs.find(item => item.title === this.activeSearchParam.title)) {
-    //   this.showCancelBtn = true
-    // } else {
-    //   this.showCancelBtn = false
-    // }
-  }
-
   showCancelBtn() {
     console.log(this.activeSearchParam, 'this.activeSearchParam')
     if (this.searchResultsService.selectedInputs.length > 0) {

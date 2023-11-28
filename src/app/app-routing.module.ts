@@ -23,10 +23,6 @@ const routes: Routes = [
         path: 'cabinet',
         loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)
     },
-    // {
-    //     path: 'product', 
-    //     loadChildren: () => import('./product/product.module').then((m) => m.ProductModule)
-    // },
     {path: 'error', component: ErrorComponent},
     {path: '**', redirectTo: '/error'},
 ];
@@ -41,66 +37,67 @@ export class AppRoutingModule {
 
     constructor(private router: Router, private apiService: ApiService) {}
 
-    loadDynamicRoutes(): void {
+    loadDynamicRoutes(): void  {
         let categoriesRoutes: any = []
         let middleCategoriesRoutes: any = []
         let productsRoutes: any = []
 
-        if (typeof window !== 'undefined' && localStorage) {
-            if (localStorage.getItem('categoriesRoutes') && localStorage.getItem('middleCategoriesRoutes')) {
-                const st: any = localStorage.getItem('categoriesRoutes')
-                const data = JSON.parse(st)
-                categoriesRoutes = data
-                this.addRoute(categoriesRoutes, MainCategoryComponent)
-    
-                const middleCatData: any = localStorage.getItem('middleCategoriesRoutes')
-                const parsedMiddleCatData = JSON.parse(middleCatData)
-                middleCategoriesRoutes = parsedMiddleCatData
-                this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent)
+        if (typeof window !== 'undefined' && sessionStorage) {
+            if (sessionStorage.getItem('categoriesRoutes') && sessionStorage.getItem('middleCategoriesRoutes')) {
+              const st: any = sessionStorage.getItem('categoriesRoutes');
+              const data = JSON.parse(st);
+              categoriesRoutes = data;
+              this.addRoute(categoriesRoutes, MainCategoryComponent);
+          
+              const middleCatData: any = sessionStorage.getItem('middleCategoriesRoutes');
+              const parsedMiddleCatData = JSON.parse(middleCatData);
+              middleCategoriesRoutes = parsedMiddleCatData;
+              this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent);
             } else {
-                this.apiService.getAllCategories().subscribe({
-                    next: response => {
-                        response.map((category: any) => {
-                            categoriesRoutes.push({title: category.engName, id: category.id})
-                            category.subCategories.map((middleCat: any) => {
-                                middleCategoriesRoutes.push({title: middleCat.engName, id: middleCat.id})
-                            })
-                        })
-                        if (!localStorage.getItem('categoriesRoutes')) {
-                            localStorage.setItem('categoriesRoutes', JSON.stringify(categoriesRoutes));
-                        }
-                        if (!localStorage.getItem('middleCategoriesRoutes')) {
-                            localStorage.setItem('middleCategoriesRoutes', JSON.stringify(middleCategoriesRoutes));
-                        }
-                        this.addRoute(categoriesRoutes, MainCategoryComponent)
-                        this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent)
-                    },
-                    error: err => console.log(err)
-                })
-            } 
-            
-    
-            if (localStorage.getItem('productsRoutes')) {
-                const st: any = localStorage.getItem('productsRoutes')
-                const data = JSON.parse(st)
-                productsRoutes = data
-                this.addProductRoute(productsRoutes)
-            } else {
-                this.apiService.getAllProducts().subscribe({
-                    next: response => {
-                        response.map((product: any) => {
-                            productsRoutes.push({title: product.engName, id: product._id})
-                        })
-                        if (!localStorage.getItem('productsRoutes')) {
-                            localStorage.setItem('productsRoutes', JSON.stringify(productsRoutes));
-                        } 
-                        this.addProductRoute(productsRoutes)
-                    },
-                    error: err => console.log(err)
-                })
+              this.apiService.getAllCategories().subscribe({
+                next: response => {
+                  response.map((category: any) => {
+                    categoriesRoutes.push({ title: category.engName, id: category.id });
+                    category.subCategories.map((middleCat: any) => {
+                      middleCategoriesRoutes.push({ title: middleCat.engName, id: middleCat.id });
+                    });
+                  });
+                  if (!sessionStorage.getItem('categoriesRoutes')) {
+                    sessionStorage.setItem('categoriesRoutes', JSON.stringify(categoriesRoutes));
+                  }
+                  if (!sessionStorage.getItem('middleCategoriesRoutes')) {
+                    sessionStorage.setItem('middleCategoriesRoutes', JSON.stringify(middleCategoriesRoutes));
+                  }
+                  this.addRoute(categoriesRoutes, MainCategoryComponent);
+                  this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent);
+                },
+                error: err => console.log(err)
+              });
             }
-        }
-    
+          
+            if (sessionStorage.getItem('productsRoutes')) {
+              const st: any = sessionStorage.getItem('productsRoutes');
+              const data = JSON.parse(st);
+              productsRoutes = data;
+              this.addProductRoute(productsRoutes);
+            } else {
+              this.apiService.getAllProducts().subscribe({
+                next: response => {
+                  response.map((product: any) => {
+                    productsRoutes.push({ title: product.engName, id: product._id });
+                  });
+                  if (!sessionStorage.getItem('productsRoutes')) {
+                    sessionStorage.setItem('productsRoutes', JSON.stringify(productsRoutes));
+                  }
+                  this.addProductRoute(productsRoutes);
+                },
+                error: err => console.log(err)
+              });
+            }
+          }
+          
+
+        
         }
 
         
@@ -163,3 +160,5 @@ export class AppRoutingModule {
     }
 
 }
+
+
