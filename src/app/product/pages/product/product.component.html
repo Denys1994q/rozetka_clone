@@ -30,7 +30,7 @@
         [startRoute]="ProductService.product.engName + '/' + ProductService.product._id">
     </app-tabs>
     <!-- контент для табів з роутер-аутлету -->
-    <ng-container *ngIf="baseView; else tabsView">
+    <ng-container *ngIf="productTabsService.baseView; else tabsView">
         <router-outlet></router-outlet>
     </ng-container>
     <ng-template #tabsView>
@@ -99,15 +99,9 @@
                     </div>
                 </div>
                 <div class="info__item mb16 seller">
-                    <p class="seller__title">
-                        Продавець: <span>{{ ProductService.seller }}</span>
-                    </p>
-                    <div
-                        class="seller__image"
-                        *ngIf="ProductService.seller === 'Rozetka'">
-                        <img
-                            src="../../../assets/rozetka-seller.svg"
-                            alt="rozetka" />
+                    <p class="seller__title">Продавець: <span>{{ ProductService.seller }}</span></p>
+                    <div class="seller__image" *ngIf="ProductService.seller === 'Rozetka'">
+                        <img src="../../../assets/rozetka-seller.svg" alt="rozetka" />
                     </div>
                 </div>
             </div>
@@ -119,9 +113,7 @@
                 src="{{ ProductService.product.image }}"
                 alt="product-panel__img"
                 class="product-panel__img" />
-            <p class="product-panel__title">
-                {{ ProductService.product.title }}
-            </p>
+            <p class="product-panel__title">{{ ProductService.product.title }}</p>
             <app-price [price]="ProductService.price"> </app-price>
             <div class="trade__buy">
                 <div *ngIf="cartService.checkIfProductInCart(ProductService.product._id); else adaptive_buy">

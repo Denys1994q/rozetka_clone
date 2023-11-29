@@ -1,8 +1,8 @@
-import { Component, ElementRef, ViewChild, Input } from '@angular/core';
-import { Comment } from 'src/app/shared/components/comment/comment.component';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
-import { ProductService } from '../../services/product.service';
 import { CommentsService } from '../../services/comments.service';
+import { ProductTabsService } from '../../services/product-tabs.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-comments',
@@ -10,19 +10,23 @@ import { CommentsService } from '../../services/comments.service';
   styleUrls: ['./product-comments.component.sass']
 })
 export class ProductCommentsComponent {
-    constructor(private modalService: ModalService, public commentsService: CommentsService ) {}
+    constructor(
+        private modalService: ModalService, 
+        public commentsService: CommentsService, 
+        private productService: ProductService,
+        private productTabsService: ProductTabsService ) {}
 
     commentsWithPhotoVideo: any = []
     sliderWidth!: number
     slideWidth!: number
-    // moreIndex!: number
     @ViewChild('sliderList') sliderList!: ElementRef;
     @ViewChild('sliderItem') sliderItem!: ElementRef;
 
     ngAfterViewInit() {
-        this.sliderWidth = this.sliderList.nativeElement.offsetWidth;
-        this.slideWidth = this.sliderItem.nativeElement.offsetWidth;
-        // this.moreIndex = Math.round((this.sliderWidth / this.slideWidth)-1)
+        if (this.sliderList && this.sliderItem) {
+            this.sliderWidth = this.sliderList.nativeElement.offsetWidth;
+            this.slideWidth = this.sliderItem.nativeElement.offsetWidth;
+        }
     }
 
     ngOnInit() {
@@ -30,6 +34,8 @@ export class ProductCommentsComponent {
             top: 0,
             behavior: "smooth"
         });
+        this.productService.checkActiveTab('comments')
+        this.productTabsService.setBaseView(false)
         this.commentsService.sortProdComments('З фото і відео')
         this.commentsWithPhotoVideo = this.commentsService.comments.filter((item: any) => item.photo || item.video)
     }

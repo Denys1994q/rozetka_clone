@@ -22,6 +22,7 @@ export class TabsComponent {
         .subscribe((event: any) => {
             const lastLetterBeforeId = event.url.lastIndexOf('/')
             const tabName = event.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+event.url.length-1)
+            console.log(tabName)
             if (this.data) {
                 this.data.map((item, index) => {
                     if (item.link === tabName) {

@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
+import { ProductTabsService } from '../../services/product-tabs.service';
 
 @Component({
   selector: 'app-product-photos',
@@ -9,14 +10,16 @@ import { ProductService } from '../../services/product.service';
 export class ProductPhotosComponent {
     photos!: any
 
-    constructor(public ProductService: ProductService) {}
+    constructor(public productService: ProductService, private productTabsService: ProductTabsService) {}
 
     ngOnInit() {
         window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
-        this.photos = this.ProductService.product.images.filter((image: any) => image.url)
+        this.productService.checkActiveTab('photos')
+        this.productTabsService.setBaseView(false)
+        this.photos = this.productService.product.images.filter((image: any) => image.url)
     }
 
 }

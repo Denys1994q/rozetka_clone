@@ -6,6 +6,7 @@ import { CartService } from 'src/app/cart/services/cart.service';
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
+import { ProductTabsService } from '../../services/product-tabs.service';
 
 @Component({
   selector: 'app-product-all',
@@ -32,6 +33,7 @@ export class ProductAllComponent {
         private wishlistService: WishlistService,
         public ProductService: ProductService, 
         public cartService: CartService, 
+        public productTabsService: ProductTabsService,
         public modalService: ModalService) {}
 
     ngOnInit() {
@@ -39,6 +41,7 @@ export class ProductAllComponent {
             top: 0,
             behavior: "smooth"
         });
+        this.productTabsService.setBaseView(true)
         this.authService.getUser().subscribe({
             next: user => {
                 if (user && user.wishlist) {

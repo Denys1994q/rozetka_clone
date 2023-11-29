@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { SearchResultsService } from 'src/app/search/services/search-results.service';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -9,6 +8,9 @@ import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
+import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductTabsService } from '../../services/product-tabs.service';
 
 @Component({
   selector: 'app-product',
@@ -16,7 +18,6 @@ import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
   styleUrls: ['./product.component.sass']
 })
 export class ProductComponent {
-    baseView!: boolean
     product!: ProductInterface
     video!: any[]
     routes!: any
@@ -26,6 +27,7 @@ export class ProductComponent {
     mobile: boolean = false
 
     constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
         private router: Router, 
         public route:ActivatedRoute, 
         public ProductService: ProductService, 
@@ -35,44 +37,46 @@ export class ProductComponent {
         public apiService: ApiService,
         public cartService: CartService,
         public modalService: ModalService,
-        private recentlyViewedService: RecentlyViewedService
+        private recentlyViewedService: RecentlyViewedService,
+        public productTabsService: ProductTabsService
     ) {}
 
     ngOnInit() {
         this.scrollToTop()
+        this.checkIfMobile()
+
         this.route.url.subscribe(route => {
-            // айді товару
-            const lastLetterBeforeId = this.router.url.lastIndexOf('/')
-            this.urlId = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
             // отримуємо з сервісу інфо щодо товару по його айді
-            this.ProductService.getCurrentProduct(route[1].path, this.urlId)
+            this.ProductService.getCurrentProduct(route[1].path)
             this.findCategory(route[1].path)
-            // на основі юрл сторінки визначаємо вигляд компоненту
-            if (route[1].path === this.urlId && (route[1].path.toString().length + route[0].path.length == this.router.url.length-2)) {
-                this.baseView = true
-                this.recentlyViewedService.addToRecentlyViewedProds(this.urlId).subscribe({
-                    next: response => console.log(response),
-                    error: err => console.log(err)
-                })
-            } else {
-                this.baseView = false
-                this.authService.getUser().subscribe({
-                    next: user => {
-                        if (user && user.wishlist) {
-                            this.isInWishlist = false
-                            this.wishlistService.setWishlistItems(user.wishlist)
-                            this.prodIdsInWishlist = user.wishlist.map((item: any) => item._id)
-                            if (this.prodIdsInWishlist.includes(this.ProductService.product._id)) {
-                                this.isInWishlist = true
-                            }
-                        } 
-                    },
-                    error: err => console.log(err)
-                })
-            }
+
+            this.recentlyViewedService.addToRecentlyViewedProds(route[1].path).subscribe({
+                next: response => console.log(response),
+                error: err => console.log(err)
+            })
+
+            this.authService.getUser().subscribe({
+                next: user => {
+                    if (user && user.wishlist) {
+                        this.isInWishlist = false
+                        this.wishlistService.setWishlistItems(user.wishlist)
+                        this.prodIdsInWishlist = user.wishlist.map((item: any) => item._id)
+                        if (this.prodIdsInWishlist.includes(this.ProductService.product._id)) {
+                            this.isInWishlist = true
+                        }
+                    } 
+                },
+                error: err => console.log(err)
+            })
         })
-        if (window.innerWidth < 700) {
-            this.mobile = true
+       
+    }
+
+    checkIfMobile() {
+        if (isPlatformBrowser(this.platformId)) {
+            if (window.innerWidth < 700) {
+                this.mobile = true
+            }
         }
     }
 
