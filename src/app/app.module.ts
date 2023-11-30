@@ -7,7 +7,7 @@ import { ModalModule } from './shared/components/modal/modal.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { TransferState } from '@angular/core';
 
 @NgModule({
   declarations: [
@@ -25,8 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      // useFactory: (appRoutingModule: AppRoutingModule) => () => appRoutingModule.loadDynamicRoutes(),
+      useFactory: (appRoutingModule: AppRoutingModule) => () => appRoutingModule.loadDynamicRoutes(),
       multi: true,
       deps: [AppRoutingModule],
     },
@@ -34,7 +33,3 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-export function initializeApp(appRoutingModule: AppRoutingModule) {
-  return () => appRoutingModule.loadDynamicRoutes();
-}

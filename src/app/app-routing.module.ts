@@ -12,6 +12,8 @@ import { ProductVideoComponent } from './product/pages/product-video/product-vid
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
 import { Router } from '@angular/router';
 import { ApiService } from './core/services/api.service';
+import { isPlatformServer } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -35,7 +37,7 @@ const routes: Routes = [
 })
 export class AppRoutingModule { 
 
-    constructor(private router: Router, private apiService: ApiService) {}
+    constructor(private router: Router, private apiService: ApiService, @Inject(PLATFORM_ID) private platformId: any) {}
 
     loadDynamicRoutes(): void  {
         let categoriesRoutes: any = []
@@ -94,11 +96,8 @@ export class AppRoutingModule {
                 error: err => console.log(err)
               });
             }
-          }
-          
-
-        
         }
+    }
 
         
     addRoute(data: any, component: any) {
