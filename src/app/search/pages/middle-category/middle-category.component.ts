@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { SearchResultsService } from 'src/app/search/services/search-results.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuService } from 'src/app/shared/components/side-menu/menu.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-middle-category',
@@ -16,26 +17,26 @@ export class MiddleCategoryComponent {
     priceDataEnd!: any
 
     constructor(
-      public SearchResultsService: SearchResultsService, 
-      public router: Router, 
-      public route:ActivatedRoute,
-      public menuService: MenuService
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public SearchResultsService: SearchResultsService, 
+        public router: Router, 
+        public route:ActivatedRoute,
+        public menuService: MenuService
     ) {}
 
     ngOnInit(): void {
         this.route.url.subscribe(route => {
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth"
-            });
-            const lastLetterBeforeId = this.router.url.lastIndexOf('/')
-            const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
-            this.SearchResultsService.getCurrentCategory(id)
+        if (isPlatformBrowser(this.platformId)) {
+            this.scrollToTop()
+        }
+        const lastLetterBeforeId = this.router.url.lastIndexOf('/')
+        const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
+        this.SearchResultsService.getCurrentCategory(id)
       })
     }
 
     onSearchPanelChange(event: any) {
-      this.SearchResultsService.addInput(event)
+        this.SearchResultsService.addInput(event)
     }
 
     onFilterChange(event: any) {
@@ -44,6 +45,10 @@ export class MiddleCategoryComponent {
 
     onBtnsGridPanelChange(event: string) {
         this.activeBtn = event
+    }
+
+    scrollToTop() {
+        window.scrollTo({top: 0, behavior: "smooth"});
     }
 
 }

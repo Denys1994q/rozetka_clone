@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-product-video',
@@ -9,13 +10,15 @@ import { ProductTabsService } from '../../services/product-tabs.service';
 })
 export class ProductVideoComponent {
 
-    constructor(public productService: ProductService, private productTabsService: ProductTabsService) {}
+    constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public productService: ProductService, 
+        private productTabsService: ProductTabsService) {}
 
     ngOnInit() {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
         this.productService.checkActiveTab('video')
         this.productTabsService.setBaseView(false)
     }

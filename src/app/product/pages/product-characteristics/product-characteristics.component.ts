@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-product-characteristics',
@@ -9,14 +10,16 @@ import { ProductTabsService } from '../../services/product-tabs.service';
 })
 export class ProductCharacteristicsComponent {
 
-    constructor(public ProductService: ProductService, private productTabsService: ProductTabsService ) {}
+    constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public ProductService: ProductService, 
+        private productTabsService: ProductTabsService ) {}
 
     ngOnInit() {
         this.ProductService.checkActiveTab('characteristics')
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
         this.productTabsService.setBaseView(false)
     }
 

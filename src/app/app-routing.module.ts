@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/pages/home/home.component';
 import { MainCategoryComponent } from './search/pages/main-category/main-category.component';
 import { MiddleCategoryComponent } from './search/pages/middle-category/middle-category.component';
@@ -10,155 +10,46 @@ import { ProductAllComponent } from './product/pages/product-all/product-all.com
 import { ProductCommentsComponent } from './product/pages/product-comments/product-comments.component';
 import { ProductVideoComponent } from './product/pages/product-video/product-video.component';
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
-import { Router } from '@angular/router';
-import { ApiService } from './core/services/api.service';
-import { isPlatformServer } from '@angular/common';
-import { Inject, PLATFORM_ID } from '@angular/core';
 
+const middleCategoriesTitlesRoutes: any = []
+const middleCategoriesTitles = ['mobile-phones/c80003', 'all-tv/c80037', 'dvd-hd-players/c80011', 'recivers/c80013', 'tuners/c80015', 'portativnaya-ehlektronika/c130309', 'e-books/c80023', 'mp3/c80016', 'recorders/p202591', 'docing_stations/c236805', 'portativnaya-ehlektronika/c130310', 'universalnye-mobilnye-batarei/c387969', 'zaryadnie-stantsii/c4674585', 'fotoelektricheskie-paneli/c4629920', 'dvd-hd-players/c80011', 'notebooks/c800041', 'accessories/c800892', 'motherboards/c80082', 'processors/c80083', 'soundcards/c80088', 'office-equipment/c802543', 'printers/c80007', 'scanners/c80028', 'tablets/c802554', 'clean_robots/c237815', 'coffee_machines/c80164', 'bigbt/c80080', 'refrigerators/c80125', 'washing_machines/c80124', 'tehnika-dlya-kuhni/c435974', 'cleaning/c435964', 'beauty/c80256', 'playstation-store/c800801', 'playstation-5/k80126', 'gamepads-playstation/k80125', 'velosipedy-i-aksessuary/c83882', 'fishing/c84703', 'reels/c84712', 'skovorody/c4626754', 'kresla/c4657815', 'mebel/c152458']
+
+middleCategoriesTitles.map(item => {
+    middleCategoriesTitlesRoutes.push({path: item, component: MiddleCategoryComponent})
+})
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
+    {path: 'checkout', loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)},
+    {path: 'cabinet', loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)},
+    // головні категорії
+    {path: 'household-appliances/c80254', component: MainCategoryComponent},
+    {path: 'telefony-tv-i-ehlektronika/c4627949', component: MainCategoryComponent},
+    {path: 'computers-notebooks/c80253', component: MainCategoryComponent},
+    {path: 'game-zone/c80255', component: MainCategoryComponent},
+    {path: 'sport-i-uvlecheniya/c4627893', component: MainCategoryComponent},
+    {path: 'tovary-dlya-doma/c2394287', component: MainCategoryComponent},
+    // підкатегорії
+    ...middleCategoriesTitlesRoutes,
+    // продукти
     {
-        path: 'checkout',
-        loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)
-    },
-    {
-        path: 'cabinet',
-        loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)
+        path: ':product/:productId',
+        component: ProductComponent, children: [
+            {path: '', component: ProductAllComponent},
+            {path: 'characteristics', component: ProductCharacteristicsComponent},
+            {path: 'comments', component: ProductCommentsComponent},
+            {path: 'video', component: ProductVideoComponent},
+            {path: 'photos', component: ProductPhotosComponent},
+        ],
     },
     {path: 'error', component: ErrorComponent},
     {path: '**', redirectTo: '/error'},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabledBlocking'
-})],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, {initialNavigation: 'enabledBlocking'})],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { 
-
-    constructor(private router: Router, private apiService: ApiService, @Inject(PLATFORM_ID) private platformId: any) {}
-
-    loadDynamicRoutes(): void  {
-        let categoriesRoutes: any = []
-        let middleCategoriesRoutes: any = []
-        let productsRoutes: any = []
-
-        if (typeof window !== 'undefined' && sessionStorage) {
-            if (sessionStorage.getItem('categoriesRoutes') && sessionStorage.getItem('middleCategoriesRoutes')) {
-              const st: any = sessionStorage.getItem('categoriesRoutes');
-              const data = JSON.parse(st);
-              categoriesRoutes = data;
-              this.addRoute(categoriesRoutes, MainCategoryComponent);
-          
-              const middleCatData: any = sessionStorage.getItem('middleCategoriesRoutes');
-              const parsedMiddleCatData = JSON.parse(middleCatData);
-              middleCategoriesRoutes = parsedMiddleCatData;
-              this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent);
-            } else {
-              this.apiService.getAllCategories().subscribe({
-                next: response => {
-                  response.map((category: any) => {
-                    categoriesRoutes.push({ title: category.engName, id: category.id });
-                    category.subCategories.map((middleCat: any) => {
-                      middleCategoriesRoutes.push({ title: middleCat.engName, id: middleCat.id });
-                    });
-                  });
-                  if (!sessionStorage.getItem('categoriesRoutes')) {
-                    sessionStorage.setItem('categoriesRoutes', JSON.stringify(categoriesRoutes));
-                  }
-                  if (!sessionStorage.getItem('middleCategoriesRoutes')) {
-                    sessionStorage.setItem('middleCategoriesRoutes', JSON.stringify(middleCategoriesRoutes));
-                  }
-                  this.addRoute(categoriesRoutes, MainCategoryComponent);
-                  this.addRoute(middleCategoriesRoutes, MiddleCategoryComponent);
-                },
-                error: err => console.log(err)
-              });
-            }
-          
-            if (sessionStorage.getItem('productsRoutes')) {
-              const st: any = sessionStorage.getItem('productsRoutes');
-              const data = JSON.parse(st);
-              productsRoutes = data;
-              this.addProductRoute(productsRoutes);
-            } else {
-              this.apiService.getAllProducts().subscribe({
-                next: response => {
-                  response.map((product: any) => {
-                    productsRoutes.push({ title: product.engName, id: product._id });
-                  });
-                  if (!sessionStorage.getItem('productsRoutes')) {
-                    sessionStorage.setItem('productsRoutes', JSON.stringify(productsRoutes));
-                  }
-                  this.addProductRoute(productsRoutes);
-                },
-                error: err => console.log(err)
-              });
-            }
-        }
-    }
-
-        
-    addRoute(data: any, component: any) {
-        const route: Route = {
-            matcher: (url) => {
-                for (let i = 0; i < data.length; i++) {
-                if (url[0] && url[1]) {
-                    if (url[0].path == data[i].title && url[1].path == data[i].id) {
-                    return {
-                        consumed: url
-                    }
-                    }
-                }
-                }
-                return null
-            }, component: component
-        }
-
-        this.router.config.unshift(route);
-    }
-
-    addProductRoute(productsRoutes: any) {
-        const route: Route = {
-            matcher: (url: any) => { 
-                for (let i = 0; i < productsRoutes.length; i++) {
-                    if (url[0] && url[1]) {
-                        if (url.length === 2 && url[0].path == productsRoutes[i].title && url[1].path == productsRoutes[i].id) {
-                            return {consumed: url}
-                        } else if (url.length === 3) {
-                            return {consumed: url.slice(0, 2)}
-                        }
-                    }
-                }
-                return null
-            }, component: ProductComponent, children: [
-        {
-          path: '',
-          component: ProductAllComponent,
-        },
-        {
-          path: 'characteristics',
-          component: ProductCharacteristicsComponent,
-        },
-        {
-          path: 'comments',
-          component: ProductCommentsComponent,
-        },
-        {
-          path: 'video',
-          component: ProductVideoComponent,
-        },
-        {
-          path: 'photos',
-          component: ProductPhotosComponent,
-        },
-        ],
-        }
-        this.router.config.unshift(route);
-    }
-
-}
+export class AppRoutingModule { }
 
 

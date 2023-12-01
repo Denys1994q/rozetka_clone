@@ -2,21 +2,15 @@
     <app-skeleton [variant]="'search'"></app-skeleton>
 </div>
 <ng-template #mainContent>
-    <div class="subcategory"
-        *ngIf="SearchResultsService.currentCategory && SearchResultsService.currentSubcategory; else skeleton" >
+    <div class="subcategory" *ngIf="SearchResultsService.currentCategory && SearchResultsService.currentSubcategory; else skeleton" >
         <!-- breadcrumbs -->
         <app-breadcrumbs
-            [data]="[
-                SearchResultsService.currentCategory.name,
-                SearchResultsService.currentSubcategory.name
-            ]">
+            [data]="[SearchResultsService.currentCategory.name, SearchResultsService.currentSubcategory.name]">
         </app-breadcrumbs>
         <!-- назва субкатегорії -->
         <h3 class="subcategory__title">{{ SearchResultsService.currentSubcategory.name }}</h3>
         <ul class="subcategory__list">
-            <li
-                class="subcategory__item"
-                *ngFor="let category of SearchResultsService.currentSubcategory.subitems">
+            <li class="subcategory__item" *ngFor="let category of SearchResultsService.currentSubcategory.subitems">
                 <app-category-card [data]="category"></app-category-card>
             </li>
         </ul>

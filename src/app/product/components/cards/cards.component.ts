@@ -71,8 +71,10 @@ export class CardsComponent {
         })      
         this.getData(this.data.products)
         // 
-        if (window.innerWidth < 700) {
-            this.endVal = 2
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 700) {
+                this.endVal = 2
+            }
         }
     }
 
@@ -142,10 +144,14 @@ export class CardsComponent {
     }
 
     checkIfProductInCart(id: string) {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        const productsFromStorage = JSON.parse(cartData) 
-        if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
-            return true
+        if (typeof window !== 'undefined' && localStorage) {
+            const cartData: any = localStorage.getItem('shoppingCart');
+            const productsFromStorage = JSON.parse(cartData) 
+            if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }

@@ -13,8 +13,6 @@ import { makeStateKey, TransferState } from '@angular/core';
   styleUrls: ['./home.component.sass']
 })
 export class HomeComponent implements AfterViewInit {
-
-    // private transferState!: TransferState
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
 
     constructor(
@@ -27,8 +25,6 @@ export class HomeComponent implements AfterViewInit {
         public cartService: CartService)
     {}
 
-
-
     ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId)) {
           this.observeNewProds();
@@ -37,9 +33,9 @@ export class HomeComponent implements AfterViewInit {
 
     observeNewProds() {
         const options = {
-        root: null, 
-        rootMargin: '0px',
-        threshold: 0.5 
+            root: null, 
+            rootMargin: '0px',
+            threshold: 0.5 
         };
         const callback = (entries: any, observer: any) => {
         entries.forEach((entry: any) => {
@@ -67,7 +63,10 @@ export class HomeComponent implements AfterViewInit {
     ngOnInit() {
         if (isPlatformServer(this.platformId)) {
             this.apiService.getAllCategories().subscribe({
-                next: data => this.transferState.set(this.ALL_CATEGORIES_KEY, data),
+                next: data => {
+                    this.productService.setAllCategories(data)
+                    this.transferState.set(this.ALL_CATEGORIES_KEY, data)
+                },
                 error: error => console.log(error)
             })
         }

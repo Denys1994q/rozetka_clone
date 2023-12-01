@@ -1,12 +1,12 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
 import { Slide } from 'src/app/shared/components/carousel/carousel.component';
-import { Comment } from 'src/app/shared/components/comment/comment.component';
 import { ProductService } from '../../services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-product-all',
@@ -19,16 +19,11 @@ export class ProductAllComponent {
     slides: Slide[] = []
     prodIdsInWishlist: string[] = [] 
     isInWishlist!: boolean
-
-    showFullBlock() {
-        this.showFullText = true
-        this.hideBtn = true
-    }
-
     @ViewChild('videoBlock') videoBlock!: ElementRef;
     @ViewChild('characteristicsAndReviewsBlock') characteristicsAndReviewsBlock!: ElementRef;
 
     constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthService,
         private wishlistService: WishlistService,
         public ProductService: ProductService, 
@@ -37,10 +32,9 @@ export class ProductAllComponent {
         public modalService: ModalService) {}
 
     ngOnInit() {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
         this.productTabsService.setBaseView(true)
         this.authService.getUser().subscribe({
             next: user => {
@@ -54,6 +48,11 @@ export class ProductAllComponent {
             },
             error: err => console.log(err)
         })
+    }
+
+    showFullBlock() {
+        this.showFullText = true
+        this.hideBtn = true
     }
 
     scrollToBlock(block: string) {

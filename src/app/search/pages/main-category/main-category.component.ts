@@ -9,7 +9,7 @@ import { ApiService } from 'src/app/core/services/api.service';
   styleUrls: ['./main-category.component.sass']
 })
 export class MainCategoryComponent implements OnInit {
-  category!: any
+  category!: any 
   
   constructor(
     public router: Router, 
