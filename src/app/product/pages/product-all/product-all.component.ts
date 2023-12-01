@@ -56,15 +56,17 @@ export class ProductAllComponent {
     }
 
     scrollToBlock(block: string) {
-        if (block === 'videoBlock') {
-        this.videoBlock.nativeElement.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
-        } else if (block === 'characteristicsAndReviewsBlock') {
-        this.characteristicsAndReviewsBlock.nativeElement.scrollIntoView({
-            behavior: "smooth",
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            if (block === 'videoBlock') {
+                this.videoBlock.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+                } else if (block === 'characteristicsAndReviewsBlock') {
+                this.characteristicsAndReviewsBlock.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+            }
         }
     }
 
@@ -73,10 +75,14 @@ export class ProductAllComponent {
     }
 
     checkIfProductInCart(id: string) {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        const productsFromStorage = JSON.parse(cartData) 
-        if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
-            return true
+        if (isPlatformBrowser(this.platformId)) {
+            const cartData: any = localStorage.getItem('shoppingCart');
+            const productsFromStorage = JSON.parse(cartData) 
+            if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }

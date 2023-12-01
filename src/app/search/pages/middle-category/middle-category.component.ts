@@ -21,17 +21,16 @@ export class MiddleCategoryComponent {
         public SearchResultsService: SearchResultsService, 
         public router: Router, 
         public route:ActivatedRoute,
-        public menuService: MenuService
-    ) {}
+        public menuService: MenuService) {}
 
     ngOnInit(): void {
         this.route.url.subscribe(route => {
-        if (isPlatformBrowser(this.platformId)) {
-            this.scrollToTop()
-        }
-        const lastLetterBeforeId = this.router.url.lastIndexOf('/')
-        const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
-        this.SearchResultsService.getCurrentCategory(id)
+            if (isPlatformBrowser(this.platformId)) {
+                this.scrollToTop()
+            }
+            const lastLetterBeforeId = this.router.url.lastIndexOf('/')
+            const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
+            this.SearchResultsService.getCurrentCategory(id)
       })
     }
 

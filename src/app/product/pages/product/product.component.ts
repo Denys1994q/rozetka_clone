@@ -85,10 +85,9 @@ export class ProductComponent {
     }
 
     scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
     }
 
     findCategory(urlId: string) {
