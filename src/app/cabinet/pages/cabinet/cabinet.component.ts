@@ -7,11 +7,10 @@ import { Component } from '@angular/core';
 })
 export class CabinetPage {
 
-  ngOnInit() {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-  });
-  }
- 
+    ngOnInit() {
+        if (typeof window !== 'undefined') {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
+    }
+
 }

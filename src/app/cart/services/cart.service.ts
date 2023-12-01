@@ -87,21 +87,23 @@ export class CartService {
     }
 
     findAndUdpate(id: number, value: number) {
-        const cartData: any = localStorage.getItem('shoppingCart');
-        const parsedCartData = JSON.parse(cartData);
-        // Пошук товару за _id
-        const productIndex = parsedCartData.findIndex((prod: any) => prod._id === id);
-        if (productIndex !== -1) {
-            // Якщо товар знайдено, оновити кількість
-            parsedCartData[productIndex].amount = value;
-        } else {
-            // Якщо товар не знайдено, створити новий об'єкт
-            const newProduct = { _id: id, amount: value };
-            // Додати новий товар до корзини
-            parsedCartData.unshift(newProduct);
+        if (typeof window !== 'undefined' && localStorage) {
+            const cartData: any = localStorage.getItem('shoppingCart');
+            const parsedCartData = JSON.parse(cartData);
+            // Пошук товару за _id
+            const productIndex = parsedCartData.findIndex((prod: any) => prod._id === id);
+            if (productIndex !== -1) {
+                // Якщо товар знайдено, оновити кількість
+                parsedCartData[productIndex].amount = value;
+            } else {
+                // Якщо товар не знайдено, створити новий об'єкт
+                const newProduct = { _id: id, amount: value };
+                // Додати новий товар до корзини
+                parsedCartData.unshift(newProduct);
+            }
+            localStorage.setItem('shoppingCart', JSON.stringify(parsedCartData));
+            this.getTotal()
         }
-        localStorage.setItem('shoppingCart', JSON.stringify(parsedCartData));
-        this.getTotal()
     }
 
     
@@ -141,11 +143,13 @@ export class CartService {
 
     // Очистити корзину
     clearCart(): void {
-        localStorage.removeItem('shoppingCart');
-        this.productsFromStorage = []
-        this.totalProductsNumber = 0
-        this.totalPrice = 0
-        this.productInCart = false
+        if (typeof window !== 'undefined' && localStorage) {
+            localStorage.removeItem('shoppingCart');
+            this.productsFromStorage = []
+            this.totalProductsNumber = 0
+            this.totalPrice = 0
+            this.productInCart = false
+        }
     }
 
     // Підтвердити замовлення

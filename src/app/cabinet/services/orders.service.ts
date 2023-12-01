@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, map } from 'rxjs';
+import { Observable, BehaviorSubject, map, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ProductInterface } from 'src/app/core/services/api-response-types';
 
@@ -21,20 +21,23 @@ export class OrdersService {
     orderslistItems$: Observable<any[]> = this.orderslistItemsSubject.asObservable();
 
     setOrdersListItems(data: any) {
-        console.log('data', data)
         this.orderslistItemsSubject.next(data)
         this.sortOrdersListByDateDesc()
     }
 
-    addToOrdersList(productId: string):Observable<{message: string}> {
-        const apiUrl = `${this.backendUrl}/add-to-orderslist/${productId}` 
-        const token = localStorage.getItem('authToken');
-        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-        const options = {
-            headers,
-            withCredentials: true
-        };
-        return this.http.post<{message: string}>(apiUrl, null, options);
+    addToOrdersList(productId: string):Observable<{message: string} | void> {
+        if (typeof window !== 'undefined' && localStorage) {
+            const apiUrl = `${this.backendUrl}/add-to-orderslist/${productId}` 
+            const token = localStorage.getItem('authToken');
+            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+            const options = {
+                headers,
+                withCredentials: true
+            };
+            return this.http.post<{message: string}>(apiUrl, null, options);
+        } else {
+            return throwError('Local storage is not available.');
+        }
     }
 
     sortOrdersListByDateDesc() {
@@ -45,12 +48,14 @@ export class OrdersService {
     }
 
     getOrdersProdsList() {
-        const apiUrl = `${this.backendUrl}/orderslist`;
-        const token = localStorage.getItem('authToken');
-        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    
-        return this.http.get<{products: IOrderItem[]}>(apiUrl, { headers, withCredentials: true })
+        if (typeof window !== 'undefined' && localStorage) {
+            const apiUrl = `${this.backendUrl}/orderslist`;
+            const token = localStorage.getItem('authToken');
+            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+            return this.http.get<{products: IOrderItem[]}>(apiUrl, { headers, withCredentials: true })
+        } else {
+            return throwError('Local storage is not available.');
+        }
     }
-
 
 }

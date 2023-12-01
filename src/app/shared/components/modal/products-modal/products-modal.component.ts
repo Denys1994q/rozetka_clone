@@ -27,10 +27,12 @@ export class ProductsModalComponent {
             next: (data) => this.products = data,
             error: (err) => console.log(err)
         })
-        if (window.innerWidth < 700) {
-            this.mobVersion = true
-        } else {
-            this.activeCategoryIndex = 0
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 700) {
+                this.mobVersion = true
+            } else {
+                this.activeCategoryIndex = 0
+            }
         }
     }
 

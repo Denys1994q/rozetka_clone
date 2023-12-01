@@ -34,35 +34,41 @@ export class LoginModalComponent {
 
     authWindow!: any
     loginWithGmail() {
-        const width = 600;
-        const height = 500;
-        const right = window.innerWidth - width;
-        const top = 0;
-        const windowFeatures = `width=${width},height=${height},right=${right},top=${top}`;
-        this.authWindow = window.open('https://evergreen-purrfect-agenda.glitch.me/auth/google', '_blank', windowFeatures);
+        if (typeof window !== 'undefined') {
+            const width = 600;
+            const height = 500;
+            const right = window.innerWidth - width;
+            const top = 0;
+            const windowFeatures = `width=${width},height=${height},right=${right},top=${top}`;
+            this.authWindow = window.open('https://evergreen-purrfect-agenda.glitch.me/auth/google', '_blank', windowFeatures);
+        }
     }
 
     ngOnInit() {
-        // Очікуємо подію message від вікна авторизації
-        window.addEventListener('message', (event) => {
-            if (event.origin === 'https://evergreen-purrfect-agenda.glitch.me') {
-                // Перевіряємо, чи повідомлення вказує на успішну авторизацію
-                if (event.data === 'authSuccess') {
-                    this.authWindow.close()
-                    this.modalService.closeDialog()
-                    if (this.authWindow) {
-                        this.authService.getUser().subscribe({
-                        next: () => {},
-                        error: err => console.log(err)
-                        })
+        if (typeof window !== 'undefined') {
+            // Очікуємо подію message від вікна авторизації
+            window.addEventListener('message', (event) => {
+                if (event.origin === 'https://evergreen-purrfect-agenda.glitch.me') {
+                    // Перевіряємо, чи повідомлення вказує на успішну авторизацію
+                    if (event.data === 'authSuccess') {
+                        this.authWindow.close()
+                        this.modalService.closeDialog()
+                        if (this.authWindow) {
+                            this.authService.getUser().subscribe({
+                            next: () => {},
+                            error: err => console.log(err)
+                            })
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     loginWithFb() {
-        window.open('https://evergreen-purrfect-agenda.glitch.me/auth/facebook', '_self');
+        if (typeof window !== 'undefined') {
+            window.open('https://evergreen-purrfect-agenda.glitch.me/auth/facebook', '_self');
+        }
     }
 
     closeDialog() {
