@@ -11,13 +11,6 @@ import { ProductCommentsComponent } from './product/pages/product-comments/produ
 import { ProductVideoComponent } from './product/pages/product-video/product-video.component';
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
 
-const middleCategoriesTitlesRoutes: any = []
-const middleCategoriesTitles = ['all-tv/c80037', 'dvd-hd-players/c80011', 'recivers/c80013', 'tuners/c80015', 'portativnaya-ehlektronika/c130309', 'e-books/c80023', 'mp3/c80016', 'recorders/p202591', 'docing_stations/c236805', 'portativnaya-ehlektronika/c130310', 'universalnye-mobilnye-batarei/c387969', 'zaryadnie-stantsii/c4674585', 'fotoelektricheskie-paneli/c4629920', 'dvd-hd-players/c80011', 'notebooks/c800041', 'accessories/c800892', 'motherboards/c80082', 'processors/c80083', 'soundcards/c80088', 'office-equipment/c802543', 'printers/c80007', 'scanners/c80028', 'tablets/c802554', 'clean_robots/c237815', 'coffee_machines/c80164', 'bigbt/c80080', 'refrigerators/c80125', 'washing_machines/c80124', 'tehnika-dlya-kuhni/c435974', 'cleaning/c435964', 'beauty/c80256', 'playstation-store/c800801', 'playstation-5/k80126', 'gamepads-playstation/k80125', 'velosipedy-i-aksessuary/c83882', 'fishing/c84703', 'reels/c84712', 'skovorody/c4626754', 'kresla/c4657815', 'mebel/c152458', 'videocards/c80087', 'hdd/c80084', 'ssd/c80109', 'office-phones/c80029', 'freezers/c80203', 'men_electric_shavers/c81226']
-
-middleCategoriesTitles.map(item => {
-    middleCategoriesTitlesRoutes.push({path: item, component: MiddleCategoryComponent})
-})
-
 const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'checkout', loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)},
@@ -31,9 +24,54 @@ const routes: Routes = [
     {path: 'tovary-dlya-doma/c2394287', component: MainCategoryComponent},
     {path: 'test', component: ErrorComponent},
     {path: 'test/:id', component: ErrorComponent},
-    {path: 'mobile-phones/c80003', component: MiddleCategoryComponent},
     // підкатегорії
-    ...middleCategoriesTitlesRoutes,
+    {path: 'mobile-phones/c80003', component: MiddleCategoryComponent},
+    {path: 'all-tv/c80037', component: MiddleCategoryComponent},
+    {path: 'dvd-hd-players/c80011', component: MiddleCategoryComponent},
+    {path: 'recivers/c80013', component: MiddleCategoryComponent},
+    {path: 'tuners/c80015', component: MiddleCategoryComponent},
+    {path: 'portativnaya-ehlektronika/c130309', component: MiddleCategoryComponent},
+    {path: 'e-books/c80023', component: MiddleCategoryComponent},
+    {path: 'mp3/c80016', component: MiddleCategoryComponent},
+    {path: 'recorders/p202591', component: MiddleCategoryComponent},
+    {path: 'docing_stations/c236805', component: MiddleCategoryComponent},
+    {path: 'portativnaya-ehlektronika/c130310', component: MiddleCategoryComponent},
+    {path: 'universalnye-mobilnye-batarei/c387969', component: MiddleCategoryComponent},
+    {path: 'zaryadnie-stantsii/c4674585', component: MiddleCategoryComponent},
+    {path: 'fotoelektricheskie-paneli/c4629920', component: MiddleCategoryComponent},
+    {path: 'dvd-hd-players/c80011', component: MiddleCategoryComponent},
+    {path: 'notebooks/c800041', component: MiddleCategoryComponent},
+    {path: 'accessories/c800892', component: MiddleCategoryComponent},
+    {path: 'motherboards/c80082', component: MiddleCategoryComponent},
+    {path: 'processors/c80083', component: MiddleCategoryComponent},
+    {path: 'soundcards/c80088', component: MiddleCategoryComponent},
+    {path: 'office-equipment/c802543', component: MiddleCategoryComponent},
+    {path: 'printers/c80007', component: MiddleCategoryComponent},
+    {path: 'scanners/c80028', component: MiddleCategoryComponent},
+    {path: 'tablets/c802554', component: MiddleCategoryComponent},
+    {path: 'clean_robots/c237815', component: MiddleCategoryComponent},
+    {path: 'coffee_machines/c80164', component: MiddleCategoryComponent},
+    {path: 'bigbt/c80080', component: MiddleCategoryComponent},
+    {path: 'refrigerators/c80125', component: MiddleCategoryComponent},
+    {path: 'washing_machines/c80124', component: MiddleCategoryComponent},
+    {path: 'tehnika-dlya-kuhni/c435974', component: MiddleCategoryComponent},
+    {path: 'cleaning/c435964', component: MiddleCategoryComponent},
+    {path: 'beauty/c80256', component: MiddleCategoryComponent},
+    {path: 'playstation-store/c800801', component: MiddleCategoryComponent},
+    {path: 'playstation-5/k80126', component: MiddleCategoryComponent},
+    {path: 'gamepads-playstation/k80125', component: MiddleCategoryComponent},
+    {path: 'velosipedy-i-aksessuary/c83882', component: MiddleCategoryComponent},
+    {path: 'fishing/c84703', component: MiddleCategoryComponent},
+    {path: 'reels/c84712', component: MiddleCategoryComponent},
+    {path: 'skovorody/c4626754', component: MiddleCategoryComponent},
+    {path: 'kresla/c4657815', component: MiddleCategoryComponent},
+    {path: 'mebel/c152458', component: MiddleCategoryComponent},
+    {path: 'videocards/c80087', component: MiddleCategoryComponent},
+    {path: 'hdd/c80084', component: MiddleCategoryComponent},
+    {path: 'ssd/c80109', component: MiddleCategoryComponent},
+    {path: 'office-phones/c80029', component: MiddleCategoryComponent},
+    {path: 'freezers/c80203', component: MiddleCategoryComponent},
+    {path: 'men_electric_shavers/c81226', component: MiddleCategoryComponent},
     // продукти
     {
         path: ':product/:productId',
