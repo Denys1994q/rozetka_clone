@@ -31,6 +31,7 @@ const routes: Routes = [
     {path: 'tovary-dlya-doma/c2394287', component: MainCategoryComponent},
     {path: 'test', component: ErrorComponent},
     {path: 'test/:id', component: ErrorComponent},
+    {path: 'mobile-phones/c80003', component: MiddleCategoryComponent},
     // підкатегорії
     ...middleCategoriesTitlesRoutes,
     // продукти
