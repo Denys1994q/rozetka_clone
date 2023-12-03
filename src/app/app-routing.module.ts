@@ -29,6 +29,8 @@ const routes: Routes = [
     {path: 'game-zone/c80255', component: MainCategoryComponent},
     {path: 'sport-i-uvlecheniya/c4627893', component: MainCategoryComponent},
     {path: 'tovary-dlya-doma/c2394287', component: MainCategoryComponent},
+    {path: 'test', component: ErrorComponent},
+    {path: 'test/:id', component: ErrorComponent},
     // підкатегорії
     ...middleCategoriesTitlesRoutes,
     // продукти

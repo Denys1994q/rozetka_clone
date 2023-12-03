@@ -1,12 +1,10 @@
-<div *ngIf="server; else browser"></div>
-<ng-template #browser>
-    <section class="error-page">
-        <h1 class="error-page__title">Помилка 404</h1>
-        <p class="error-page__subtitle">Сторінку не знайдено</p>
-        <p class="error-page__text">
-            Неправильно набрано адресу або такої сторінки на сайті більше не існує.
-        </p>
-        <a routerLink="/" class="error-page__link">Перейти на головну сторінку</a>
-    </section>
-</ng-template>
+<section class="error-page">
+    <h1 class="error-page__title">Помилка 404</h1>
+    <p class="error-page__subtitle">Сторінку не знайдено</p>
+    <p class="error-page__text">
+        Неправильно набрано адресу або такої сторінки на сайті більше не існує.
+    </p>
+    <a routerLink="/" class="error-page__link">Перейти на головну сторінку</a>
+</section>
+
 

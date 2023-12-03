@@ -1,5 +1,4 @@
-import { isPlatformServer } from '@angular/common';
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component} from '@angular/core';
 
 @Component({
   selector: 'app-error',
@@ -7,14 +6,9 @@ import { Component, Inject, PLATFORM_ID } from '@angular/core';
   styleUrls: ['./error.component.sass']
 })
 export class ErrorComponent {
-    server: boolean = false
 
-    constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+    constructor() {}
 
-    ngOnInit() {
-        if (isPlatformServer(this.platformId)) {
-            this.server = true
-        }
-    }
+    ngOnInit() {}
 
 }
