@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/pages/home/home.component';
-import { MainCategoryComponent } from './search/pages/main-category/main-category.component';
 import { MiddleCategoryComponent } from './search/pages/middle-category/middle-category.component';
 import { ErrorComponent } from './core/pages/error/error.component';
 import { ProductComponent } from './product/pages/product/product.component';
@@ -10,20 +9,19 @@ import { ProductAllComponent } from './product/pages/product-all/product-all.com
 import { ProductCommentsComponent } from './product/pages/product-comments/product-comments.component';
 import { ProductVideoComponent } from './product/pages/product-video/product-video.component';
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
+import { MainCategoryModule } from './search/pages/main-category/main-category.module';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'checkout', loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)},
     {path: 'cabinet', loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)},
     // головні категорії
-    {path: 'household-appliances/c80254', component: MainCategoryComponent},
-    {path: 'telefony-tv-i-ehlektronika/c4627949', component: MainCategoryComponent},
-    {path: 'computers-notebooks/c80253', component: MainCategoryComponent},
-    {path: 'game-zone/c80255', component: MainCategoryComponent},
-    {path: 'sport-i-uvlecheniya/c4627893', component: MainCategoryComponent},
-    {path: 'tovary-dlya-doma/c2394287', component: MainCategoryComponent},
-    {path: 'test', component: ErrorComponent},
-    {path: 'test/:id', component: ErrorComponent},
+    {path: 'household-appliances/c80254', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
+    {path: 'telefony-tv-i-ehlektronika/c4627949', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
+    {path: 'computers-notebooks/c80253', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
+    {path: 'game-zone/c80255', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
+    {path: 'sport-i-uvlecheniya/c4627893',loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
+    {path: 'tovary-dlya-doma/c2394287', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
     // підкатегорії
     {path: 'mobile-phones/c80003', component: MiddleCategoryComponent},
     {path: 'all-tv/c80037', component: MiddleCategoryComponent},
