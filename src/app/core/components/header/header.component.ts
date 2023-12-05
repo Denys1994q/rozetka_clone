@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuService } from 'src/app/shared/components/side-menu/menu.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 

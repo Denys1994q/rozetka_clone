@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { SnackBarComponent } from 'src/app/shared/components/snackBar/snack-bar.component';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 
 interface Cards {
   category?: string,

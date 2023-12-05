@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 

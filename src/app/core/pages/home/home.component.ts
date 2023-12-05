@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ElementRef, Inject, PLATFORM_ID   } from '@angular/core';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { Slide } from 'src/app/shared/components/carousel/carousel.component';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from 'src/app/product/services/product.service';

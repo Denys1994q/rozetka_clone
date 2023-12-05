@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/
 import { Slide } from 'src/app/shared/components/carousel/carousel.component';
 import { ProductService } from '../../services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { ProductTabsService } from '../../services/product-tabs.service';

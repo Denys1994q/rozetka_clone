@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { ProductInterface } from 'src/app/core/services/api-response-types';
 import { ProductService } from 'src/app/product/services/product.service';
 

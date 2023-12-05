@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuService } from 'src/app/shared/components/side-menu/menu.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { SearchResultsService } from 'src/app/search/services/search-results.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 })
 export class SideMenuComponent {
   activeSearchParam!: any
-  // showCancelBtn: boolean = false
 
   constructor(
     public menuService: MenuService, 

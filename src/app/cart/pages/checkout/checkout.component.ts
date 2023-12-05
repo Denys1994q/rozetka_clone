@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../services/cart.service';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { OrdersService } from 'src/app/cabinet/services/orders.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from '../modal.service';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { HttpClient } from '@angular/common/http';

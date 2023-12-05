@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ModalService } from '../modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({

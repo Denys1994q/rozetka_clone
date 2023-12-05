@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../shared.module';
+import { SharedModule } from '../shared/shared.module';
 
 import { CommentsModalComponent } from './comments-modal/comments-modal.component';
 import { FiltersModalComponent } from './filters-modal/filters-modal.component';

@@ -4,7 +4,7 @@ import { SearchResultsService } from 'src/app/search/services/search-results.ser
 import { ApiService } from 'src/app/core/services/api.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { ProductInterface } from 'src/app/core/services/api-response-types';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { ModalService } from 'src/app/modals/modal.service';
 import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
