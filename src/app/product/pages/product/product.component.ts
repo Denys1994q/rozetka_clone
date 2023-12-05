@@ -45,12 +45,13 @@ export class ProductComponent {
         this.scrollToTop()
         this.checkIfMobile()
 
-        this.route.url.subscribe(route => {
+        this.route.params.subscribe(params => {
+            const productId = params['productId'];
             // отримуємо з сервісу інфо щодо товару по його айді
-            this.ProductService.getCurrentProduct(route[1].path)
-            this.findCategory(route[1].path)
+            this.ProductService.getCurrentProduct(productId)
+            this.findCategory(productId)
 
-            this.recentlyViewedService.addToRecentlyViewedProds(route[1].path).subscribe({
+            this.recentlyViewedService.addToRecentlyViewedProds(productId).subscribe({
                 next: response => console.log(response),
                 error: err => console.log(err)
             })

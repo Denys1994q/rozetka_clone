@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/pages/home/home.component';
-import { MiddleCategoryComponent } from './search/pages/middle-category/middle-category.component';
 import { ErrorComponent } from './core/pages/error/error.component';
 import { ProductComponent } from './product/pages/product/product.component';
 import { ProductCharacteristicsComponent } from './product/pages/product-characteristics/product-characteristics.component';
@@ -9,13 +8,14 @@ import { ProductAllComponent } from './product/pages/product-all/product-all.com
 import { ProductCommentsComponent } from './product/pages/product-comments/product-comments.component';
 import { ProductVideoComponent } from './product/pages/product-video/product-video.component';
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
-import { MainCategoryModule } from './search/pages/main-category/main-category.module';
-import { MiddleCategoryModule } from './search/pages/middle-category/middle-category.module';
+import { ProductModule } from './product/product.module';
+import { MainCategoryComponent } from './search/pages/main-category/main-category.component';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'checkout', loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)},
     {path: 'cabinet', loadChildren: () => import('./cabinet/cabinet.module').then((m) => m.CabinetModule)},
+    // {path: 'household-appliances/c80254', component: MainCategoryComponent},
     // головні категорії
     {path: 'household-appliances/c80254', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
     {path: 'telefony-tv-i-ehlektronika/c4627949', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
@@ -72,6 +72,10 @@ const routes: Routes = [
     {path: 'freezers/c80203', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
     {path: 'men_electric_shavers/c81226', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
     // продукти
+    // {
+    //     path: ':product/:productId',
+    //     loadChildren: () => import('./product/product.module').then((m) => m.ProductModule)
+    // },
     {
         path: ':product/:productId',
         component: ProductComponent, children: [

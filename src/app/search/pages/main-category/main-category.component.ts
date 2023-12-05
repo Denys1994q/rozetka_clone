@@ -23,7 +23,7 @@ export class MainCategoryComponent implements OnInit {
     if (this.SearchResultsService.selectedInputs.length > 0) {
       this.SearchResultsService.removeAll()
     }
-    
+
     this.route.url.subscribe(route => {
       const lastLetterBeforeId = this.router.url.lastIndexOf('/')
       const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
