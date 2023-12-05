@@ -10,6 +10,7 @@ import { ProductVideoComponent } from './product/pages/product-video/product-vid
 import { ProductPhotosComponent } from './product/pages/product-photos/product-photos.component';
 import { ProductModule } from './product/product.module';
 import { MainCategoryComponent } from './search/pages/main-category/main-category.component';
+import { MiddleCategoryComponent } from './search/pages/middle-category/middle-category.component';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -24,7 +25,8 @@ const routes: Routes = [
     {path: 'sport-i-uvlecheniya/c4627893',loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
     {path: 'tovary-dlya-doma/c2394287', loadChildren: () => import('./search/pages/main-category/main-category.module').then((m) => m.MainCategoryModule)},
     // підкатегорії
-    {path: 'mobile-phones/c80003', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
+    {path: 'mobile-phones/c80003', component: MiddleCategoryComponent},
+    // {path: 'mobile-phones/c80003', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
     {path: 'all-tv/c80037', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
     {path: 'dvd-hd-players/c80011', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
     {path: 'recivers/c80013', loadChildren: () => import('./search/pages/middle-category/middle-category.module').then((m) => m.MiddleCategoryModule)},
