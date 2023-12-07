@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
-import { Slide } from 'src/app/shared/components/carousel/carousel.component';
+import { Slide } from 'src/app/carousel/carousel.component';
 import { ProductService } from '../../services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { ModalService } from 'src/app/modals/modal.service';

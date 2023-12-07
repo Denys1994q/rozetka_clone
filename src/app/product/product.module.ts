@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CharacteristicsBlockComponent } from './components/characteristics-block/characteristics-block.component';
 import { SharedModule } from '../shared/shared.module';
 import { CommentsPanelComponent } from './components/comments-panel/comments-panel.component';
@@ -15,6 +14,12 @@ import { ProductPhotosComponent } from './pages/product-photos/product-photos.co
 import { ProductVideoComponent } from './pages/product-video/product-video.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { CarouselModule } from '../carousel/carousel.module';
+import { CommentModule } from '../comment/comment.module';
+import { InputsModule } from '../inputs/inputs.module';
+import { RatingModule } from '../rating/rating.module';
+import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
+import { SkeletonModule } from '../skeleton/skeleton.module';
 // import { RouterModule } from '@angular/router';
 
 // const routes = [
@@ -48,9 +53,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   ],
   imports: [
     // RouterModule.forChild(routes),
-    CommonModule,
+    InputsModule,
+    BreadcrumbsModule,
+    RatingModule,
+    CarouselModule,
+    CommentModule,
     SharedModule,
     MatSnackBarModule,
+    SkeletonModule
   ], 
   exports: [
     CharacteristicsBlockComponent,

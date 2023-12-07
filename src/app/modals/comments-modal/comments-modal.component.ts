@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalService } from '../modal.service';
-import { Slide } from 'src/app/shared/components/carousel/carousel.component';
+import { Slide } from 'src/app/carousel/carousel.component';
 import { Inject } from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ProductService } from 'src/app/product/services/product.service';

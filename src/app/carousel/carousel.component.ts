@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { AfterViewInit, AfterContentChecked, OnDestroy, Input, OnInit, OnChanges, SimpleChanges, ViewChildren, QueryList, Inject, PLATFORM_ID } from '@angular/core';
+import { OnDestroy, Input, ViewChildren, QueryList, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 
 export type Slide = {

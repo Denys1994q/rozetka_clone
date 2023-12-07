@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
@@ -8,6 +7,12 @@ import { ErrorComponent } from './pages/error/error.component';
 import { ProductModule } from '../product/product.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CartModule } from '../cart/cart.module';
+import { CarouselModule } from '../carousel/carousel.module';
+import { InputsModule } from '../inputs/inputs.module';
+import { SkeletonModule } from '../skeleton/skeleton.module';
+import { AsideModule } from '../aside/aside.module';
+import { SocialMediaModule } from '../social-media/social-media.module';
+import { SideMenuModule } from '../side-menu/side-menu.module';
 
 @NgModule({
   declarations: [
@@ -18,10 +23,15 @@ import { CartModule } from '../cart/cart.module';
   ],
   imports: [
     HttpClientModule,
-    CommonModule,
+    InputsModule,
+    CarouselModule,
     ProductModule,
     SharedModule,
-    CartModule
+    CartModule,
+    SkeletonModule,
+    AsideModule,
+    SocialMediaModule,
+    SideMenuModule
   ],
   exports: [
     HeaderComponent,

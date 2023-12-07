@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, ElementRef, Inject, PLATFORM_ID   } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
-import { Slide } from 'src/app/shared/components/carousel/carousel.component';
+import { Slide } from 'src/app/carousel/carousel.component';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from 'src/app/product/services/product.service';
-import { CartService } from 'src/app/cart/services/cart.service';
+import { CartService } from 'src/app/cart/services/cart.service';``
 import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { makeStateKey, TransferState } from '@angular/core';
 

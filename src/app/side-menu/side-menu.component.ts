@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuService } from 'src/app/shared/components/side-menu/menu.service';
+import { MenuService } from 'src/app/side-menu/menu.service';
 import { ModalService } from 'src/app/modals/modal.service';
 import { SearchResultsService } from 'src/app/search/services/search-results.service';
 import { AuthService } from 'src/app/core/services/auth.service';

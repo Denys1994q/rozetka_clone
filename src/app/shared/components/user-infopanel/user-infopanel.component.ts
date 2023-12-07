@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ModalService } from 'src/app/modals/modal.service';
-import { MenuService } from '../side-menu/menu.service';
+import { MenuService } from '../../../side-menu/menu.service';
 import { Input } from '@angular/core';
 
 @Component({
