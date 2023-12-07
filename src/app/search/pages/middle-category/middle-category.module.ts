@@ -10,7 +10,7 @@ import { BreadcrumbsModule } from 'src/app/breadcrumbs/breadcrumbs.module';
 import { SkeletonModule } from 'src/app/skeleton/skeleton.module';
 import { BtnsModule } from 'src/app/btns/btns.module';
 import { MatIconModule } from '@angular/material/icon';
-
+import { CardsModule } from 'src/app/cards/cards.module';
 
 const routes = [
   {path: '', component: MiddleCategoryComponent}
@@ -27,7 +27,8 @@ const routes = [
     BreadcrumbsModule,
     ProductModule,
     SkeletonModule,
-    BtnsModule
+    BtnsModule,
+    CardsModule
   ],
   declarations: [MiddleCategoryComponent],
   exports: [MiddleCategoryComponent]

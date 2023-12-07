@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared/shared.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
 import { CartNotificationComponent } from './components/cart-notification/cart-notification.component';
 import { CheckoutPage } from './pages/checkout/checkout.component';
 import { RouterModule } from '@angular/router';
@@ -13,7 +14,8 @@ const routes = [
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
-    SharedModule,
+    MatIconModule,
+    MatBadgeModule
   ],
   declarations: [
     CartNotificationComponent,

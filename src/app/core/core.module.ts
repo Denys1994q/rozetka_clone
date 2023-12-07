@@ -13,6 +13,8 @@ import { SkeletonModule } from '../skeleton/skeleton.module';
 import { AsideModule } from '../aside/aside.module';
 import { SocialMediaModule } from '../social-media/social-media.module';
 import { SideMenuModule } from '../side-menu/side-menu.module';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CardsModule } from '../cards/cards.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { SideMenuModule } from '../side-menu/side-menu.module';
     SkeletonModule,
     AsideModule,
     SocialMediaModule,
-    SideMenuModule
+    SideMenuModule,
+    MatBadgeModule,
+    CardsModule
   ],
   exports: [
     HeaderComponent,

@@ -1,26 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SideMenuComponent } from './side-menu.component';
-import { SocialMediaModule } from '../social-media/social-media.module';
+import { CategoryCardComponent } from './category-card/category-card.component';
+import { RouterLink } from '@angular/router';
+import { CardsComponent } from './cards/cards.component';
 import { MatIconModule } from '@angular/material/icon';
 import { InputsModule } from '../inputs/inputs.module';
-import { SharedModule } from '../shared/shared.module';
+import { RatingModule } from '../rating/rating.module';
 import { PriceModule } from '../price/price.module';
 
 @NgModule({
   declarations: [
-    SideMenuComponent
+    CategoryCardComponent,
+    CardsComponent
   ],
   imports: [
     CommonModule,
-    SocialMediaModule,
+    RouterLink,
     MatIconModule,
     InputsModule,
-    SharedModule,
+    RatingModule,
     PriceModule
   ],
   exports: [
-    SideMenuComponent
+    CategoryCardComponent,
+    CardsComponent
   ]
 })
-export class SideMenuModule { }
+export class CardsModule { }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CabinetPage } from './pages/cabinet/cabinet.component';
-import { SharedModule } from '../shared/shared.module';
 import { CabinetOrdersPage } from './pages/cabinet-orders/cabinet-orders.component';
 import { CabinetPersonalInfoPage } from './pages/cabinet-personalInfo/cabinet-personalInfo.component';
 import { CabinetRecentlyViewedPage } from './pages/cabinet-recently-viewed/cabinet-recently-viewed.component';
@@ -11,6 +11,9 @@ import { ProductModule } from '../product/product.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { BtnsModule } from '../btns/btns.module';
 import { AsideModule } from '../aside/aside.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CardsModule } from '../cards/cards.module';
 
 const routes = [
   {path: '', component: CabinetPage, canActivate: [AuthGuard], children: [
@@ -47,11 +50,14 @@ const routes = [
   ],
   imports: [
     RouterModule.forChild(routes),
+    CommonModule,
     InputsModule,
-    SharedModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     ProductModule,
     BtnsModule,
-    AsideModule
+    AsideModule,
+    CardsModule
   ],
   exports: [],
 })
