@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 
 @Component({
   selector: 'app-checkbox',

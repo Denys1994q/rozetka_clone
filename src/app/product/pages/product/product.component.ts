@@ -1,6 +1,6 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { ProductInterface } from 'src/app/core/services/api-response-types';

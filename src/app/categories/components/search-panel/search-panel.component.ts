@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-// import { SearchResultsService } from '../../services/search-results.service';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-search-panel',

@@ -1,5 +1,5 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuService } from 'src/app/side-menu/menu.service';
 import { isPlatformBrowser } from '@angular/common';

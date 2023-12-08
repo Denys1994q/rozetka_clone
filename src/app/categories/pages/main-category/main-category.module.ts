@@ -21,6 +21,6 @@ const routes = [
     CardsModule
   ],
   declarations: [MainCategoryComponent],
-  exports: [MainCategoryComponent]
+  exports: []
 })
 export class MainCategoryModule { }

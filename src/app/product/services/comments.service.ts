@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { Comment } from 'src/app/comment/comment.component';
 
 @Injectable({ providedIn: 'root' })

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Comment } from '../comment.component';
 import { ModalService } from 'src/app/modals/modal.service';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { ProductService } from '../../product/services/product.service';
 import { CommentsService } from '../../product/services/comments.service';
 

@@ -2,15 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MiddleCategoryComponent } from './middle-category.component';
 import { RouterModule } from '@angular/router';
-import { SearchModule } from '../../search.module';
+import { SkeletonModule } from 'src/app/skeleton/skeleton.module';
 import { ProductModule } from 'src/app/product/product.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { InputsModule } from 'src/app/inputs/inputs.module';
 import { BreadcrumbsModule } from 'src/app/breadcrumbs/breadcrumbs.module';
-import { SkeletonModule } from 'src/app/skeleton/skeleton.module';
 import { BtnsModule } from 'src/app/btns/btns.module';
 import { MatIconModule } from '@angular/material/icon';
 import { CardsModule } from 'src/app/cards/cards.module';
+import { SearchPanelComponent } from '../../components/search-panel/search-panel.component';
+import { PriceModule } from 'src/app/price/price.module';
+import { AlphabetBlockComponent } from '../../components/alphabet-block/alphabet-block.component';
 
 const routes = [
   {path: '', component: MiddleCategoryComponent}
@@ -23,14 +25,18 @@ const routes = [
     InputsModule,
     CommonModule,
     SharedModule,
-    SearchModule,
     BreadcrumbsModule,
     ProductModule,
     SkeletonModule,
     BtnsModule,
-    CardsModule
+    CardsModule,
+    PriceModule
   ],
-  declarations: [MiddleCategoryComponent],
-  exports: [MiddleCategoryComponent]
+  declarations: [
+    MiddleCategoryComponent,
+    SearchPanelComponent,
+    AlphabetBlockComponent
+  ],
+  exports: []
 })
 export class MiddleCategoryModule { }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalService } from '../modal.service';
 import { ProductService } from 'src/app/product/services/product.service';
-import { SearchResultsService } from 'src/app/search/services/search-results.service';
+import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { CommentsService } from 'src/app/product/services/comments.service';
 
 @Component({
