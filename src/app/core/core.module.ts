@@ -11,17 +11,18 @@ import { CarouselModule } from '../carousel/carousel.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { SkeletonModule } from '../skeleton/skeleton.module';
 import { AsideModule } from '../aside/aside.module';
-import { SocialMediaModule } from '../social-media/social-media.module';
-import { SideMenuModule } from '../side-menu/side-menu.module';
+import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CardsModule } from '../cards/cards.module';
+import { PriceModule } from '../price/price.module';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    ErrorComponent
+    ErrorComponent,
+    SideMenuComponent
   ],
   imports: [
     HttpClientModule,
@@ -32,16 +33,14 @@ import { CardsModule } from '../cards/cards.module';
     CartModule,
     SkeletonModule,
     AsideModule,
-    SocialMediaModule,
-    SideMenuModule,
     MatBadgeModule,
-    CardsModule
+    CardsModule,
+    PriceModule
   ],
   exports: [
+    ErrorComponent,
     HeaderComponent,
-    FooterComponent,
-    HomeComponent,
-    ErrorComponent
+    FooterComponent
   ]
 })
 export class CoreModule { }

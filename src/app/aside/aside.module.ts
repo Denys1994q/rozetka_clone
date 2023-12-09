@@ -4,21 +4,22 @@ import { AsideComponent } from './aside.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SkeletonModule } from '../skeleton/skeleton.module';
 import { RouterModule } from '@angular/router';
-import { SocialMediaModule } from '../social-media/social-media.module';
+import { SocialMediaComponent } from './components/social-media/social-media.component';
 
 @NgModule({
   declarations: [
-    AsideComponent
+    AsideComponent,
+    SocialMediaComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     MatIconModule,
-    SkeletonModule,
-    SocialMediaModule
+    SkeletonModule
   ],
   exports: [
-    AsideComponent
+    AsideComponent,
+    SocialMediaComponent
   ]
 })
 export class AsideModule { }

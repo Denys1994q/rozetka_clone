@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuService } from 'src/app/side-menu/menu.service';
+import { MenuService } from 'src/app/core/components/side-menu/menu.service';
 import { ModalService } from 'src/app/modals/modal.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -22,7 +22,6 @@ export class SideMenuComponent {
   ) {}
 
   showCancelBtn() {
-    console.log(this.activeSearchParam, 'this.activeSearchParam')
     if (this.searchResultsService.selectedInputs.length > 0) {
       return this.searchResultsService.selectedInputs.find(item => item.title === this.activeSearchParam.title)
     } else {
