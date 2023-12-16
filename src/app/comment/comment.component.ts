@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core';
 
+interface Vote {
+  user: string
+}
+
 export interface Comment {
   author?: string,
   user?: any,
@@ -10,8 +14,8 @@ export interface Comment {
   raiting?: number,
   advantages?: string,
   disadvantages?: string,
-  likes: number,
-  dislikes: number,
+  likes: Vote[],
+  dislikes: Vote[],
   photo?: string,
   photos?: string[],
   video?: string,

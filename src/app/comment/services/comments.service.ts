@@ -105,7 +105,7 @@ export class CommentsService {
                 return dateB - dateA;
             });
         } else if (sortType === 'Найкорисніші') {
-            this.filteredComments = [...this.filteredComments].sort((a,b) => (b.likes+b.dislikes) - (a.likes+a.dislikes))
+            // this.filteredComments = [...this.filteredComments].sort((a,b) => (b.likes+b.dislikes) - (a.likes+a.dislikes))
         }
     }
 
