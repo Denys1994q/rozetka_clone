@@ -4,42 +4,46 @@
             <mat-icon>add_shopping_cart</mat-icon>
         </div>
         <div class="comment__author">
-            <div class="bold">{{ comment.author }}</div>
+            <div class="bold">{{ comment.author || comment.user.name + ' ' + comment.user.surname || comment.user.displayName  }}</div>
             <div class="fs12">Відгук від покупця</div>
         </div>
-        <time class="comment__date">{{ comment.date | date }}</time>
+        <time class="comment__date">{{ comment.createdAt | date }}</time>
     </div>
     <div class="comment__main">
-        <div class="comment__seller mb16">Продавець: <span>Rozetka</span></div>
         <div class="mb16">
             <app-rating
                 [fixed]="true"
-                [activeIconIndex]="comment.rating"></app-rating>
+                [activeIconIndex]="comment.rating ||  comment.raiting"></app-rating>
         </div>
         <div>
             <div
                 [class.mb16]="comment.advantages || comment.disadvantages"
                 class="comment__text">
-                {{ comment.text }}
+                {{ comment.text || comment.content }}
             </div>
             <div>
                 <ng-container *ngIf="comment.advantages">
-                    <p class="bold mb8">Переваги:</p>
-                    <p class="mb8">{{ comment.advantages }}</p>
+                    <div class="comment__advantages">
+                        <p class="bold mb8">Переваги:</p>
+                        <p class="mb8">{{ comment.advantages }}</p>
+                    </div>
                 </ng-container>
                 <ng-container *ngIf="comment.disadvantages">
-                    <p class="bold mb8">Недоліки:</p>
-                    <p class="mb8">{{ comment.disadvantages }}</p>
+                    <div class="comment__advantages">
+                        <p class="bold mb8">Недоліки:</p>
+                        <p class="mb8">{{ comment.disadvantages }}</p>
+                    </div>
                 </ng-container>
             </div>
         </div>
-        <ng-container *ngIf="comment.photo">
-            <div class="mb8 comment__photo">
-                <img
-                    src="{{ comment.photo }}"
-                    alt="" />
-            </div>
-        </ng-container>
+        <div *ngIf="comment.photo" class="mb8 comment__photo">
+            <img src="{{ comment.photo }}" alt="comment-addedImage" />
+        </div>
+        <ul *ngIf="comment.photos && comment.photos.length > 0" class="mb8 comment__photos comment__photo">
+            <li *ngFor="let image of comment.photos">
+                <img src="{{ image }}" alt="comment-addedImage" />
+            </li>
+        </ul>
         <div class="comment__footer">
             <button class="showMoreBtn">
                 <mat-icon class="showMoreBtn__icon"

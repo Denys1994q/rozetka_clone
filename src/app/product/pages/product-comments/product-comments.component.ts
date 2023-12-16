@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild,  Inject, PLATFORM_ID } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
-import { CommentsService } from '../../services/comments.service';
+import { CommentsService } from 'src/app/comment/services/comments.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
 import { ProductService } from '../../services/product.service';
 import { isPlatformBrowser } from '@angular/common';

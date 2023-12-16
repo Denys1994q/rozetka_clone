@@ -2,7 +2,12 @@ import { Component } from '@angular/core';
 import { ModalService } from '../modal.service';
 import { ProductService } from 'src/app/product/services/product.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
-import { CommentsService } from 'src/app/product/services/comments.service';
+import { CommentsService } from 'src/app/comment/services/comments.service';
+
+type RaitingItem = {
+  label: string,
+  icons: number[]
+}
 
 @Component({
   selector: 'app-filters-modal',
@@ -10,7 +15,7 @@ import { CommentsService } from 'src/app/product/services/comments.service';
   styleUrls: ['./filters-modal.component.sass']
 })
 export class FiltersModalComponent {
-  items: any[] = [
+  items: RaitingItem[] = [
     {label: '1 зірка', icons: [1]},
     {label: '2 зірки', icons: [1,2]},
     {label: '3 зірки', icons: [1,2,3]},

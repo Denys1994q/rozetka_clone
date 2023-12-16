@@ -1,0 +1,79 @@
+<!-- <button (click)="modalService.openDialog('thanks-modal')">Open</button> -->
+<header class="modal-header header" >
+    <h3 class="modal__title" (click)="commentsService.writeComment()">Написати відгук</h3>
+        <button>
+            <mat-icon class="close-icon" (click)="closeDialog()">close</mat-icon>
+        </button>
+</header>
+<mat-dialog-content>
+    <form
+    action="#"
+    #commentForm="ngForm"
+    (ngSubmit)="sendComment(commentForm)">
+        <div class="modal-raiting" #modalHeader>
+            <p class="modal-raiting__title">Оцініть товар</p>
+            <app-rating [fixed]="false" [bigIcons]="true" (raitingValue)="onRaitingValue($event)"></app-rating>
+            <p *ngIf="raitingError" class="error">Необхідно виставити оцінку</p>
+        </div>
+        <div class="modal-input">
+            <app-input-text [label]="'Переваги'" [name]="'Advantages'" (inputValue)="onAdvantagesValue($event)"></app-input-text>
+        </div>
+        <div class="modal-input">
+            <app-input-text [label]="'Недоліки'" [name]="'Disadvantages'" (inputValue)="onDisadvantagesValue($event)"></app-input-text>
+        </div>
+        <div class="modal-input">
+            <app-input-textarea 
+                [label]="'Коментар'" 
+                [name]="'Comment'" 
+                [textareaError]="textareaError" 
+                (textareaValue)="onTextAreaValue($event)">
+            </app-input-textarea>
+        </div>
+        <div class="add-photosWrapper">
+            <div class="add-photos">
+                <div class="add-photos__info">
+                    <div>
+                        <mat-icon>image</mat-icon>
+                    </div> 
+                    <div>
+                        <p class="sign">Додайте фото</p>
+                        <p>Перетягніть файли сюди чи натисніть на кнопку. Додавайте до 10 зображень у форматі .jpg, .gif, .png, розміром файлу до 5 МБ</p>
+                    </div>
+                </div>
+                <div class="add-photos__addFile">
+                    <input type="file" name="file" id="fileInput" style="display: none;" (input)="handleFileChange($event)">
+                    <label for="fileInput" class="btn btn-grey btn-medium">Вибрати файли</label>
+                </div>
+            </div>
+            <ul *ngIf="selectedFileUrls.length > 0" class="add-photos__list">
+                <li class="photo-item" *ngFor="let image of selectedFileUrls; let i = index">
+                    <img src="{{image.url}}" style="transform: rotate({{image.rotate}}deg)" class="add-photos__image" alt="uploaded-photo">
+                    <div class="photo-item__icons">
+                        <mat-icon class="delete-icon" (click)="removePhoto(i)">delete</mat-icon>
+                        <mat-icon class="refresh-icon" (click)="rotatePhoto(i)">refresh</mat-icon>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="comment-btns details">
+            <div *ngIf="authService.userData$ | async as userData">
+                <app-input-text 
+                    [label]="'Ваше ім`я та прізвище'" 
+                    [name]="'UserName'" 
+                    [inpVal]="userData.displayName || (userData.name + ' ' + userData.surname)">
+                </app-input-text>
+            </div>
+            <div *ngIf="authService.userData$ | async as userData">
+                <app-input-text 
+                    [label]="'Електронна пошта'" 
+                    [name]="'UserEmail'"
+                    [inpVal]="userData.email ?? ''">
+                </app-input-text>
+            </div>
+        </div>
+        <div class="comment-btns">
+            <button class="btn btn-grey btn-medium comment-btn" (click)="closeDialog()">Скасувати</button>
+            <button type="submit" class="btn btn-green btn-medium comment-btn">Залишити відгук</button>
+        </div>
+    </form>
+</mat-dialog-content>

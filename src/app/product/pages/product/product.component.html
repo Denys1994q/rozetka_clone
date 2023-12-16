@@ -1,9 +1,7 @@
 <section class="product" *ngIf="ProductService.product; else skeleton">
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="ProductService.category && ProductService.subCategory">
-        <app-breadcrumbs 
-        [data]="[ProductService.category.name, ProductService.subCategory.name]">
-        </app-breadcrumbs>
+        <app-breadcrumbs [data]="[ProductService.category.name, ProductService.subCategory.name]"></app-breadcrumbs>
     </ng-container>
     <!-- назва товару -->
     <h1 class="product__title">

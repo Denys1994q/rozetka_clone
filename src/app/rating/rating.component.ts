@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-rating',
@@ -9,13 +9,16 @@ export class RatingComponent {
   @Input() activeIconIndex: any = null
   @Input() fixed: boolean = false
   @Input() numReviews!: any
+  @Input() bigIcons: boolean = false
+  @Output() raitingValue = new EventEmitter<number>();
 
   icon: string = 'star_border'
-  icons = [1,2,3,4,5]
+  icons = ['Погано', 'Так собі', 'Нормально', 'Добре', 'Чудово']
   clicked!: number 
 
   fillStar(i: number) {
     this.activeIconIndex = i
+    this.raitingValue.emit(this.activeIconIndex);
   }
 
   removeStar() {

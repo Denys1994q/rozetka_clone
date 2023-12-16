@@ -1,4 +1,4 @@
-<app-input-text (inputValue)="showItems($event)" [inpVal]="letter" />
+<app-input-text [placeholder]="'Пошук'" [name]="'search'" [withCloseIcon]="true" (inputValue)="showItems($event)" [inpVal]="letter" />
 <p (click)="setShowBlock()" class="info-item">Алфавітний вказівник</p>
 <div *ngIf="showBlock" class="alphabet-wrapper">
   <span class="info-item info-item-underlined" *ngFor="let item of firstLetters" (click)="letter = item"

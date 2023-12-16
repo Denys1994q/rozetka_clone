@@ -8,6 +8,8 @@ import { ServicesModalComponent } from './services-modal/services-modal.componen
 import { CommentsModalComponent } from './comments-modal/comments-modal.component';
 import { FiltersModalComponent } from './filters-modal/filters-modal.component';
 import { CartModalComponent } from './cart-modal/cart-modal.component';
+import { CreateCommentModalComponent } from './create-comment/create-comment-modal.component';
+import { ThanksModalComponent } from './thanks-modal/thanks-modal.component';
 
 @Injectable({ providedIn: 'root' })
 
@@ -88,6 +90,22 @@ export class ModalService {
                     }
                 }
                 break
+            case 'create-comment': 
+              if (variant == 'create-comment') {
+                modalVariant = CreateCommentModalComponent
+                modalStyles = {
+                  panelClass: 'modal-create-comment',
+                }
+                }
+              break
+            case 'thanks-modal': 
+              if (variant == 'thanks-modal') {
+                modalVariant = ThanksModalComponent
+                modalStyles = {
+                  panelClass: 'thanks-modal',
+                }
+                }
+              break
         }
         this.openedDialog.next(variant)
         const dialogRef = this.dialog.open(modalVariant, modalStyles);

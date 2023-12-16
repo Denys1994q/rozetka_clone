@@ -1,22 +1,16 @@
 <div>
-    <div
-        class="comments__item"
-        *ngIf="commentsWithPhotoVideo.length > 0">
+    <div class="comments__item" *ngIf="commentsWithPhotoVideo.length > 0">
         <div class="comment__header comment__header-title">
             <p class="bold">Фотографії та відео покупців</p>
         </div>
         <div class="comment__main comment__sliderWrapper">
-            <ul
-                #sliderList
-                class="comment__sliderList">
-                <li
-                    #sliderItem
-                    *ngFor="let it of commentsWithPhotoVideo; let i = index"
+            <ul #sliderList class="comment__sliderList">
+                <li 
+                    #sliderItem 
+                    *ngFor="let comment of commentsWithPhotoVideo; let i = index"
                     class="comment__sliderItem"
                     (click)="openDialog('comments', i)">
-                    <img
-                        src="{{ it.photo }}"
-                        alt="" />
+                    <img src="{{ comment.photo }}" alt="comment-photo" />
                 </li>
             </ul>
             <button
@@ -33,7 +27,7 @@
         </p>
         <button
             class="btn btn-medium btn-grey comment__leaveComment-btn"
-            (click)="openDialog('login')">
+            (click)="commentsService.writeComment()">
             Написати відгук
         </button>
     </div>

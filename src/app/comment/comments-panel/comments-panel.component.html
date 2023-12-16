@@ -1,7 +1,7 @@
 <div class="comments" *ngIf="!withFilters">
     <div class="comments__header">
-        <h3>Відгуки покупців <span>{{ comments.length }}</span></h3>
-        <button class="btn btn-grey btn-medium btn-send-comment" (click)="openDialog('login')">Написати відгук</button>
+        <h3>Відгуки покупців <span>{{ comments && comments.length }}</span></h3>
+        <button class="btn btn-grey btn-medium" (click)="commentsService.writeComment()">Написати відгук</button>
     </div>
     <ul class="comments__list">
         <li *ngFor="let comment of comments">
@@ -28,7 +28,7 @@
             <app-select
                 [name]="'filters'"
                 [options]="['З фото і відео', 'За датою', 'Найкорисніші']"
-                [activeOption]="CommentsService.sortType"
+                [activeOption]="commentsService.sortType"
                 (selectChangeEvent)="onSelectChange($event)">
             </app-select>
         </div>

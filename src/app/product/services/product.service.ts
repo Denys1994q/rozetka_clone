@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/core/services/api.service';
 import { ProductInterface } from 'src/app/core/services/api-response-types';
-import { CommentsService } from './comments.service';
+import { CommentsService } from 'src/app/comment/services/comments.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -110,7 +110,7 @@ export class ProductService {
     setProductRaiting() {
       let sum = 0
       this.product.reviews_data.map((review: any) => {
-        sum += review.rating
+        sum += review.rating || review.raiting
         this.raiting = sum / this.product.reviews_data.length
       })
     }

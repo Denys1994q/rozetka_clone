@@ -1,17 +1,16 @@
 <div class="input-wrapper">
-  <input
-    type="text"
-    name="searchInput"
-    [(ngModel)]="inpVal"
-    class="input"
-    placeholder="Пошук"
-    (input)="getValue()"
-  />
-  <mat-icon
-    (click)="resetValue()"
-    *ngIf="inpVal.length > 0"
-    class="input-close"
-  >
-    close
-  </mat-icon>
+    <label *ngIf="label" [for]="name"  class="input-label">{{label}}</label>
+    <input
+        type="text"
+        [name]="name"
+        [(ngModel)]="inpVal"
+        class="input"
+        placeholder="{{placeholder ? placeholder : ' '}}"
+        (input)="getValue()"/>
+    <mat-icon
+        (click)="resetValue()"
+        *ngIf="inpVal.length > 0 && withCloseIcon"
+        class="input-close" >
+        close
+    </mat-icon>
 </div>

@@ -3,7 +3,7 @@ import { Comment } from '../comment.component';
 import { ModalService } from 'src/app/modals/modal.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { ProductService } from '../../product/services/product.service';
-import { CommentsService } from '../../product/services/comments.service';
+import { CommentsService } from '../services/comments.service';
 
 @Component({
   selector: 'app-comments-panel',
@@ -12,26 +12,28 @@ import { CommentsService } from '../../product/services/comments.service';
 })
 export class CommentsPanelComponent {
 
-  constructor(
-    private modalService: ModalService, 
-    public SearchResultsService: SearchResultsService, 
-    public ProductService: ProductService,
-    public CommentsService: CommentsService) {}
+    constructor(
+        private modalService: ModalService, 
+        public SearchResultsService: SearchResultsService, 
+        public ProductService: ProductService,
+        public commentsService: CommentsService) {}
 
-  @Input() comments: Comment[] = []
-  @Input() withFilters: boolean = false
-  @Input() link!: any 
+    @Input() comments: Comment[] | null = []
+    @Input() withFilters: boolean = false
+    @Input() link!: any 
 
-  ngOnInit() {
-    this.SearchResultsService.removeAll()
-  }
+    ngOnInit() {
+        this.SearchResultsService.removeAll()
+    }
 
-  openDialog(type: string) {
-    this.modalService.openDialog(type)
-  }
+    openDialog(type: string) {
+        this.modalService.openDialog(type)
+    }
 
-  onSelectChange(sortType: string) {
-    this.CommentsService.sortProdComments(sortType)
-  }
+    onSelectChange(sortType: string) {
+        this.commentsService.sortProdComments(sortType)
+    }
+
+
   
 }

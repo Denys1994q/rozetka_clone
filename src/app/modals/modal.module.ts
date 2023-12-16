@@ -20,6 +20,9 @@ import { RouterModule } from '@angular/router';
 import { CounterComponent } from './counter/counter.component';
 import { CommentModule } from '../comment/comment.module';
 import { InputsModule } from '../inputs/inputs.module';
+import { CreateCommentModalComponent } from './create-comment/create-comment-modal.component';
+import { RatingModule } from '../rating/rating.module';
+import { ThanksModalComponent } from './thanks-modal/thanks-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,9 @@ import { InputsModule } from '../inputs/inputs.module';
     passBigLettersValidatorDirective,
     emailPhoneValidatorDirective,
     ErrorComponent,
-    CounterComponent
+    CounterComponent,
+    CreateCommentModalComponent,
+    ThanksModalComponent
   ],
   imports: [
     CommonModule,
@@ -46,6 +51,7 @@ import { InputsModule } from '../inputs/inputs.module';
     NgxMaskPipe,
     CarouselModule,
     CommentModule,
+    RatingModule,
     MatDialogModule, 
   ],
   providers: [provideNgxMask()],

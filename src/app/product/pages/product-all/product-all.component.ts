@@ -62,7 +62,7 @@ export class ProductAllComponent {
                     behavior: "smooth",
                     block: "start",
                 });
-                } else if (block === 'characteristicsAndReviewsBlock') {
+            } else if (block === 'characteristicsAndReviewsBlock') {
                 this.characteristicsAndReviewsBlock.nativeElement.scrollIntoView({
                     behavior: "smooth",
                 });

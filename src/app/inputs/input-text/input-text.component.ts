@@ -7,6 +7,10 @@ import { Component, Input, Output, EventEmitter, SimpleChanges} from '@angular/c
 })
 export class InputTextComponent {
   @Input() inpVal: string = ''
+  @Input() placeholder: string = ''
+  @Input() label: string = ''
+  @Input() name: string = ''
+  @Input() withCloseIcon: boolean = false
   @Output() inputValue = new EventEmitter<string>();
 
   resetValue() {
