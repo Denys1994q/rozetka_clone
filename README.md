@@ -1,6 +1,10 @@
 ## Description
 
-This application is a replica of the well-known Ukrainian online marketplace, Rozetka. The front-end, developed using Angular, is seamlessly integrated with a custom Express backend. Data is stored in a MongoDB database, encompassing six categories and a catalog of 142 products. The application boasts a self-developed carousel component and various types of modal dialogs to facilitate user interactions and improve overall usability. The design of components is based on Angular Material Design, providing a modern and user-friendly interface. The application has both mobile and desktop versions that adhere to the design of the Rozetka website.
+This application is a replica of the well-known Ukrainian online marketplace, Rozetka. The front-end, developed using Angular, is seamlessly integrated with a custom Express backend. Data is stored in a MongoDB database, encompassing six categories and a catalog of 142 products.
+
+The application boasts a self-developed carousel component and various types of modal dialogs to facilitate user interactions and improve overall usability. The design of components is based on Angular Material Design, providing a modern and user-friendly interface.
+
+The application has both mobile and desktop versions that adhere to the design of the Rozetka website.
 
 ## Key Features
 
