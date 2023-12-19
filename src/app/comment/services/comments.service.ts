@@ -135,7 +135,12 @@ export class CommentsService {
                 return dateB - dateA;
             });
         } else if (sortType === 'Найкорисніші') {
-            // this.filteredComments = [...this.filteredComments].sort((a,b) => (b.likes+b.dislikes) - (a.likes+a.dislikes))
+            this.filteredComments = [...this.filteredComments].sort(
+                (commentA, commentB) => {
+                    const scoreA = commentA.likes.length - commentA.dislikes.length;
+                    const scoreB = commentB.likes.length - commentB.dislikes.length;
+                    return scoreB - scoreA;
+            })
         }
     }
 
