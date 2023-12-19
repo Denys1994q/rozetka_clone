@@ -22,18 +22,14 @@
                 {{ comment.text || comment.content }}
             </div>
             <div>
-                <ng-container *ngIf="comment.advantages">
-                    <div class="comment__advantages">
-                        <p class="bold mb8">Переваги:</p>
-                        <p class="mb8">{{ comment.advantages }}</p>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="comment.disadvantages">
-                    <div class="comment__advantages">
-                        <p class="bold mb8">Недоліки:</p>
-                        <p class="mb8">{{ comment.disadvantages }}</p>
-                    </div>
-                </ng-container>
+                <div *ngIf="comment.advantages" class="comment__advantagesWrapper">
+                    <p class="comment__advantages">Переваги:</p>
+                    <p>{{ comment.advantages }}</p>
+                </div>
+                <div *ngIf="comment.disadvantages" class="comment__advantagesWrapper">
+                    <p class="comment__advantages">Недоліки:</p>
+                    <p>{{ comment.disadvantages }}</p>
+                </div>
             </div>
         </div>
         <div *ngIf="comment.photo" class="mb8 comment__photo">

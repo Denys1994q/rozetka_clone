@@ -255,7 +255,12 @@ export class SearchResultsService {
         this.sortType = sortType
         if (sortType === 'За рейтингом') {
             const productsWithAvgRating = this.currentSubcategory.products.map((product: ProductInterface) => {
-                const totalRatings = product.reviews_data.reduce((sum, review) => sum + review.rating, 0);
+                const totalRatings = product.reviews_data.reduce((sum, review) => {
+                    if (review) {
+                        return sum + (review.rating !== undefined && review.rating !== null ? review.rating : review.raiting || 0);
+                    }
+                        return sum;
+                  }, 0);
                 const avgRating = totalRatings / product.reviews_data.length;
                 return { ...product, avgRating };
             });

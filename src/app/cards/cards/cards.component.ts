@@ -106,7 +106,7 @@ export class CardsComponent {
         let res;
         if (prod.reviews_data && prod.reviews_data.length > 0) {
             prod.reviews_data.map((review: any) => {
-                sum += review.rating
+                sum += review.rating || review.raiting
                 res = sum / prod.reviews_data.length
             })
         }

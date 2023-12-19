@@ -11,7 +11,8 @@ interface Review {
     author: string,
     date: Date,
     text: string,
-    rating: number,
+    rating?: number,
+    raiting?: number,
     likes: number,
     dislikes: number,
     photo: string
