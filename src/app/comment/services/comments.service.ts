@@ -52,6 +52,36 @@ export class CommentsService {
         }
     }
 
+    addLike(productId: string, commentId: string):Observable<{message: string, likes: number, dislikes: number}> {
+        if (typeof window !== 'undefined' && localStorage) {
+            const apiUrl = `${this.backendUrl}/products/${productId}/comments/${commentId}/like` 
+            const token = localStorage.getItem('authToken');
+            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+            const options = {
+                headers,
+                withCredentials: true
+            };
+            return this.http.post<{message: string, likes: number, dislikes: number}>(apiUrl, null, options);
+        } else {
+            return throwError('Local storage is not available.');
+        }
+    }
+
+    addDislike(productId: string, commentId: string):Observable<{message: string, dislikes: number, likes: number}> {
+        if (typeof window !== 'undefined' && localStorage) {
+            const apiUrl = `${this.backendUrl}/products/${productId}/comments/${commentId}/dislike` 
+            const token = localStorage.getItem('authToken');
+            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+            const options = {
+                headers,
+                withCredentials: true
+            };
+            return this.http.post<{message: string, dislikes: number, likes: number}>(apiUrl, null, options);
+        } else {
+            return throwError('Local storage is not available.');
+        }
+    }
+
     uploadPhoto(file: File) {
         const apiUrl = `${this.backendUrl}/uploads` 
         const token = localStorage.getItem('authToken');

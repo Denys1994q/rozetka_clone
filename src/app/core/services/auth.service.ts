@@ -5,7 +5,7 @@ import { tap, map} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 
-interface UserData {
+export interface UserData {
     name?: string;
     surname?: string;
     middleName?: string;
@@ -14,7 +14,8 @@ interface UserData {
     phone?: string;
     displayName?: string;
     dateOfBirth?: any,
-    wishlist?: any[]
+    wishlist?: any[],
+    _id?: string
 }
 
 interface UserResponse extends UserData {

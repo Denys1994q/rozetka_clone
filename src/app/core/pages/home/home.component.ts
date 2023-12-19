@@ -71,6 +71,7 @@ export class HomeComponent implements AfterViewInit {
             })
         }
         else {
+            window.scrollTo({top: 0, behavior: "smooth"});
             const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
             if (cachedCategories) {
                 this.productService.setAllCategories(cachedCategories)

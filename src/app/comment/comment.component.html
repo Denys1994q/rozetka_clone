@@ -53,16 +53,22 @@
             </button>
             <div class="comment__votes">
                 <div class="flex-center">
-                    <mat-icon class="icon-like flex-center">
+                    <mat-icon 
+                        (click)="addLike(comment._id)" 
+                        class="icon-like flex-center"
+                        [class.icon-like--active]="isLiked">
                         thumb_up_off_alt
                     </mat-icon>
-                    <span class="fs12">{{ comment.likes.length }}</span>
+                    <span class="likes-number">{{ totalLikes }}</span>
                 </div>
                 <div class="flex-center">
-                    <mat-icon class="icon-dislike flex-center">
+                    <mat-icon 
+                        (click)="addDislike(comment._id)"
+                        class="icon-dislike flex-center"
+                        [class.icon-dislike--active]="isDisliked">
                         thumb_down_off_alt
                     </mat-icon>
-                    <span class="fs12">{{ comment.dislikes.length }}</span>
+                    <span class="likes-number">{{ totalDislikes }}</span>
                 </div>
             </div>
         </div>
