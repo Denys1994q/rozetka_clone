@@ -220,13 +220,7 @@
     <div class="comments info__desc">
         <app-comments-panel
             [comments]="ProductService.product.reviews_data"
-            [link]="
-                '/' +
-                ProductService.product.engName +
-                '/' +
-                ProductService.product._id +
-                '/comments'
-            ">
+            [link]="'/' + ProductService.product.engName + '/' + ProductService.product._id + '/comments'" >
         </app-comments-panel>
     </div>
 </div>

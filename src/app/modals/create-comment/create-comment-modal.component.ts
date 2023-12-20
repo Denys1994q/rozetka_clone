@@ -56,6 +56,7 @@ export class CreateCommentModalComponent {
             next: response => {
                 this.modalService.closeDialog()
                 this.modalService.openDialog('thanks-modal')
+                this.productService.getCurrentProduct(prodId)
             },
             error: error => console.log(error)
         })

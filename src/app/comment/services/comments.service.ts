@@ -98,6 +98,8 @@ export class CommentsService {
     setComments(comments: any) {
         this.filteredComments = null
         this.comments = comments
+        
+        this.filterProdComments()
     }
 
     filterProdComments(selectedRaiting?: number) {
@@ -110,7 +112,7 @@ export class CommentsService {
             // скидаємо значення selectedRaitingIndex, яке в іншому сервісі знаходиться 
             this.SearchResultsService.resetRaitingValue()
         }
-      }
+    }
   
     sortProdComments(sortType: string) {
         if (!this.filteredComments) {
