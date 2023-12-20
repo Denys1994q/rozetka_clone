@@ -26,28 +26,28 @@ export class ApiService {
         return this.http.get<ProductInterface>(apiUrl);
     }
 
-    getAllProducts(): Observable<any> {
+    getAllProducts(): Observable<ProductInterface[]> {
         const apiUrl = `${this.backendUrl}/products` 
-        return this.http.get<any>(apiUrl);
+        return this.http.get<ProductInterface[]>(apiUrl);
     }
 
-    getSomeProducts(): Observable<any> {
+    getSomeProducts(): Observable<ProductInterface[]> {
         const apiUrl = `${this.backendUrl}/someProducts` 
-        return this.http.get<any>(apiUrl);
+        return this.http.get<ProductInterface[]>(apiUrl);
     }
 
-    getNewProducts(): Observable<any> {
+    getNewProducts(): Observable<ProductInterface[]> {
         const apiUrl = `${this.backendUrl}/newProducts` 
-        return this.http.get<any>(apiUrl);
+        return this.http.get<ProductInterface[]>(apiUrl);
     }
 
-    getMoreProducts(): Observable<any> {
+    getMoreProducts(): Observable<ProductInterface[]> {
         const apiUrl = `${this.backendUrl}/moreProducts` 
-        return this.http.get<any>(apiUrl);
+        return this.http.get<ProductInterface[]>(apiUrl);
     }
 
-    getRecommendedProducts(): Observable<any> {
+    getRecommendedProducts(): Observable<ProductInterface[]> {
         const apiUrl = `${this.backendUrl}/recommendedProducts` 
-        return this.http.get<any>(apiUrl);
+        return this.http.get<ProductInterface[]>(apiUrl);
     }
 }

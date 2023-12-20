@@ -37,31 +37,16 @@ export class ProductService {
       private apiService: ApiService) 
     {}
 
-    getNewProducts() {
-      this.apiService.getNewProducts().subscribe({
-        next: (response) => {
-          this.newProds = response
-        },
-        error: err => console.log(err)
-      })
+    setNewProducts(data: ProductInterface[]) {
+      this.newProds = data
     }
 
-    getMoreProducts() {
-      this.apiService.getMoreProducts().subscribe({
-        next: (response) => {
-          this.moreProds = response
-        },
-        error: err => console.log(err)
-      })
+    setMoreProducts(data: ProductInterface[]) {
+      this.moreProds = data
     }
 
-    getRecommendedProducts() {
-      this.apiService.getRecommendedProducts().subscribe({
-        next: (response) => {
-          this.recommendedProds = response
-        },
-        error: err => console.log(err)
-      })
+    setRecommendedProducts(data: ProductInterface[]) {
+      this.recommendedProds = data
     }
 
     getCurrentProduct(id: string, urlId?: any) {

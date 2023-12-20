@@ -14,7 +14,10 @@ import { makeStateKey, TransferState } from '@angular/core';
 })
 export class HomeComponent implements AfterViewInit {
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
-    error: boolean = false
+    allCategoriesError: boolean = false
+    newProductsError: boolean = false
+    moreProductsError: boolean = false
+    recommendedProductsError: boolean = false
 
     constructor(
         private transferState: TransferState,
@@ -42,11 +45,20 @@ export class HomeComponent implements AfterViewInit {
         entries.forEach((entry: any) => {
             if (entry.isIntersecting) {
             if (entry.target.classList.contains('newProds')) {
-                this.productService.getNewProducts()
+                this.apiService.getNewProducts().subscribe({
+                    next: response => this.productService.setNewProducts(response),
+                    error: err => this.newProductsError = true
+                })
             } else if (entry.target.classList.contains('moreProds')) {
-                this.productService.getMoreProducts()
+                this.apiService.getMoreProducts().subscribe({
+                    next: response => this.productService.setMoreProducts(response),
+                    error: err => this.moreProductsError = true
+                  })
             } else if (entry.target.classList.contains('recommendedProds')) {
-                this.productService.getRecommendedProducts()
+                this.apiService.getRecommendedProducts().subscribe({
+                    next: response => this.productService.setRecommendedProducts(response),
+                    error: err => this.recommendedProductsError = true
+                  })
             }
             observer.unobserve(entry.target); 
             }
@@ -68,7 +80,7 @@ export class HomeComponent implements AfterViewInit {
                     this.productService.setAllCategories(data)
                     this.transferState.set(this.ALL_CATEGORIES_KEY, data)
                 },
-                error: error => this.error = true
+                error: error => this.allCategoriesError = true
             })
         }
         else {
@@ -79,7 +91,7 @@ export class HomeComponent implements AfterViewInit {
             } else {
                 this.apiService.getAllCategories().subscribe({
                     next: data => this.productService.setAllCategories(data),
-                    error: err => this.error = true
+                    error: err => this.allCategoriesError = true
                   })
             }
             this.cartService.getCart()
