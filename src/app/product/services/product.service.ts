@@ -139,13 +139,6 @@ export class ProductService {
       this.allCategories = JSON.parse(JSON.stringify(data)) 
     }
 
-    getAllCategories() {
-      this.apiService.getAllCategories().subscribe({
-        next: (data) => this.allCategories = data,
-        error: (err) => console.log(err)
-      })
-    }
-
     setCategory(category: any) {
       this.category = category
     }

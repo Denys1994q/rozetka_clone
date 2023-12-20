@@ -11,13 +11,8 @@ export class AsideComponent {
     @Input() data!: any[]
     @Input() full!: boolean
     @Input() cabinet!: boolean
+    @Input() error!: boolean
 
-    constructor(
-        public modalService: ModalService,
-        public authService: AuthService
-    ) {}
-
-    ngOnInit() {
-    }
+    constructor(public modalService: ModalService, public authService: AuthService) {}
 
 }

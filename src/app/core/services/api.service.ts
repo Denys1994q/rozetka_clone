@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductInterface } from './api-response-types';
-import { Router, Route } from '@angular/router';
+import { ProductInterface } from './api-response-types'
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +9,7 @@ import { Router, Route } from '@angular/router';
 export class ApiService {
     private backendUrl = 'https://evergreen-purrfect-agenda.glitch.me';
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient) { }
 
     getAllCategories(): Observable<any> {
         const apiUrl = `${this.backendUrl}/categories` 

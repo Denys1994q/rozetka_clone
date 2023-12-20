@@ -14,6 +14,7 @@ import { makeStateKey, TransferState } from '@angular/core';
 })
 export class HomeComponent implements AfterViewInit {
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
+    error: boolean = false
 
     constructor(
         private transferState: TransferState,
@@ -67,7 +68,7 @@ export class HomeComponent implements AfterViewInit {
                     this.productService.setAllCategories(data)
                     this.transferState.set(this.ALL_CATEGORIES_KEY, data)
                 },
-                error: error => console.log(error)
+                error: error => this.error = true
             })
         }
         else {
@@ -76,7 +77,10 @@ export class HomeComponent implements AfterViewInit {
             if (cachedCategories) {
                 this.productService.setAllCategories(cachedCategories)
             } else {
-                this.productService.getAllCategories()
+                this.apiService.getAllCategories().subscribe({
+                    next: data => this.productService.setAllCategories(data),
+                    error: err => this.error = true
+                  })
             }
             this.cartService.getCart()
         }

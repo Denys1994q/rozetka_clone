@@ -1,6 +1,6 @@
 <aside class="products__catalog" *ngIf="full">
     <!-- список категорій -->
-    <ng-container *ngIf="data && data.length > 0; else skeleton">
+    <ng-container *ngIf="data && data.length > 0; else skeletonOrError">
         <ul class="categories__list">
             <li
                 class="categories__item categories__item-basic"
@@ -12,8 +12,14 @@
             </li>
         </ul>
     </ng-container>
-    <ng-template #skeleton>
-        <app-skeleton [variant]="'categories'"></app-skeleton>
+    <ng-template #skeletonOrError>
+        <div *ngIf="error; else skeleton" class="errorWrapper">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <h4 class="error-text">Вибачте, сервіс тимчасово не працює</h4>
+        </div>
+        <ng-template #skeleton>
+            <app-skeleton [variant]="'categories'"></app-skeleton>
+        </ng-template>
     </ng-template>
     <!-- кнопка "ласкаво просимо" -->
     <div
