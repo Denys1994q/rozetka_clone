@@ -15,6 +15,7 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CardsModule } from '../cards/cards.module';
 import { PriceModule } from '../price/price.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { PriceModule } from '../price/price.module';
   ],
   imports: [
     HttpClientModule,
+    RouterModule,
     InputsModule,
     CarouselModule,
     ProductModule,

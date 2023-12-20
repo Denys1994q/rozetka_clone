@@ -5,10 +5,10 @@
     <!-- бокова панель для авторизації -->
     <div *ngSwitchCase="'auth'">
         <div class="side-menu__header">
-            <a href="#">
+            <a routerLink="/">
                 <img
                     class="side-menu__logo"
-                    src="../../../../assets/rozetka.svg"
+                    src="https://res.cloudinary.com/dw60kllwn/image/upload/v1703075367/rozetka_p4bjxl.svg"
                     alt="rozetka-logo" />
             </a>
             <button>
@@ -22,12 +22,12 @@
         <!-- інфопанель користувача -->
         <app-user-infopanel></app-user-infopanel>
         <!-- банер -->
-        <a class="side-menu__banner banner">
+        <a href="https://savelife.in.ua/" target="_blank" class="side-menu__banner banner">
             <img
                 class="banner__icon"
-                src="../../../../assets/war_icon.svg"
+                src="https://res.cloudinary.com/dw60kllwn/image/upload/v1703075301/war_icon_kzfkcl.svg"
                 alt="Повернись_живим_лого" />
-            Повернись живим
+                Повернись живим
             <mat-icon>chevron_right</mat-icon>
         </a>
         <ul class="side-menu__list">
@@ -46,7 +46,7 @@
                 <div class="side-menu__item-innerWrapper">
                     <button class="textBtn">
                         <mat-icon class="textBtn__icon">help_outline</mat-icon>
-                        Довідковий центр
+                        <a href="https://help.rozetka.com.ua/" target="_blank">Довідковий центр</a>
                     </button>
                 </div>
             </li>
@@ -62,21 +62,41 @@
         <div class="side-menu__infoBlock infoBlock">
             <p class="infoBlock__title">Інформація про компанію</p>
             <ul class="infoBlock__list">
-                <li class="infoBlock__item">Про нас</li>
-                <li class="infoBlock__item">Умови використання сайту</li>
-                <li class="infoBlock__item">Вакансії</li>
-                <li class="infoBlock__item">Контакти</li>
-                <li class="infoBlock__item">Усі категорії</li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/pages/about/" target="_blank">Про нас</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/pages/legal_terms/" target="_blank">Умови використання сайту</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/careers/" target="_blank">Вакансії</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/contacts/" target="_blank">Контакти</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/all-categories-goods/" target="_blank">Усі категорії</a>
+                </li>
             </ul>
         </div>
         <div class="side-menu__infoBlock infoBlock">
             <p class="infoBlock__title">Допомога</p>
             <ul class="infoBlock__list">
-                <li class="infoBlock__item">Доставка та оплата</li>
-                <li class="infoBlock__item">Кредит</li>
-                <li class="infoBlock__item">Гарантія</li>
-                <li class="infoBlock__item">Повернення товару</li>
-                <li class="infoBlock__item">Сервісні центри</li>
+                <li class="infoBlock__item">
+                    <a href="https://help.rozetka.com.ua/p/97-dostavka/" target="_blank">Доставка та оплата</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/pages/credit/" target="_blank">Кредит</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://help.rozetka.com.ua/p/111-harantiya-i-povernennya-tovaru/" target="_blank">Гарантія</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://help.rozetka.com.ua/p/102-povernennya-tovaru/" target="_blank">Повернення товару</a>
+                </li>
+                <li class="infoBlock__item">
+                    <a href="https://rozetka.com.ua/ua/service-centers/" target="_blank">Сервісні центри</a>
+                </li>
             </ul>
         </div>
         <div class="side-menu__infoBlock infoBlock">
