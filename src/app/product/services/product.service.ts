@@ -6,31 +6,23 @@ import { CommentsService } from 'src/app/comment/services/comments.service';
 @Injectable({ providedIn: 'root' })
 
 export class ProductService {
-    // all categories
     allCategories!: any
-    // 
     tab: number = 0
     tabs: any = []
     category!: any 
     subCategory!: any
-    // весь продукт 
     product!: any
-    // ціна 
     price!: any
-    // статус продажу
     sellStatus!: any
-    // продавець
     seller!: any
-    // рейтинг
     raiting: number = 0
-    // нові, улюблені, рекомендовані продукти
     newProds: ProductInterface[] = []
     moreProds: ProductInterface[] = []
     recommendedProds: ProductInterface[] = []
-    // знайдені продукти
     foundedProducts: any = []
-    // 
     loading: boolean = false
+    getOneProductLoading: boolean = false
+    getOneProductError: boolean = false
 
     constructor(
       private CommentsService: CommentsService, 
@@ -50,6 +42,7 @@ export class ProductService {
     }
 
     getCurrentProduct(id: string, urlId?: any) {
+      this.getOneProductLoading = true
       this.apiService.getOneProduct(id).subscribe({
         next: (response) => {
           this.product = response
@@ -73,8 +66,12 @@ export class ProductService {
           }
           this.setProductRaiting()
           this.checkActiveTab(urlId)
+          this.getOneProductLoading = false
         },
-        error: err => console.log(err)
+        error: err => {
+          this.getOneProductLoading = false
+          this.getOneProductError = true
+        }
       })
     }
 

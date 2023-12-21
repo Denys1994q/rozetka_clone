@@ -19,6 +19,7 @@ import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 import { SkeletonModule } from '../skeleton/skeleton.module';
 import { PriceModule } from '../price/price.module';
 import { CardsModule } from '../cards/cards.module';
+import { ErrorModule } from '../error/error.module';
 // import { RouterModule } from '@angular/router';
 
 // const routes = [
@@ -58,7 +59,8 @@ import { CardsModule } from '../cards/cards.module';
     MatSnackBarModule,
     SkeletonModule,
     PriceModule,
-    CardsModule
+    CardsModule,
+    ErrorModule
   ], 
   exports: [
     CharacteristicsBlockComponent,

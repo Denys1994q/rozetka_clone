@@ -1,4 +1,10 @@
-<section class="product" *ngIf="ProductService.product; else skeleton">
+<div *ngIf="ProductService.getOneProductLoading">
+    <app-skeleton [variant]="'category'"></app-skeleton>
+</div>
+<div *ngIf="ProductService.getOneProductError">
+    <app-error></app-error>
+</div>
+<section *ngIf="ProductService.product" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="ProductService.category && ProductService.subCategory">
         <app-breadcrumbs [data]="[ProductService.category.name, ProductService.subCategory.name]"></app-breadcrumbs>
@@ -132,6 +138,3 @@
         </div>
     </ng-template>
 </section>
-<ng-template #skeleton>
-    <app-skeleton [variant]="'category'"></app-skeleton>
-</ng-template>
