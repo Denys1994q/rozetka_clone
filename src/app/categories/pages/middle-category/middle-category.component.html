@@ -1,4 +1,10 @@
-<div class="subcategory" *ngIf="SearchResultsService.currentCategory && SearchResultsService.currentSubcategory; else skeletonOrError" >
+<div *ngIf="SearchResultsService.getAllCategoriesLoading">
+    <app-skeleton [variant]="'search'"></app-skeleton> 
+</div>
+<div *ngIf="SearchResultsService.getAllCategoriesError">
+    <app-error></app-error>
+</div>
+<div class="subcategory" *ngIf="SearchResultsService.currentCategory && SearchResultsService.currentSubcategory" >
         <!-- breadcrumbs -->
         <app-breadcrumbs
             [data]="[SearchResultsService.currentCategory.name, SearchResultsService.currentSubcategory.name]">
@@ -71,11 +77,11 @@
             </section>
         </div>
 </div>
-<ng-template #skeletonOrError>
+<!-- <ng-template #skeletonOrError>
     <div *ngIf="SearchResultsService.getAllCategoriesLoading">
         <app-skeleton [variant]="'search'"></app-skeleton> 
     </div>
     <div *ngIf="SearchResultsService.getAllCategoriesError">
         <app-error></app-error>
     </div>
-</ng-template>
+</ng-template> -->

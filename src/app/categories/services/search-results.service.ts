@@ -92,7 +92,6 @@ export class SearchResultsService {
         this.getAllCategoriesLoading = true
         this.apiService.getAllCategories().subscribe({
             next: categoriesData => {
-                this.getAllCategoriesLoading = false
                 categoriesData.map((category: any) => {
                     category.subCategories.find((subcategory: any) => {
                       if (subcategory.id === id) {
@@ -113,6 +112,7 @@ export class SearchResultsService {
                                     this.addInput(this.baseInput)
                                     this.createSearchParams();
                                 }
+                                this.getAllCategoriesLoading = false
                             },
                             error: err => console.log(err)
                         });
@@ -121,7 +121,6 @@ export class SearchResultsService {
                 })
             },
             error: err => {
-                console.log('error')
                 this.getAllCategoriesLoading = false
                 this.getAllCategoriesError = true
             } 
