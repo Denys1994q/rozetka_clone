@@ -10,6 +10,8 @@ import { ApiService } from 'src/app/core/services/api.service';
 })
 export class MainCategoryComponent implements OnInit {
   category!: any 
+  getOneCategoryLoading: boolean = false
+  getOneCategoryError: boolean = false
   
   constructor(
     public router: Router, 
@@ -25,14 +27,20 @@ export class MainCategoryComponent implements OnInit {
     }
 
     this.route.url.subscribe(route => {
-      const lastLetterBeforeId = this.router.url.lastIndexOf('/')
-      const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
-
-      this.apiService.getOneCategory(id).subscribe({
-        next: (data) => this.category = data,
-        error: (err) => console.log(err)
-      })
-    })
+        const lastLetterBeforeId = this.router.url.lastIndexOf('/')
+        const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
+        this.getOneCategoryLoading = true
+        this.apiService.getOneCategory(id).subscribe({
+            next: (data) => {
+                this.getOneCategoryLoading = false
+                this.category = data
+            },
+            error: (err) => {
+                this.getOneCategoryLoading = false
+                this.getOneCategoryError = true
+            }
+        })
+        })
   }
 
   getCategories() {

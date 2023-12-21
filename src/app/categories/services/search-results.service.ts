@@ -8,7 +8,6 @@ import { forkJoin, Observable } from 'rxjs';
 
 export class SearchResultsService {
     public resetPriceValue = new Subject();
-    productsLoading: boolean = false
     // всі можливі параметри пошуку на основі вибраних товарів
     searchParams: any = []
     // обрані параметри пошуку і їх опції 
@@ -31,8 +30,9 @@ export class SearchResultsService {
     sortType: string = this.optionsToSort[0]
     // base input
     baseInput!: string 
-    // 
     selectedRaitingIndex!: any
+    getAllCategoriesLoading: boolean = false
+    getAllCategoriesError: boolean = false
 
     constructor(private apiService: ApiService) {}
 
@@ -88,10 +88,11 @@ export class SearchResultsService {
     }
 
     getCurrentCategory(id: string) {
-        this.productsLoading = true
         this.searchParams = []
+        this.getAllCategoriesLoading = true
         this.apiService.getAllCategories().subscribe({
             next: categoriesData => {
+                this.getAllCategoriesLoading = false
                 categoriesData.map((category: any) => {
                     category.subCategories.find((subcategory: any) => {
                       if (subcategory.id === id) {
@@ -112,7 +113,6 @@ export class SearchResultsService {
                                     this.addInput(this.baseInput)
                                     this.createSearchParams();
                                 }
-                                this.productsLoading = false
                             },
                             error: err => console.log(err)
                         });
@@ -120,7 +120,11 @@ export class SearchResultsService {
                     })
                 })
             },
-            error: err => console.log(err)
+            error: err => {
+                console.log('error')
+                this.getAllCategoriesLoading = false
+                this.getAllCategoriesError = true
+            } 
         })
     }
 

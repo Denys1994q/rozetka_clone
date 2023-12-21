@@ -1,4 +1,4 @@
-<section class="category" *ngIf="category; else skeleton">
+<section class="category" *ngIf="category">
     <!-- breadcrumbs -->
     <app-breadcrumbs [data]="[category.name]"></app-breadcrumbs>
     <!-- назва категорії -->
@@ -37,6 +37,10 @@
     </ul>
 </section>
 <!-- скелетон -->
-<ng-template #skeleton>
+<div *ngIf="getOneCategoryLoading">
     <app-skeleton [variant]="'category'"></app-skeleton>
-</ng-template>
+</div>
+<!-- помилка -->
+<div *ngIf="getOneCategoryError">
+    <app-error></app-error>
+</div>

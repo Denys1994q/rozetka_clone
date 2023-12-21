@@ -50,5 +50,10 @@ export class MiddleCategoryComponent {
         window.scrollTo({top: 0, behavior: "smooth"});
     }
 
+    ngOnDestroy() {
+        this.SearchResultsService.currentCategory = null
+        this.SearchResultsService.currentSubcategory = null
+    }
+
 }
 

@@ -13,6 +13,7 @@ import { CardsModule } from 'src/app/cards/cards.module';
 import { SearchPanelComponent } from '../../components/search-panel/search-panel.component';
 import { PriceModule } from 'src/app/price/price.module';
 import { AlphabetBlockComponent } from '../../components/alphabet-block/alphabet-block.component';
+import { ErrorModule } from 'src/app/error/error.module';
 
 const routes = [
   {path: '', component: MiddleCategoryComponent}
@@ -30,7 +31,8 @@ const routes = [
     SkeletonModule,
     BtnsModule,
     CardsModule,
-    PriceModule
+    PriceModule,
+    ErrorModule
   ],
   declarations: [
     MiddleCategoryComponent,

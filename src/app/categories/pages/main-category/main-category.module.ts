@@ -6,6 +6,7 @@ import { BreadcrumbsModule } from 'src/app/breadcrumbs/breadcrumbs.module';
 import { SkeletonModule } from 'src/app/skeleton/skeleton.module';
 import { CommonModule } from '@angular/common';
 import { CardsModule } from 'src/app/cards/cards.module';
+import { ErrorModule } from 'src/app/error/error.module';
 
 const routes = [
   {path: '', component: MainCategoryComponent}
@@ -18,9 +19,9 @@ const routes = [
     CarouselModule,
     BreadcrumbsModule,
     SkeletonModule,
-    CardsModule
+    CardsModule,
+    ErrorModule
   ],
-  declarations: [MainCategoryComponent],
-  exports: []
+  declarations: [MainCategoryComponent]
 })
 export class MainCategoryModule { }
