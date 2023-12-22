@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.sass']
 })
-export class ErrorComponent {}
+export class ErrorComponent {
+  @Input() errorMsg!: string
+}

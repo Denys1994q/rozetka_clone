@@ -23,6 +23,7 @@ export class ProductService {
     loading: boolean = false
     getOneProductLoading: boolean = false
     getOneProductError: boolean = false
+    getOneProductErrorMsg: string = ''
 
     constructor(
       private CommentsService: CommentsService, 
@@ -42,6 +43,7 @@ export class ProductService {
     }
 
     getCurrentProduct(id: string, urlId?: any) {
+      this.getOneProductError = false
       this.getOneProductLoading = true
       this.apiService.getOneProduct(id).subscribe({
         next: (response) => {
@@ -71,6 +73,9 @@ export class ProductService {
         error: err => {
           this.getOneProductLoading = false
           this.getOneProductError = true
+          if (err.error.message) {
+            this.getOneProductErrorMsg = 'Код помилки: ' + err.status + '. ' + err.error.message
+          }
         }
       })
     }

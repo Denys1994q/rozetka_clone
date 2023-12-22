@@ -2,7 +2,7 @@
     <app-skeleton [variant]="'category'"></app-skeleton>
 </div>
 <div *ngIf="ProductService.getOneProductError">
-    <app-error></app-error>
+    <app-error [errorMsg]="ProductService.getOneProductErrorMsg"></app-error>
 </div>
 <section *ngIf="ProductService.product" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
