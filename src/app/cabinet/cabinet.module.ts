@@ -10,7 +10,7 @@ import { AuthGuard } from '../core/services/auth.guard';
 import { ProductModule } from '../product/product.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { BtnsModule } from '../btns/btns.module';
-import { AsideModule } from '../aside/aside.module';
+import { CabinetAsideModule } from '../aside/cabinet-aside/cabinet-aside.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CardsModule } from '../cards/cards.module';
@@ -56,7 +56,7 @@ const routes = [
     MatProgressSpinnerModule,
     ProductModule,
     BtnsModule,
-    AsideModule,
+    CabinetAsideModule,
     CardsModule
   ],
   exports: [],

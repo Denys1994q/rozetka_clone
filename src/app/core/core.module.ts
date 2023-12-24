@@ -10,7 +10,7 @@ import { CartModule } from '../cart/cart.module';
 import { CarouselModule } from '../carousel/carousel.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { SkeletonModule } from '../skeleton/skeleton.module';
-import { AsideModule } from '../aside/aside.module';
+import { CategoriesAsideModule } from '../aside/categories-aside/categories-aside.module';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CardsModule } from '../cards/cards.module';
@@ -34,7 +34,7 @@ import { RouterModule } from '@angular/router';
     SharedModule,
     CartModule,
     SkeletonModule,
-    AsideModule,
+    CategoriesAsideModule,
     MatBadgeModule,
     CardsModule,
     PriceModule

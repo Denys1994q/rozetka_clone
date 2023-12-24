@@ -1,17 +1,18 @@
-<aside class="products__catalog" *ngIf="full">
+<aside class="products__catalog">
     <!-- список категорій -->
-    <ng-container *ngIf="data && data.length > 0; else skeletonOrError">
+    <ng-container *ngIf="categories && categories.length > 0; else skeletonOrError">
         <ul class="categories__list">
             <li
                 class="categories__item categories__item-basic"
-                *ngFor="let product of data">
-                <mat-icon class="categories__icon">{{ product.icon }}</mat-icon>
-                <a routerLink="{{ product.engName + '/' + product.id }}">
-                    {{ product.name }}
+                *ngFor="let category of categories">
+                <mat-icon class="categories__icon">{{ category.icon }}</mat-icon>
+                <a routerLink="{{ category.engName + '/' + category.id }}">
+                    {{ category.name }}
                 </a>
             </li>
         </ul>
     </ng-container>
+    <!-- завантаження або помилка -->
     <ng-template #skeletonOrError>
         <div *ngIf="error; else skeleton" class="errorWrapper">
             <mat-icon class="error-icon">error_outline</mat-icon>
@@ -36,23 +37,18 @@
         </button>
     </div>
     <!-- додатки Розетка -->
-    <div
-        class="side-menu__media media media-bordered side-menu__infoBlock uploadApps-block">
+    <div class="side-menu__media media media-bordered side-menu__infoBlock uploadApps-block">
         <p class="infoBlock__title">Встановлюйте наші додатки</p>
         <a
             target="_blank"
-            href="https://play.google.com/store/apps/details/?id=ua.com.rozetka.shop&referrer=utm_source%3Dfullversion%26utm_medium%3Dsite%26utm_campaign%3Dfullversion"
-            ><img
-                src="../../../../assets/button-google-play.svg"
-                alt="download-from-google-play"
-        /></a>
+            href="https://play.google.com/store/apps/details/?id=ua.com.rozetka.shop&referrer=utm_source%3Dfullversion%26utm_medium%3Dsite%26utm_campaign%3Dfullversion">
+            <img src="../../../../assets/button-google-play.svg" alt="download-from-google-play"/>
+        </a>
         <a
             target="_blank"
-            href="https://apps.apple.com/app/apple-store/id740469631"
-            ><img
-                src="../../../../assets/button-appstore.svg"
-                alt="download-from-app-store"
-        /></a>
+            href="https://apps.apple.com/app/apple-store/id740469631">
+            <img src="../../../../assets/button-appstore.svg" alt="download-from-app-store"/>
+        </a>
     </div>
     <!-- соціальні мережі -->
     <div class="side-menu__media media media-bordered side-menu__infoBlock">
@@ -116,65 +112,3 @@
     </div>
 </aside>
 
-<aside class="products__catalog" *ngIf="cabinet">
-    <div class="side-menu__infoBlock infoBlock infoBlock-cabinet">
-        <ul class="side-menu__list">
-            <li class="side-menu__item">
-                <a routerLink="/cabinet/personal-information">
-                    <div
-                        class="side-menu__item-innerWrapper cabinet-itemWrapper"
-                        routerLinkActive="active">
-                        <button class="textBtn">
-                            <mat-icon class="textBtn__icon">person</mat-icon>
-                            <div class="user-name">
-                                <p *ngIf="(authService.userData$ | async)?.displayName; else nameSurname">
-                                    {{ (authService.userData$ | async)?.displayName }}
-                                </p>
-                                <ng-template #nameSurname>
-                                    <span *ngIf="(authService.userData$ | async)?.name">
-                                        {{ (authService.userData$ | async)?.name }}
-                                    </span>
-                                    <span *ngIf="(authService.userData$ | async)?.surname">
-                                        {{ (authService.userData$ | async)?.surname }}
-                                    </span>
-                                </ng-template>
-                                <p *ngIf="(authService.userData$ | async)?.email" class="user-email">
-                                    {{ (authService.userData$ | async)?.email }}
-                                </p>
-                            </div>
-                        </button>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a routerLink="/cabinet/orders">
-                    <div class="side-menu__item-innerWrapper" routerLinkActive="active">
-                        <button
-                            class="textBtn">
-                            <mat-icon class="textBtn__icon">list_alt</mat-icon>
-                            Мої замовлення
-                        </button>
-                    </div>
-                </a>
-                <a routerLink="/cabinet/wishlist">
-                    <div class="side-menu__item-innerWrapper" routerLinkActive="active">
-                        <button
-                            class="textBtn">
-                            <mat-icon class="textBtn__icon">favorite_border</mat-icon>
-                            Список бажань
-                        </button>
-                    </div>
-                </a>
-                <a routerLink="/cabinet/recently-viewed">
-                    <div class="side-menu__item-innerWrapper" routerLinkActive="active">
-                        <button
-                            class="textBtn">
-                            <mat-icon class="textBtn__icon">visibility</mat-icon>
-                            Переглянуті товари
-                        </button>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
-</aside>

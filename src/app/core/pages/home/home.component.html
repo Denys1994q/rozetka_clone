@@ -1,10 +1,9 @@
 <div class="products">
      <!-- бокова панель з категоріями товарів, додатками, соцмережами, інформацією про компанію -->
-    <app-aside
-        [data]="productService.allCategories"
-        [full]="true"
+    <app-categories-aside
+        [categories]="productService.allCategories"
         [error]="allCategoriesError">
-    </app-aside>
+    </app-categories-aside>
     <!-- основна частина -->
     <main class="products__list prodlist">
         <app-cart-notification></app-cart-notification>

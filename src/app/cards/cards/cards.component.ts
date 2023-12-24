@@ -68,7 +68,7 @@ export class CardsComponent {
                 } 
             },
             error: err => console.log(err)
-        })      
+        })    
         this.getData(this.data.products)
         // 
         if (typeof window !== 'undefined') {

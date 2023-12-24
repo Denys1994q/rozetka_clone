@@ -1,0 +1,30 @@
+@import 'mixins'
+@import 'src/app/core/components/side-menu/side-menu.component'
+
+.cabinet
+    align-self: flex-start
+    width: 30rem
+    padding: 1.6rem 0
+    border-right: 1px solid #e9e9e9
+    position: sticky
+    top: -50%
+    @include respond(tab-port)
+        display: none
+.infoBlock-cabinet
+    padding: 0
+.user-name
+    text-align: start
+.user-email
+    margin-top: 4px
+    font-size: 12px
+    color: #797878
+.cabinet-itemWrapper
+    height: 56px
+    margin-bottom: 8px
+.side-menu__item-innerWrapper
+    margin-top: 4px
+.active
+    background: #d0ecdb
+    border-radius: 8px
+    .textBtn__icon
+        background: #d0ecdb
