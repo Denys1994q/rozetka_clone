@@ -4,7 +4,7 @@
 <div *ngIf="ProductService.getOneProductError">
     <app-error [errorMsg]="ProductService.getOneProductErrorMsg"></app-error>
 </div>
-<section *ngIf="ProductService.product" class="product" >
+<section *ngIf="ProductService.product && !ProductService.getOneProductLoading" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="ProductService.category && ProductService.subCategory">
         <app-breadcrumbs [data]="[ProductService.category.name, ProductService.subCategory.name]"></app-breadcrumbs>

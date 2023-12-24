@@ -1,15 +1,6 @@
 <mat-dialog-content>
     <div class="modal-login modal-register modal-services">
-        <header class="modal-login__header header">
-            <h3 class="header__title">Cервіси продовження гарантії</h3>
-            <button>
-                <mat-icon
-                    class="modal-login__close"
-                    (click)="closeDialog()"
-                    >close</mat-icon
-                >
-            </button>
-        </header>
+        <app-modal-header [title]="'Cервіси продовження гарантії'"></app-modal-header>
         <div class="services__info">
             <p>Додаткові 1 або 2 роки гарантії виробника від Support.ua</p>
             <p>Що входить:</p>

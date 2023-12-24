@@ -71,10 +71,6 @@ export class LoginModalComponent {
         }
     }
 
-    closeDialog() {
-        this.modalService.closeDialog()
-    }
-
     openRegisterDialog() {
         this.modalService.closeDialog()
         this.modalService.openDialog('register')

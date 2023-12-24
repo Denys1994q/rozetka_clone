@@ -1,18 +1,6 @@
 <mat-dialog-content>
     <div class="comments-modal">
-        <header class="comments-modal__header">
-            <h3 class="comments-modal__title bold">
-                Фотографії та відео покупців -
-                {{ ProductService.product.title }}
-            </h3>
-            <button>
-                <mat-icon
-                    class="comments-modal__close"
-                    (click)="closeDialog()"
-                    >close</mat-icon
-                >
-            </button>
-        </header>
+        <app-modal-header [title]="'Фотографії та відео покупців - ' + ProductService.product.title"></app-modal-header>
     </div>
 </mat-dialog-content>
 <div class="comments-modal__content">

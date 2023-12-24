@@ -2,16 +2,7 @@
     <div
         class="modal-cart"
         (click)="removeFromOpenedToDelete($event)">
-        <header class="modal-login__header header">
-            <h3 class="header__title">Кошик</h3>
-            <button>
-                <mat-icon
-                    class="modal-login__close"
-                    (click)="modalService.closeDialog()">
-                    close
-                </mat-icon>
-            </button>
-        </header>
+        <app-modal-header [title]="'Кошик'"></app-modal-header>
         <div class="cart-content">
             <div
                 *ngIf="

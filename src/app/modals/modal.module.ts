@@ -23,6 +23,7 @@ import { InputsModule } from '../inputs/inputs.module';
 import { CreateCommentModalComponent } from './create-comment/create-comment-modal.component';
 import { RatingModule } from '../rating/rating.module';
 import { ThanksModalComponent } from './thanks-modal/thanks-modal.component';
+import { ModalHeaderComponent } from './modal-header/modal-header.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ThanksModalComponent } from './thanks-modal/thanks-modal.component';
     ErrorComponent,
     CounterComponent,
     CreateCommentModalComponent,
-    ThanksModalComponent
+    ThanksModalComponent,
+    ModalHeaderComponent
   ],
   imports: [
     CommonModule,

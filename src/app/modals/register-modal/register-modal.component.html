@@ -1,15 +1,6 @@
 <mat-dialog-content>
     <div class="modal-login modal-register">
-        <header class="modal-login__header header">
-            <h3 class="header__title">Реєстрація</h3>
-            <button>
-                <mat-icon
-                    class="modal-login__close"
-                    (click)="closeDialog()">
-                    close
-                </mat-icon>
-            </button>
-        </header>
+        <app-modal-header [title]="'Реєстрація'"></app-modal-header>
         <div class="modal-login__content modal-register__content">
             <form
                 action="#"

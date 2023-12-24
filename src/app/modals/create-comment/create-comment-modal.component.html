@@ -1,10 +1,4 @@
-<!-- <button (click)="modalService.openDialog('thanks-modal')">Open</button> -->
-<header class="modal-header header" >
-    <h3 class="modal__title" (click)="commentsService.writeComment()">Написати відгук</h3>
-        <button>
-            <mat-icon class="close-icon" (click)="closeDialog()">close</mat-icon>
-        </button>
-</header>
+<app-modal-header [title]="'Написати відгук'"></app-modal-header>
 <mat-dialog-content>
     <form
     action="#"

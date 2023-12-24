@@ -1,15 +1,6 @@
 <mat-dialog-content>
     <div class="modal-login">
-        <header class="modal-login__header header">
-            <h3 class="header__title">Вхід</h3>
-            <button>
-                <mat-icon
-                    class="modal-login__close"
-                    (click)="closeDialog()">
-                    close
-                </mat-icon>
-            </button>
-        </header>
+        <app-modal-header [title]="'Вхід'"></app-modal-header>
         <div class="modal-login__content">
             <form
                 action="#"
@@ -20,8 +11,8 @@
                     <label
                         for="auth_email"
                         class="form__label"
-                        >Ел. пошта або телефон</label
-                    >
+                        >Ел. пошта або телефон
+                    </label>
                     <input
                         type="email"
                         required

@@ -1,15 +1,6 @@
 <mat-dialog-content>
     <div class="filters-modal">
-        <header class="filters-modal__header">
-            <h3 class="filters-modal__title bold">Фiльтрацiя вiдгукiв</h3>
-            <button class="close-btn">
-                <mat-icon
-                    class="filters-modal__close"
-                    (click)="closeDialog()">
-                    close
-                </mat-icon>
-            </button>
-        </header>
+        <app-modal-header [title]="'Фільтрація відгуків'"></app-modal-header>
     </div>
 </mat-dialog-content>
 <div class="filters-modal__content content">
