@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { CommentsService } from 'src/app/comment/services/comments.service';
-import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 
 @Component({
   selector: 'app-search-result-btn',
@@ -15,8 +14,7 @@ export class SearchResultBtnComponent {
 
     constructor(
         private SearchResultsService: SearchResultsService, 
-        private CommentsService: CommentsService, 
-        private recentlyViewedService: RecentlyViewedService) {}
+        private CommentsService: CommentsService) {}
 
     cancelAll() {
         this.clearAllClicked.emit();

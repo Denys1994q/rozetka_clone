@@ -1,7 +1,7 @@
-import { Component,  Inject, PLATFORM_ID } from '@angular/core';
+import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
-import { isPlatformBrowser } from '@angular/common';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-product-photos',
@@ -12,14 +12,12 @@ export class ProductPhotosComponent {
     photos!: any
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
         public productService: ProductService, 
+        private scrollService: ScrollService,
         private productTabsService: ProductTabsService) {}
 
     ngOnInit() {
-        if (isPlatformBrowser(this.platformId)) {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        }
+        this.scrollService.scrollToTop()
         this.productService.checkActiveTab('photos')
         this.productTabsService.setBaseView(false)
         this.photos = this.productService.product.images.filter((image: any) => image.url)

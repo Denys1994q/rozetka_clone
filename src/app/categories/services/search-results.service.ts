@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ApiService } from 'src/app/core/services/api.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
+import { IProduct } from 'src/app/product/models/product.model';
 import { forkJoin, Observable } from 'rxjs';
+import { ProductApiService } from 'src/app/product/services/product-api.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -34,7 +35,7 @@ export class SearchResultsService {
     getAllCategoriesLoading: boolean = false
     getAllCategoriesError: boolean = false
 
-    constructor(private apiService: ApiService) {}
+    constructor(private categoriesApiService: CategoriesApiService, private productApiService: ProductApiService) {}
 
     setBaseInput(val: string) {
         this.baseInput = val
@@ -90,18 +91,18 @@ export class SearchResultsService {
     getCurrentCategory(id: string) {
         this.searchParams = []
         this.getAllCategoriesLoading = true
-        this.apiService.getAllCategories().subscribe({
+        this.categoriesApiService.getAllCategories().subscribe({
             next: categoriesData => {
                 categoriesData.map((category: any) => {
                     category.subCategories.find((subcategory: any) => {
                       if (subcategory.id === id) {
                         this.currentCategory = category
-                        let productObservables: Observable<ProductInterface>[] = [];
-                        subcategory.products.forEach((prod: ProductInterface) => {
-                            productObservables.push(this.apiService.getOneProduct(prod._id));
+                        let productObservables: Observable<IProduct>[] = [];
+                        subcategory.products.forEach((prod: IProduct) => {
+                            productObservables.push(this.productApiService.getOneProduct(prod._id));
                         });
                         forkJoin(productObservables).subscribe({
-                            next: (responses: ProductInterface[]) => {
+                            next: (responses: IProduct[]) => {
                                 this.currentSubcategory = subcategory
                                 this.currentSubcategory.products = responses;
                                 this.currentSubcategoryCopy = JSON.parse(JSON.stringify(subcategory))
@@ -146,7 +147,7 @@ export class SearchResultsService {
     createSearchParams() {
         this.searchParams = []
         this.createPriceSearchParams()
-        this.currentSubcategory.products.map((product: ProductInterface) => {
+        this.currentSubcategory.products.map((product: IProduct) => {
           product.searchStatus.map((searchItem: any) => {
             if (searchItem.option === false) {
                 return
@@ -257,7 +258,7 @@ export class SearchResultsService {
     sortData(sortType: string) {
         this.sortType = sortType
         if (sortType === 'За рейтингом') {
-            const productsWithAvgRating = this.currentSubcategory.products.map((product: ProductInterface) => {
+            const productsWithAvgRating = this.currentSubcategory.products.map((product: IProduct) => {
                 const totalRatings = product.reviews_data.reduce((sum, review) => {
                     if (review) {
                         return sum + (review.rating !== undefined && review.rating !== null ? review.rating : review.raiting || 0);

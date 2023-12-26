@@ -1,8 +1,8 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component} from '@angular/core';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuService } from 'src/app/core/components/side-menu/menu.service';
-import { isPlatformBrowser } from '@angular/common';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-middle-category',
@@ -17,17 +17,15 @@ export class MiddleCategoryComponent {
     priceDataEnd!: any
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
         public SearchResultsService: SearchResultsService, 
         public router: Router, 
         public route:ActivatedRoute,
+        private scrollService: ScrollService,
         public menuService: MenuService) {}
 
     ngOnInit(): void {
         this.route.url.subscribe(route => {
-            if (isPlatformBrowser(this.platformId)) {
-                this.scrollToTop()
-            }
+            this.scrollService.scrollToTop()
             const lastLetterBeforeId = this.router.url.lastIndexOf('/')
             const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
             this.SearchResultsService.getCurrentCategory(id)
@@ -44,10 +42,6 @@ export class MiddleCategoryComponent {
 
     onBtnsGridPanelChange(event: string) {
         this.activeBtn = event
-    }
-
-    scrollToTop() {
-        window.scrollTo({top: 0, behavior: "smooth"});
     }
 
     ngOnDestroy() {

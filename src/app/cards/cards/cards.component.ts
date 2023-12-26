@@ -1,5 +1,5 @@
 import { Component, Input, Output, HostListener, EventEmitter, SimpleChanges  } from '@angular/core';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -10,7 +10,7 @@ import { ModalService } from 'src/app/modals/modal.service';
 
 interface Cards {
   category?: string,
-  products: ProductInterface[] 
+  products: IProduct[] 
 }
 
 @Component({

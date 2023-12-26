@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from 'src/app/core/services/api.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { ProductApiService } from './product-api.service';
+import { IProduct } from '../models/product.model';
 import { CommentsService } from 'src/app/comment/services/comments.service';
 
 @Injectable({ providedIn: 'root' })
@@ -16,9 +16,9 @@ export class ProductService {
     sellStatus!: any
     seller!: any
     raiting: number = 0
-    newProds: ProductInterface[] = []
-    moreProds: ProductInterface[] = []
-    recommendedProds: ProductInterface[] = []
+    newProds: IProduct[] = []
+    moreProds: IProduct[] = []
+    recommendedProds: IProduct[] = []
     foundedProducts: any = []
     loading: boolean = false
     getOneProductLoading: boolean = false
@@ -27,25 +27,25 @@ export class ProductService {
 
     constructor(
       private CommentsService: CommentsService, 
-      private apiService: ApiService) 
+      private productApiService: ProductApiService) 
     {}
 
-    setNewProducts(data: ProductInterface[]) {
+    setNewProducts(data: IProduct[]) {
       this.newProds = data
     }
 
-    setMoreProducts(data: ProductInterface[]) {
+    setMoreProducts(data: IProduct[]) {
       this.moreProds = data
     }
 
-    setRecommendedProducts(data: ProductInterface[]) {
+    setRecommendedProducts(data: IProduct[]) {
       this.recommendedProds = data
     }
 
     getCurrentProduct(id: string, urlId?: any) {
       this.getOneProductError = false
       this.getOneProductLoading = true
-      this.apiService.getOneProduct(id).subscribe({
+      this.productApiService.getOneProduct(id).subscribe({
         next: (response) => {
           this.product = response
           this.setProductPrice()
@@ -105,7 +105,7 @@ export class ProductService {
     findProduct(name: string): any {
       this.resetFoundedProducts()
       this.loading = true
-      this.apiService.getAllProducts().subscribe({
+      this.productApiService.getAllProducts().subscribe({
         next: products => {
           products.map((prod: any) => {
               this.loading = false

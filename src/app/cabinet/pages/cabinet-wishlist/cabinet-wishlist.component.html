@@ -1,5 +1,5 @@
-<div class="wishlist">
-    <!-- назва категорії -->
+<section class="wishlist">
+    <!-- title -->
     <h2 class="wishlist__title">Список бажань</h2>
     <section class="wishlist__details details">
         <div class="details__header">
@@ -7,14 +7,18 @@
                 Список <span class="caption">(За замовчуванням)</span>
             </h3>
         </div>
+        <!-- loading -->
         <div *ngIf="loading; else content">
             <div class="spinner">
                 <mat-progress-spinner diameter="32" mode="indeterminate"></mat-progress-spinner>
             </div>
         </div>
+        <!-- content -->
         <ng-template #content>
             <div *ngIf="(wishlistService.wishlistItems$ | async)?.length" class="details__paramsWrapper">
+                <!-- search options list -->
                 <ul class="details__params">
+                    <!-- search option item -->
                     <li class="param">
                         <button
                             *ngIf="!allCardsChecked; else reset"
@@ -30,6 +34,7 @@
                             <button (click)="resetAll()">Скинути вибір</button>
                         </ng-template>
                     </li>
+                     <!-- search option item -->
                     <li
                         class="param"
                         [class.param-active]="checkedProds.length > 0">
@@ -46,6 +51,7 @@
                         </button>
                     </li>
                 </ul>
+                 <!-- filters -->
                 <div class="details__filters">
                     <app-select
                         [name]="'filters'"
@@ -58,6 +64,7 @@
             <div class="details__main">
                 <ng-container
                     *ngIf="(wishlistService.wishlistItems$ | async)?.length; else empty">
+                    <!-- list cards -->
                     <app-cards
                         [full]="true"
                         [data]="{ products: (wishlistService.wishlistItems$ | async) || []}"
@@ -67,6 +74,7 @@
                         (cardCheckboxChange)="onCardCheckboxChange($event)">
                     </app-cards>
                 </ng-container>
+                <!-- empty card -->
                 <ng-template #empty>
                     <div class="emptyBlock">
                         <img
@@ -84,6 +92,7 @@
                         </a>
                     </div>
                 </ng-template>
+                <!-- total -->
                 <div class="details__total total" *ngIf="(wishlistService.wishlistItems$ | async)?.length">
                     <div class="total__quantity quantity">
                         <p class="quantity__amount">{{(wishlistService.wishlistItems$ | async)?.length}} товари на суму</p>
@@ -94,4 +103,4 @@
             </div>
         </ng-template>
     </section>
-</div>
+</section>

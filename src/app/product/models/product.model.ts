@@ -29,9 +29,8 @@ export interface ISearchStatus {
     option: string | Price | boolean
 }
 
-export interface ProductInterface {
+export interface IProduct {
     _id: string,
-    id?: string,
     title: string,
     engName: string,
     image: string,

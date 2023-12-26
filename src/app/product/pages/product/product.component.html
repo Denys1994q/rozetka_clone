@@ -4,7 +4,7 @@
 <div *ngIf="ProductService.getOneProductError">
     <app-error [errorMsg]="ProductService.getOneProductErrorMsg"></app-error>
 </div>
-<section *ngIf="ProductService.product && !ProductService.getOneProductLoading" class="product" >
+<article *ngIf="ProductService.product && !ProductService.getOneProductLoading" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="ProductService.category && ProductService.subCategory">
         <app-breadcrumbs [data]="[ProductService.category.name, ProductService.subCategory.name]"></app-breadcrumbs>
@@ -14,7 +14,7 @@
         {{ ProductService.product.title }}
     </h1>
     <!-- панель рейтингу -->
-    <div class="product__rating">
+    <section class="product__rating">
         <app-rating
             [fixed]="true"
             [activeIconIndex]="ProductService.raiting">
@@ -25,9 +25,9 @@
         </a>
         <p class="product__code">
             <span> Код: </span>
-            {{ mobile ? (ProductService.product._id | slice:0:10) + '...' : ProductService.product._id }}
+            {{ deviceService.isMobileView ? (ProductService.product._id | slice:0:10) + '...' : ProductService.product._id }}
         </p>
-    </div>
+    </section>
     <!-- таби: коментарі, відгуки, фото, відео -->
     <app-tabs
         [data]="ProductService.tabs"
@@ -38,7 +38,7 @@
         <router-outlet></router-outlet>
     </ng-container>
     <ng-template #tabsView>
-        <div class="product-section">
+        <section class="product-section">
             <div class="product-section__info">
                 <!-- роути під конкретний таб -->
                 <!-- ліва частина сторінки -->
@@ -46,7 +46,7 @@
             </div>
             <!-- права частина сторінки -->
             <div class="product-section__card">
-                <div class="info__item mb16 card">
+                <section class="info__item mb16 card">
                     <div class="card__image">
                         <img
                             src="{{ ProductService.product.image }}"
@@ -55,9 +55,9 @@
                     <p class="card__title">
                         {{ ProductService.product.title }}
                     </p>
-                </div>
+                </section>
                 <div class="info__item mb16">
-                    <div class="price">
+                    <section class="price">
                         <div class="trade__price">
                             <app-price
                                 [price]="ProductService.price"
@@ -82,8 +82,8 @@
                                 </mat-icon>
                             </button>
                         </div>
-                    </div>
-                    <div class="trade__buy">
+                    </section>
+                    <section class="trade__buy">
                         <div *ngIf="cartService.checkIfProductInCart(ProductService.product._id); else buy">
                             <div class="inCart-block">
                                 <mat-icon class="inCart-icon">shopping_cart</mat-icon>
@@ -100,19 +100,19 @@
                                 Купити
                             </button>
                         </ng-template>
-                    </div>
+                    </section>
                 </div>
-                <div class="info__item mb16 seller">
+                <section class="info__item mb16 seller">
                     <p class="seller__title">Продавець: <span>{{ ProductService.seller }}</span></p>
                     <div class="seller__image" *ngIf="ProductService.seller === 'Rozetka'">
                         <img src="../../../assets/rozetka-seller.svg" alt="rozetka" />
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </section>
         <!-- <app-cards [data]="newProds"></app-cards> -->
         <!-- адаптив: панель продукту -->
-        <div class="product-panel">
+        <section class="product-panel">
             <img
                 src="{{ ProductService.product.image }}"
                 alt="product-panel__img"
@@ -135,6 +135,6 @@
                     </button>
                 </ng-template>
             </div>
-        </div>
+        </section>
     </ng-template>
-</section>
+</article>

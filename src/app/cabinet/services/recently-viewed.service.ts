@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
 
 @Injectable({ providedIn: 'root' })
 
@@ -10,10 +10,10 @@ export class RecentlyViewedService {
 
     constructor(private http: HttpClient) { }
 
-    private recentlyViewedItemsSubject = new BehaviorSubject<ProductInterface[]>([]);
+    private recentlyViewedItemsSubject = new BehaviorSubject<IProduct[]>([]);
     recentlyViewedtItems$: Observable<any[]> = this.recentlyViewedItemsSubject.asObservable();
 
-    setRecentlyViewedItems(data: ProductInterface[]) {
+    setRecentlyViewedItems(data: IProduct[]) {
         this.recentlyViewedItemsSubject.next(data)
     }
 

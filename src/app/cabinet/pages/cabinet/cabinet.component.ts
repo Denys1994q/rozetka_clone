@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-cabinet',
@@ -7,10 +8,10 @@ import { Component } from '@angular/core';
 })
 export class CabinetPage {
 
+    constructor(private scrollService: ScrollService) {}
+
     ngOnInit() {
-        if (typeof window !== 'undefined') {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        }
+        this.scrollService.scrollToTop()
     }
 
 }

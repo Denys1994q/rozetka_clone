@@ -1,13 +1,17 @@
 <div class="orders">
     <h2 class="orders__title">Мої замовлення</h2>
     <section class="orders__details">
+        <!-- loading -->
         <div *ngIf="loading; else content">
             <div class="spinner">
                 <mat-progress-spinner diameter="32" mode="indeterminate"></mat-progress-spinner>
             </div>
         </div>
+        <!-- content -->
         <ng-template #content>
+            <!-- orders list -->
             <ul class="orders__list list" *ngIf="(ordersService.orderslistItems$ | async)?.length; else empty">
+                <!-- order item -->
                 <li class="list__item order" *ngFor="let prod of ordersService.orderslistItems$ | async">
                     <div class="order__status">
                         <span> № {{prod.orderNumber}} від {{prod.orderDate | date: 'dd.MM.yy'}} </span>
@@ -22,6 +26,7 @@
                     </div>
                 </li>
             </ul>
+            <!-- empty orders list -->
             <ng-template #empty>
                 <div class="emptyBlock">
                     <img

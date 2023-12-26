@@ -1,6 +1,6 @@
-import { ProductInterface } from "src/app/core/services/api-response-types";
+import { IProduct } from "src/app/product/models/product.model";
 
-export interface PopularCategory {
+export interface IPopularCategory {
     name: string;
     engName: string;
     id: string;
@@ -17,23 +17,21 @@ export interface IPopularSubcategory {
     id: string;
 }
 
-// Модель для Subcategory
 export interface ISubcategory {
     name: string;
     img: string;
     engName: string;
     id: string;
     popular: IPopularSubcategory[];
-    products: ProductInterface[]
+    products: IProduct[]
 }
 
-// Модель для Category
 export interface ICategory {
     name: string;
     engName: string;
     id: string;
     icon?: string;
-    popular: PopularCategory[];
+    popular: IPopularCategory[];
     banners: IBanner[];
     brands: string[];
     subCategories: ISubcategory[];

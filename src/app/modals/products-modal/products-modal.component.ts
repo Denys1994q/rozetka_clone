@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { ModalService } from '../modal.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiService } from 'src/app/core/services/api.service';
+import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
+import { DeviceService } from 'src/app/core/services/device.service';
 
 @Component({
   selector: 'app-products-modal',
@@ -13,24 +14,22 @@ import { ApiService } from 'src/app/core/services/api.service';
 export class ProductsModalComponent {
     activeCategoryIndex: number | boolean = false
     products!: any[]
-    mobVersion: boolean = false
 
     constructor(
         public modalService: ModalService, 
         public SearchResultsService: SearchResultsService, 
         public router: Router,  
         public route:ActivatedRoute, 
-        public apiService: ApiService) {}
+        public deviceService: DeviceService,
+        private categoriesApiService: CategoriesApiService) {}
     
     ngOnInit() {
-        this.apiService.getAllCategories().subscribe({
+        this.categoriesApiService.getAllCategories().subscribe({
             next: (data) => this.products = data,
             error: (err) => console.log(err)
         })
         if (typeof window !== 'undefined') {
-            if (window.innerWidth < 700) {
-                this.mobVersion = true
-            } else {
+            if (!this.deviceService.isMobileView) {
                 this.activeCategoryIndex = 0
             }
         }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ProductService } from 'src/app/product/services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class CabinetWishlistPage {
     // завантаження списку продуктів
     loading: boolean = false
     // 
-    wishlistItems: ProductInterface[] = []
+    wishlistItems: IProduct[] = []
 
     ngOnInit() {
         this.loading = true

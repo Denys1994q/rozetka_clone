@@ -37,7 +37,7 @@
             <app-color-palette></app-color-palette>
         </div>
         <!-- ціна, гарантія, сервіси, оплата -->
-        <div class="info__item price-buy-panel mb24 info__desc__trade trade">
+        <section class="info__item price-buy-panel mb24 info__desc__trade trade">
             <div class="trade__price">
                 <!-- ціна -->
                 <app-price
@@ -79,7 +79,7 @@
                     </mat-icon>
                 </button>
             </div>
-        </div>
+        </section>
         <div class="info__item mb24 services">
             <app-checkbox
                 [services]="true"
@@ -87,7 +87,7 @@
             </app-checkbox>
         </div>
         <!-- продавець -->
-        <div class="info__item mb24 seller">
+        <section class="info__item mb24 seller">
             <p class="seller__title">
                 Продавець: <span>{{ ProductService.seller }}</span>
             </p>
@@ -96,8 +96,8 @@
                     src="../../../assets/rozetka-seller.svg"
                     alt="rozetka" />
             </div>
-        </div>
-        <div class="info__item payment payment-main">
+        </section>
+        <section class="info__item payment payment-main">
             <div class="payment__info">
                 <button class="payment__info-btn">
                     <mat-icon>credit_card</mat-icon>
@@ -112,8 +112,8 @@
                     "єПідтримка", Mastercard
                 </p>
             </div>
-        </div>
-        <div class="info__item payment payment-last">
+        </section>
+        <section class="info__item payment payment-last">
             <div class="payment__info">
                 <button class="payment__info-btn">
                     <mat-icon>security</mat-icon>
@@ -123,12 +123,12 @@
                     впродовж 14 днів
                 </p>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 <!-- <app-cards [data]="newProds"></app-cards> -->
 <!-- характеристики -->
-<div
+<section
     class="product__characteristicsAndReviews info"
     #characteristicsAndReviewsBlock>
     <div class="info__main">
@@ -223,9 +223,9 @@
             [link]="'/' + ProductService.product.engName + '/' + ProductService.product._id + '/comments'" >
         </app-comments-panel>
     </div>
-</div>
+</section>
 <!-- відео блок -->
-<div
+<section
     *ngIf="ProductService.product.video"
     class="product__video video">
     <div
@@ -249,5 +249,5 @@
                 alt="youtube-logo" />
         </a>
     </div>
-</div>
+</section>
 <!-- <app-cards [Wdata]="newProds"></app-cards> -->

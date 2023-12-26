@@ -3,6 +3,7 @@ import { Router, NavigationEnd, Event } from '@angular/router';
 import {filter} from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 import { WishlistService } from './cabinet/services/wishlist.service';
+import { DeviceService } from './core/services/device.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router, 
         private wishlistService: WishlistService,
+        private deviceService: DeviceService,
         private authService: AuthService ) {
             router.events.pipe(filter(event => event instanceof NavigationEnd))
                 .subscribe({
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit {
         if (typeof window !== 'undefined' && localStorage) {
             localStorage.setItem('side-banner', 'active')
         }
+        this.deviceService.detectDevice()
     }
 
 }

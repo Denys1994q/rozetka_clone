@@ -1,20 +1,20 @@
 <div class="personalInfo">
-    <!-- назва категорії -->
+    <!-- title -->
     <h2 class="personalInfo__title">Особисті дані</h2>
-    <!-- пункти категорії -->
+    <!-- userdata list -->
     <ul class="personalInfo__list">
-        <!-- кожен пункт -->
+        <!-- userdata item -->
         <li
             class="personalInfo__item"
             *ngFor="let item of data; let i = index">
-            <!-- іконка пункту -->
+            <!-- icon -->
             <div class="limitedInfo" (click)="showInfo(i)">
                 <button>
                     <mat-icon>{{ item.icon }}</mat-icon>
                 </button>
-                <!-- заголовок пункту -->
+                <!-- item title-->
                 <p class="personalInfo__itemHeading">{{ item.heading }}</p>
-                <!-- стрілка відкрити більше чи менше -->
+                <!-- icon show more -->
                 <button class="arrow">
                     <mat-icon *ngIf="selectedIdxs.indexOf(i) === -1; else show">
                         expand_more
@@ -113,6 +113,8 @@
             </div>
         </li>
     </ul>
+    <!-- delete account -->
     <button class="btn-link del-btn" (click)="deleteAccount()">Видалити акаунт</button>
+    <!-- exit -->
     <button class="btn-link exit-btn" (click)="logout()">Вихід</button>
 </div>

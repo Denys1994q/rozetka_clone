@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, map, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
-import { ISearchStatus } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
+import { ISearchStatus } from 'src/app/product/models/product.model';
 
 interface WishlistResponse {     
     message: string,
-    updatedWishlist: ProductInterface[]
+    updatedWishlist: IProduct[]
 }
 
 interface WishlistItemResponse {
-    product: ProductInterface,
+    product: IProduct,
     addedDate: Date
 }
 
@@ -27,13 +27,13 @@ export class WishlistService {
     sortOptions: string[] = ['За датою додавання', 'Від дешевих до дорогих', 'Від дорогих до дешевих']
     activeSortOption: string = this.sortOptions[0]
 
-    setWishlistItems(data: ProductInterface[]) {
+    setWishlistItems(data: IProduct[]) {
         this.wishlistItemsSubject.next(data)
         this.sortWishlist(this.activeSortOption)
         this.calculateTotalPrice(data) 
     }
 
-    addToWishlist(productId: string):Observable<{message: string, updatedWishlist: ProductInterface[]}> {
+    addToWishlist(productId: string):Observable<{message: string, updatedWishlist: IProduct[]}> {
         if (typeof window !== 'undefined' && localStorage) {
             const apiUrl = `${this.backendUrl}/add-to-wishlist/${productId}` 
             const token = localStorage.getItem('authToken');
@@ -42,7 +42,7 @@ export class WishlistService {
                 headers,
                 withCredentials: true
             };
-            return this.http.post<{message: string, updatedWishlist: ProductInterface[]}>(apiUrl, null, options).pipe(
+            return this.http.post<{message: string, updatedWishlist: IProduct[]}>(apiUrl, null, options).pipe(
                 map((response: any) => {
                     if (response && response.updatedWishlist) {
                         response.updatedWishlist = response.updatedWishlist.map((wishlistItem: WishlistItemResponse) => ({
@@ -105,7 +105,7 @@ export class WishlistService {
         this.wishlistItemsSubject.next(sortedWishlist);
     }
 
-    calculateTotalPrice(wishlistItems: ProductInterface[]) {
+    calculateTotalPrice(wishlistItems: IProduct[]) {
         this.total = 0 
         if (wishlistItems) {
             for (const item of wishlistItems) {

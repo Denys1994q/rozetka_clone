@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
 import { isPlatformBrowser } from '@angular/common';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-product-all',
@@ -29,12 +30,11 @@ export class ProductAllComponent {
         public ProductService: ProductService, 
         public cartService: CartService, 
         public productTabsService: ProductTabsService,
+        private scrollService: ScrollService,
         public modalService: ModalService) {}
 
     ngOnInit() {
-        if (isPlatformBrowser(this.platformId)) {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        }
+        this.scrollService.scrollToTop()
         this.productTabsService.setBaseView(true)
         this.authService.getUser().subscribe({
             next: user => {

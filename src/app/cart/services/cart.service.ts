@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
 import { ProductService } from 'src/app/product/services/product.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class CartService {
-    productsFromStorage: ProductInterface[] = []
+    productsFromStorage: IProduct[] = []
     totalProductsNumber = 0
     totalPrice = 0
     productInCart!: boolean 

@@ -1,9 +1,9 @@
-import { Component, ElementRef, ViewChild,  Inject, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
 import { CommentsService } from 'src/app/comment/services/comments.service';
 import { ProductTabsService } from '../../services/product-tabs.service';
 import { ProductService } from '../../services/product.service';
-import { isPlatformBrowser } from '@angular/common';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-product-comments',
@@ -18,16 +18,14 @@ export class ProductCommentsComponent {
     @ViewChild('sliderItem') sliderItem!: ElementRef;
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
         private modalService: ModalService, 
         public commentsService: CommentsService, 
         private productService: ProductService,
+        private scrollService: ScrollService,
         private productTabsService: ProductTabsService ) {}
 
     ngOnInit() {
-        if (isPlatformBrowser(this.platformId)) {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        }
+        this.scrollService.scrollToTop()
         this.productService.checkActiveTab('comments')
         this.productTabsService.setBaseView(false)
         this.commentsService.sortProdComments('З фото і відео')

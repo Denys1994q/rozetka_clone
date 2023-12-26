@@ -1,5 +1,7 @@
-<div class="recentlyViewed">
+<section class="recentlyViewed">
+    <!-- header -->
     <header class="recentlyViewed__header">
+        <!-- title -->
         <h2 class="recentlyViewed__title">Переглянуті товари</h2>
         <ng-container *ngIf="(recentlyViewedService.recentlyViewedtItems$ | async)?.length">
             <app-search-result-btn
@@ -8,14 +10,17 @@
                 (clearAllClicked)="handleClearAllClick()" />
         </ng-container>
     </header>
+    <!-- loading -->
     <div *ngIf="loading; else content">
         <div class="spinner">
             <mat-progress-spinner diameter="32" mode="indeterminate"></mat-progress-spinner>
         </div>
     </div>
+    <!-- content -->
     <ng-template #content>
         <section class="orders__details">
             <ng-container *ngIf="(recentlyViewedService.recentlyViewedtItems$ | async)?.length; else empty">
+                <!-- list with cards -->
                 <app-cards
                     [full]="true"
                     [withDeleteOption]="true"
@@ -24,6 +29,7 @@
                     [size]="'big'">
                 </app-cards>
             </ng-container>
+            <!-- empty list -->
             <ng-template #empty>
                 <div class="emptyBlock">
                     <img
@@ -39,4 +45,4 @@
             </ng-template>
         </section>
     </ng-template>
-</div>
+</section>

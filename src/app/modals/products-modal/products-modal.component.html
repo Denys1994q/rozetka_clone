@@ -1,4 +1,4 @@
-<div *ngIf="!mobVersion; else mobile">
+<div *ngIf="!deviceService.isMobileView; else mobile">
     <mat-dialog-content>
         <div class="modall-prod">
             <!-- Список позицій -->

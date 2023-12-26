@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, map, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
 
 interface IOrderItem {
     orderDate: Date,
     orderNumber: number,
-    product: ProductInterface,
+    product: IProduct,
     _id: string
 }
 

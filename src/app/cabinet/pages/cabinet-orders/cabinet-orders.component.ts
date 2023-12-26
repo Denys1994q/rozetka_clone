@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { OrdersService } from '../../services/orders.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
-import { ISearchStatus } from 'src/app/core/services/api-response-types';
+import { IProduct } from 'src/app/product/models/product.model';
+import { ISearchStatus } from 'src/app/product/models/product.model';
 
 @Component({
   selector: 'app-cabinet-orders',
@@ -31,7 +31,7 @@ export class CabinetOrdersPage {
             })
     }
 
-    getPriceObject(prod: ProductInterface) {
+    getPriceObject(prod: IProduct) {
         if (prod.searchStatus && prod.searchStatus.length > 0) {
             const priceStatus = prod.searchStatus.find((status: ISearchStatus) => status.searchPosition === 'price');
             if (priceStatus && priceStatus.option && typeof priceStatus.option === 'object') {

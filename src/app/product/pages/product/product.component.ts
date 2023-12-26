@@ -1,9 +1,8 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
-import { ApiService } from 'src/app/core/services/api.service';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { ProductInterface } from 'src/app/core/services/api-response-types';
+import { IProduct } from '../../models/product.model';
 import { ModalService } from 'src/app/modals/modal.service';
 import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -11,6 +10,9 @@ import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductTabsService } from '../../services/product-tabs.service';
+import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
+import { DeviceService } from 'src/app/core/services/device.service';
+import { ScrollService } from 'src/app/core/services/scroll.service';
 
 @Component({
   selector: 'app-product',
@@ -18,32 +20,29 @@ import { ProductTabsService } from '../../services/product-tabs.service';
   styleUrls: ['./product.component.sass']
 })
 export class ProductComponent {
-    product!: ProductInterface
-    video!: any[]
-    routes!: any
-    urlId!: any
+    product!: IProduct
     isInWishlist: boolean = false
     prodIdsInWishlist: string[] = [] 
-    mobile: boolean = false
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
+        public deviceService: DeviceService,
         private router: Router, 
         public route:ActivatedRoute, 
         public ProductService: ProductService, 
         private authService: AuthService,
         private wishlistService: WishlistService,
         public SearchResultsService: SearchResultsService,
-        public apiService: ApiService,
         public cartService: CartService,
         public modalService: ModalService,
         private recentlyViewedService: RecentlyViewedService,
+        private categoriesApiService: CategoriesApiService,
+        private scrollService: ScrollService,
         public productTabsService: ProductTabsService
     ) {}
 
     ngOnInit() {
-        this.scrollToTop()
-        this.checkIfMobile()
+        this.scrollService.scrollToTop()
 
         this.route.params.subscribe(params => {
             const productId = params['productId'];
@@ -73,26 +72,12 @@ export class ProductComponent {
        
     }
 
-    checkIfMobile() {
-        if (isPlatformBrowser(this.platformId)) {
-            if (window.innerWidth < 700) {
-                this.mobile = true
-            }
-        }
-    }
-
     addToCart() {
         this.cartService.addToShoppingCart({...this.ProductService.product, amount: 1})  
     }
 
-    scrollToTop() {
-        if (isPlatformBrowser(this.platformId)) {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        }
-    }
-
     findCategory(urlId: string) {
-        this.apiService.getAllCategories().subscribe({
+        this.categoriesApiService.getAllCategories().subscribe({
             next: response => {
                 response.find((category: any) => {
                     category.subCategories.find((sub: any) => {

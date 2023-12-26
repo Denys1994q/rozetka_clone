@@ -1,11 +1,13 @@
 import { Component, AfterViewInit, ElementRef, Inject, PLATFORM_ID   } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
 import { Slide } from 'src/app/carousel/carousel.component';
-import { ApiService } from '../../services/api.service';
+import { ProductApiService } from 'src/app/product/services/product-api.service';
 import { ProductService } from 'src/app/product/services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';``
 import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { makeStateKey, TransferState } from '@angular/core';
+import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
+import { ScrollService } from '../../services/scroll.service';
 
 @Component({
   selector: 'app-home',
@@ -24,8 +26,10 @@ export class HomeComponent implements AfterViewInit {
         @Inject(PLATFORM_ID) private platformId: Object,
         public modalService: ModalService, 
         public productService: ProductService, 
-        public apiService: ApiService,
+        public productApiService: ProductApiService,
+        private categoriesApiService: CategoriesApiService,
         private elementRef: ElementRef,
+        private scrollService: ScrollService,
         public cartService: CartService)
     {}
 
@@ -45,17 +49,17 @@ export class HomeComponent implements AfterViewInit {
         entries.forEach((entry: any) => {
             if (entry.isIntersecting) {
             if (entry.target.classList.contains('newProds')) {
-                this.apiService.getNewProducts().subscribe({
+                this.productApiService.getNewProducts().subscribe({
                     next: response => this.productService.setNewProducts(response),
                     error: err => this.newProductsError = true
                 })
             } else if (entry.target.classList.contains('moreProds')) {
-                this.apiService.getMoreProducts().subscribe({
+                this.productApiService.getMoreProducts().subscribe({
                     next: response => this.productService.setMoreProducts(response),
                     error: err => this.moreProductsError = true
                   })
             } else if (entry.target.classList.contains('recommendedProds')) {
-                this.apiService.getRecommendedProducts().subscribe({
+                this.productApiService.getRecommendedProducts().subscribe({
                     next: response => this.productService.setRecommendedProducts(response),
                     error: err => this.recommendedProductsError = true
                   })
@@ -75,7 +79,7 @@ export class HomeComponent implements AfterViewInit {
 
     ngOnInit() {
         if (isPlatformServer(this.platformId)) {
-            this.apiService.getAllCategories().subscribe({
+            this.categoriesApiService.getAllCategories().subscribe({
                 next: data => {
                     this.productService.setAllCategories(data)
                     this.transferState.set(this.ALL_CATEGORIES_KEY, data)
@@ -84,12 +88,12 @@ export class HomeComponent implements AfterViewInit {
             })
         }
         else {
-            window.scrollTo({top: 0, behavior: "smooth"});
+            this.scrollService.scrollToTop()
             const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
             if (cachedCategories) {
                 this.productService.setAllCategories(cachedCategories)
             } else {
-                this.apiService.getAllCategories().subscribe({
+                this.categoriesApiService.getAllCategories().subscribe({
                     next: data => this.productService.setAllCategories(data),
                     error: err => this.allCategoriesError = true
                   })

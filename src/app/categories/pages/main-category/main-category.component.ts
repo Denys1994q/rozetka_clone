@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
-import { ApiService } from 'src/app/core/services/api.service';
+import { CategoriesApiService } from '../../services/categories-api.service';
 
 @Component({
   selector: 'app-main-category',
@@ -17,7 +17,7 @@ export class MainCategoryComponent implements OnInit {
     public router: Router, 
     public route: ActivatedRoute, 
     public SearchResultsService: SearchResultsService, 
-    public apiService: ApiService
+    private categoriesApiService: CategoriesApiService,
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class MainCategoryComponent implements OnInit {
         const lastLetterBeforeId = this.router.url.lastIndexOf('/')
         const id = this.router.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+this.router.url.length-1)
         this.getOneCategoryLoading = true
-        this.apiService.getOneCategory(id).subscribe({
+        this.categoriesApiService.getOneCategory(id).subscribe({
             next: (data) => {
                 this.getOneCategoryLoading = false
                 this.category = data
