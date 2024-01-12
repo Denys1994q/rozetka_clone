@@ -4,6 +4,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cabinet-wishlist',
@@ -11,6 +12,14 @@ import { CartService } from 'src/app/cart/services/cart.service';
   styleUrls: ['./cabinet-wishlist.component.sass']
 })
 export class CabinetWishlistPage {
+    checkedProds: string[] = []
+    allCardsChecked!: boolean
+    loading: boolean = false
+    wishlistItems: IProduct[] = []
+    private getUserSubscription!: Subscription;
+    private sortWishlistSubscription!: Subscription;
+    private removeFromWishlistSubscription!: Subscription;
+    private sortRemovedWishlistSubscription!: Subscription
 
     constructor(
         public productService: ProductService, 
@@ -18,33 +27,21 @@ export class CabinetWishlistPage {
         public wishlistService: WishlistService,
         private cartService: CartService) {}
 
-    // список продуктів, виділених юзером 
-    checkedProds: string[] = []
-    // виділити всі продукти 
-    allCardsChecked!: boolean
-    // завантаження списку продуктів
-    loading: boolean = false
-    // 
-    wishlistItems: IProduct[] = []
-
     ngOnInit() {
         this.loading = true
-        this.authService.getUser().subscribe({
+        this.getUserSubscription = this.authService.getUser().subscribe({
             next: user => {
-                if (user && user.wishlist) {
-                    this.loading = false
-                    this.wishlistService.setWishlistItems(user.wishlist)
-                } 
+                this.loading = false
+                this.wishlistItems = user.wishlist
             },
             error: err => this.loading = false
         })
-        this.wishlistService.wishlistItems$.subscribe((items) => {
-            this.wishlistItems = items;
-          });
     }
 
     onSelectChange(e: string) {
-        this.wishlistService.sortWishlist(e)
+        this.sortWishlistSubscription = this.wishlistService.sortWishlist(e).subscribe({
+            next: response => this.wishlistService.setWishlistItems(response.sortedWishlist)
+        })
     }
 
     onCardCheckboxChange(prodId: string) {
@@ -55,35 +52,49 @@ export class CabinetWishlistPage {
         }
     }
 
-    chooseAll() {
+    handleSelectAllClick() {
         this.allCardsChecked = true
-        this.wishlistService.wishlistItems$.subscribe({
-            next: wishlist => {
-                wishlist.map(item => this.checkedProds.push(item._id))
-            }, 
-            error: err => console.log(err)
+        this.wishlistItems.map((item) => {
+            this.checkedProds.push(item._id)
         })
     }
 
-    resetAll() {
+    handleResetAllClick() {
         this.allCardsChecked = false
         this.checkedProds = []
     }
 
-    deleteFromWishlist() {
-        this.wishlistService.removeFromWishlist(this.checkedProds).subscribe({
+    handleDeleteFromWishlistClick() {
+        this.removeFromWishlistSubscription = this.wishlistService.removeFromWishlist(this.checkedProds).subscribe({
             next: response => {
-                this.wishlistService.setWishlistItems(response.updatedWishlist);    
-                this.checkedProds = [];
+                this.sortRemovedWishlistSubscription = this.wishlistService.sortWishlist(this.wishlistService.activeSortOption).subscribe({
+                    next: res => {
+                        this.wishlistItems = res.sortedWishlist  
+                        this.checkedProds = [];
+                    } 
+                })
             },
             error: err => console.log(err)
         });
     }
 
-    buyProds() {
+    handleBuyProdsClick() {
         this.wishlistItems.map(item => {
             this.cartService.addToShoppingCart({...item, amount: 1})
         })
+    }
+
+    ngOnDestroy() {
+        this.getUserSubscription.unsubscribe();
+        if (this.sortWishlistSubscription) {
+            this.sortWishlistSubscription.unsubscribe();
+        }
+        if (this.removeFromWishlistSubscription) {
+            this.removeFromWishlistSubscription.unsubscribe();
+        }
+        if (this.sortRemovedWishlistSubscription) {
+            this.sortRemovedWishlistSubscription.unsubscribe()
+        }
     }
 
 }

@@ -27,7 +27,7 @@
                 </li>
             </a>
 
-            <p *ngIf="ProductService.foundedProducts.length === 0 && !ProductService.loading">По вашому запиту нічого не знайдено. Уточніть свій запит</p>
+            <p *ngIf="ProductService.foundedProducts.length === 0 && !getAllProductsLoading">По вашому запиту нічого не знайдено. Уточніть свій запит</p>
         </ul>
     </div>
     <div

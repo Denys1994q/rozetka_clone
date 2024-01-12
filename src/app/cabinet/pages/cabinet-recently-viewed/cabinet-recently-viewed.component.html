@@ -11,7 +11,7 @@
         </ng-container>
     </header>
     <!-- loading -->
-    <div *ngIf="loading; else content">
+    <div *ngIf="loading$ | async; else content">
         <div class="spinner">
             <mat-progress-spinner diameter="32" mode="indeterminate"></mat-progress-spinner>
         </div>

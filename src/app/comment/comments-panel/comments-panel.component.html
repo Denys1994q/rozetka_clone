@@ -28,7 +28,7 @@
             <app-select
                 [name]="'filters'"
                 [options]="['З фото і відео', 'За датою', 'Найкорисніші']"
-                [activeOption]="commentsService.sortType"
+                [activeOption]="commentsService.sortType$ | async"
                 (selectChangeEvent)="onSelectChange($event)">
             </app-select>
         </div>

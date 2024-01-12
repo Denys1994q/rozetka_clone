@@ -9,7 +9,7 @@ import { ICategory } from 'src/app/categories/models/categories.model';
   styleUrls: ['./categories-aside.component.sass']
 })
 export class CategoriesAsideComponent {
-    @Input() categories!: ICategory[]
+    @Input() categories!: ICategory[] | null
     @Input() error!: boolean
 
     constructor(public modalService: ModalService, public authService: AuthService) {}

@@ -4,6 +4,8 @@ import { Slide } from 'src/app/carousel/carousel.component';
 import { Inject } from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ProductService } from 'src/app/product/services/product.service';
+import { IProduct } from 'src/app/product/models/product.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comments-modal',
@@ -13,7 +15,17 @@ import { ProductService } from 'src/app/product/services/product.service';
 export class CommentsModalComponent {
   productName!: string
   activeSlide!: number
-  constructor(private modalService: ModalService, @Inject(MAT_DIALOG_DATA) public data: any, public ProductService: ProductService) {}
+  product: IProduct | null = null
+  productSubscription!: Subscription
+
+  constructor(
+        private modalService: ModalService, 
+        @Inject(MAT_DIALOG_DATA) public data: any, 
+        public ProductService: ProductService) {
+            this.productSubscription = this.ProductService.product$.subscribe(prod => {
+                this.product = prod
+            })
+        }
 
   closeDialog() {
     this.modalService.closeDialog()
@@ -26,5 +38,9 @@ export class CommentsModalComponent {
   receiveActiveSlideIndex = ($event: any) => {
     this.activeSlide = $event
   }
+
+  ngOnDestroy() {
+    this.productSubscription.unsubscribe();
+}
 
 }

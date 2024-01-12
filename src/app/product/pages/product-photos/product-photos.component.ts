@@ -1,7 +1,8 @@
 import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { ProductTabsService } from '../../services/product-tabs.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { IProduct } from '../../models/product.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-photos',
@@ -10,17 +11,28 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
 })
 export class ProductPhotosComponent {
     photos!: any
+    product: IProduct | null = null
+    productSubscription!: Subscription
 
     constructor(
         public productService: ProductService, 
-        private scrollService: ScrollService,
-        private productTabsService: ProductTabsService) {}
+        private scrollService: ScrollService) {
+            this.productSubscription = this.productService.product$.subscribe(prod => {
+                this.product = prod
+            })
+        }
 
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('photos')
-        this.productTabsService.setBaseView(false)
-        this.photos = this.productService.product.images.filter((image: any) => image.url)
+        this.productService.setBaseView(false)
+        if (this.product) {
+            this.photos = this.product.images.filter((image: any) => image.url)
+        }
+    }
+
+    ngOnDestroy() {
+        this.productSubscription.unsubscribe();
     }
 
 }

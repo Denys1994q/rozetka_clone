@@ -15,23 +15,23 @@
         </div>
         <!-- content -->
         <ng-template #content>
-            <div *ngIf="(wishlistService.wishlistItems$ | async)?.length" class="details__paramsWrapper">
+            <div *ngIf="wishlistItems.length" class="details__paramsWrapper">
                 <!-- search options list -->
                 <ul class="details__params">
                     <!-- search option item -->
                     <li class="param">
                         <button
                             *ngIf="!allCardsChecked; else reset"
-                            (click)="chooseAll()">
+                            (click)="handleSelectAllClick()">
                             Вибрати все
                         </button>
                         <ng-template #reset>
                             <mat-icon
-                                (click)="resetAll()"
+                                (click)="handleResetAllClick()"
                                 class="param-icon param-icon--active">
                                 done_all
                             </mat-icon>
-                            <button (click)="resetAll()">Скинути вибір</button>
+                            <button (click)="handleResetAllClick()">Скинути вибір</button>
                         </ng-template>
                     </li>
                      <!-- search option item -->
@@ -39,13 +39,13 @@
                         class="param"
                         [class.param-active]="checkedProds.length > 0">
                         <mat-icon
-                            (click)="deleteFromWishlist()"
+                            (click)="handleDeleteFromWishlistClick()"
                             [class.disabledIcon]="checkedProds.length === 0"
                             class="param-icon">
                             delete_outline
                         </mat-icon>
                         <button
-                            (click)="deleteFromWishlist()"
+                            (click)="handleDeleteFromWishlistClick()"
                             [disabled]="checkedProds.length === 0">
                             Видалити
                         </button>
@@ -63,11 +63,11 @@
             </div>
             <div class="details__main">
                 <ng-container
-                    *ngIf="(wishlistService.wishlistItems$ | async)?.length; else empty">
+                    *ngIf="wishlistItems.length; else empty">
                     <!-- list cards -->
                     <app-cards
                         [full]="true"
-                        [data]="{ products: (wishlistService.wishlistItems$ | async) || []}"
+                        [data]="{ products: wishlistItems || []}"
                         [withCheckbox]="true"
                         [allCardsChecked]="allCardsChecked"
                         [size]="'big'"
@@ -93,12 +93,12 @@
                     </div>
                 </ng-template>
                 <!-- total -->
-                <div class="details__total total" *ngIf="(wishlistService.wishlistItems$ | async)?.length">
+                <div class="details__total total" *ngIf="wishlistItems.length">
                     <div class="total__quantity quantity">
-                        <p class="quantity__amount">{{(wishlistService.wishlistItems$ | async)?.length}} товари на суму</p>
+                        <p class="quantity__amount">{{wishlistItems.length}} товари на суму</p>
                         <p class="quantity__price">{{wishlistService.total}} &#x20b4;</p>
                     </div>
-                    <button class="total__btn" (click)="buyProds()">Купити все</button>
+                    <button class="total__btn" (click)="handleBuyProdsClick()">Купити все</button>
                 </div>
             </div>
         </ng-template>

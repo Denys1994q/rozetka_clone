@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Comment } from '../comment.component';
+import { IComment } from '../models/comment.model';
 import { ModalService } from 'src/app/modals/modal.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { ProductService } from '../../product/services/product.service';
@@ -18,7 +18,7 @@ export class CommentsPanelComponent {
         public ProductService: ProductService,
         public commentsService: CommentsService) {}
 
-    @Input() comments: Comment[] | null = []
+    @Input() comments: IComment[] | null = []
     @Input() withFilters: boolean = false
     @Input() link!: any 
 

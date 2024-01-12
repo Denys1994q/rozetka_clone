@@ -62,7 +62,7 @@ export class AuthService {
             tap(response => {
                 if (response && typeof window !== 'undefined' && localStorage) {
                     localStorage.setItem('authToken', response.token);
-                    this.wishlistService.setWishlistItems(response.wishlist)
+                    // this.wishlistService.setWishlistItems(response.wishlist)
                     this.userDataSubject.next(response);
                 } 
             }),
@@ -105,6 +105,7 @@ export class AuthService {
             tap(response => {
                 if (response) {
                     this.userDataSubject.next(response);
+                    // this.wishlistService.setWishlistItems(response.wishlist)
                 } 
             })
         )
@@ -121,7 +122,7 @@ export class AuthService {
                 if (typeof window !== 'undefined' && localStorage) {
                     localStorage.removeItem('authToken');
                 }
-                this.wishlistService.setWishlistItems([])
+                // this.wishlistService.setWishlistItems([])
                 this.router.navigate(['/']);
             })
         )

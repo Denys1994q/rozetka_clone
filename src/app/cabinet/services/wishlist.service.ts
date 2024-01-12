@@ -29,7 +29,6 @@ export class WishlistService {
 
     setWishlistItems(data: IProduct[]) {
         this.wishlistItemsSubject.next(data)
-        this.sortWishlist(this.activeSortOption)
         this.calculateTotalPrice(data) 
     }
 
@@ -82,27 +81,28 @@ export class WishlistService {
 
     sortWishlist(sortType: string) {
         this.activeSortOption = sortType
-        const currentWishlist = this.wishlistItemsSubject.getValue();
-        let sortedWishlist = [...currentWishlist];
-
-        if (sortType === 'Від дорогих до дешевих') { 
-            sortedWishlist = sortedWishlist.sort((a: any,b: any) => b.searchStatus.find((it: any) => it.searchPosition === 'price').option.new - a.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new)
-        } else if (sortType === 'Від дешевих до дорогих') {
-            sortedWishlist = sortedWishlist.sort((a: any,b: any) => a.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new - b.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new)
-        } else if (sortType === 'За датою додавання') {
-            sortedWishlist = sortedWishlist.sort((a: any, b: any) => {
-                const dateA = new Date(a.addedDate);
-                const dateB = new Date(b.addedDate);
-                if (dateA > dateB) {
-                    return -1;
-                } else if (dateA < dateB) {
-                    return 1;
-                } else {
-                    return 0; 
-                }
-        })
+        if (typeof window !== 'undefined' && localStorage) {
+            const apiUrl = `${this.backendUrl}/wishlist/sort/${sortType}` 
+            const token = localStorage.getItem('authToken');
+            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+            const options = {
+                headers,
+                withCredentials: true
+            };
+            return this.http.get<{message: string, sortedWishlist: IProduct[]}>(apiUrl, options).pipe(
+                map((response: any) => {
+                    if (response && response.sortedWishlist) {
+                        response.sortedWishlist = response.sortedWishlist.map((wishlistItem: WishlistItemResponse) => ({
+                            ...wishlistItem.product, 
+                            addedDate: wishlistItem.addedDate 
+                        }));
+                    }
+                    return response;
+                })
+            )
+        } else {
+            return throwError('Local storage is not available.');
         }
-        this.wishlistItemsSubject.next(sortedWishlist);
     }
 
     calculateTotalPrice(wishlistItems: IProduct[]) {
@@ -123,5 +123,4 @@ export class WishlistService {
         }
     }
 
-  
 }

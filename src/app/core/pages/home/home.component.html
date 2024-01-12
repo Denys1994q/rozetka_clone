@@ -1,7 +1,7 @@
 <div class="products">
      <!-- бокова панель з категоріями товарів, додатками, соцмережами, інформацією про компанію -->
     <app-categories-aside
-        [categories]="productService.allCategories"
+        [categories]="allCategories$ | async"
         [error]="allCategoriesError">
     </app-categories-aside>
     <!-- основна частина -->
@@ -17,7 +17,7 @@
             <h2 class="categories-mini__title">Каталог товарів</h2>
             <ul class="categories-mini__list">
                 <li
-                    *ngFor="let product of productService.allCategories"
+                    *ngFor="let product of allCategories$ | async"
                     class="categories-mini__item">
                     <mat-icon class="categories-mini__icon">{{product.icon}}</mat-icon>
                     <a routerLink="{{ product.engName + '/' + product.id }}">{{ product.name }}</a>
@@ -34,58 +34,47 @@
             Каталог товарів
         </button>
         <!-- картки -->
-        <ng-container *ngIf="productService.newProds && productService.newProds.length > 0">
-            <app-cards 
-                [data]="{category: 'Гарячі новинки', products: productService.newProds}">
-            </app-cards>
+        <ng-container *ngIf="newProds && newProds.length > 0 ">
+            <app-cards [data]="{category: 'Гарячі новинки', products: newProds}"></app-cards>
         </ng-container>
         <div
             class="newProds"
-            [hidden]="newProductsError ||  (productService.newProds && productService.newProds.length !== 0)">
+            [hidden]="newProductsError || (newProds && newProds.length !== 0)">
             <app-skeleton [variant]="'products'"></app-skeleton>
         </div>
         <div *ngIf="newProductsError" class="errorWrapper">
             <mat-icon>error_outline</mat-icon>
             <h4>Вибачте, сервіс тимчасово не працює</h4>
         </div>
-        <ng-container *ngIf="productService.moreProds && productService.moreProds.length > 0">
+        <ng-container *ngIf="moreProds && moreProds.length > 0">
             <div>
-                <app-cards
-                    [data]="{category: 'Більше товарів для вибору', products: productService.moreProds}">
-                </app-cards>
+                <app-cards [data]="{category: 'Більше товарів для вибору', products: moreProds}"></app-cards>
             </div>
         </ng-container>
         <div
             class="moreProds"
-            [hidden]="moreProductsError || (productService.moreProds && productService.moreProds.length !== 0)">
+            [hidden]="moreProductsError || (moreProds && moreProds.length !== 0)">
             <app-skeleton [variant]="'products'"></app-skeleton>
         </div>
         <div *ngIf="moreProductsError" class="errorWrapper">
             <mat-icon>error_outline</mat-icon>
             <h4>Вибачте, сервіс тимчасово не працює</h4>
         </div>
-        <ng-container
-            *ngIf="
-                productService.recommendedProds &&
-                productService.recommendedProds.length > 0
-            ">
-            <app-cards
-                [data]="{
-                    category: 'Рекомендовані',
-                    products: productService.recommendedProds
-                }">
-            </app-cards>
+        <ng-container *ngIf="recommendedProds && recommendedProds.length > 0">
+            <app-cards [data]="{category: 'Рекомендовані', products: recommendedProds}"></app-cards>
         </ng-container>
         <div
             class="recommendedProds"
-            [hidden]="recommendedProductsError || (productService.recommendedProds && productService.recommendedProds.length !== 0)">
+            [hidden]="recommendedProductsError || (recommendedProds && recommendedProds.length !== 0)">
             <app-skeleton [variant]="'products'"></app-skeleton>
         </div>
         <div *ngIf="recommendedProductsError" class="errorWrapper">
             <mat-icon>error_outline</mat-icon>
             <h4>Вибачте, сервіс тимчасово не працює</h4>
         </div>
+        <!-- video cards -->
         <app-video-cards></app-video-cards>
     </main>
+    <!-- side-banner -->
     <app-side-banner></app-side-banner>
 </div>

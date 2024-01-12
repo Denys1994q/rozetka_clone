@@ -1,4 +1,4 @@
-import { Component, Input, Output, HostListener, EventEmitter, SimpleChanges  } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges  } from '@angular/core';
 import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
@@ -48,29 +48,20 @@ export class CardsComponent {
     modData!: any
 
     ngOnInit() { 
-        // для динамічного відзначення карточок, які позначені як бажані (wishlist). Наприклад, коли юзер відлогінюється
-        this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
-            next: data => {
-                if (data.length === 0) {
+        this.getUserSubscription = this.authService.getUser().subscribe({
+            next: userData => {
+                if (!userData) {
                     this.prodIdsInWishlist = []
                 } else {
-                    data.map(item => this.prodIdsInWishlist.push(item._id)) 
+                    if (userData && userData.wishlist) {
+                        userData.wishlist.map((item: any) => this.prodIdsInWishlist.push(item._id))
+                    } 
                 }
             },
-            error: err => console.log(err) 
+            error: err => console.log(err)  
         })
-        // при першій ініціалізації: для початкового відзначення карточок, які позначені як бажані (wishlist)
-        this.getUserSubscription = this.authService.getUser().subscribe({
-            next: user => {
-                if (user && user.wishlist) {
-                    this.wishlistService.setWishlistItems(user.wishlist)
-                    user.wishlist.map((item: any) => this.prodIdsInWishlist.push(item._id))
-                } 
-            },
-            error: err => console.log(err)
-        })    
+
         this.getData(this.data.products)
-        // 
         if (typeof window !== 'undefined') {
             if (window.innerWidth < 700) {
                 this.endVal = 2
@@ -99,7 +90,6 @@ export class CardsComponent {
     getPriceObject(prod: any) {
         return prod.searchStatus.find((status: any) => status.searchPosition === 'price').option
     }
-
 
     getRaiting(prod: any) {
         let sum = 0
@@ -195,7 +185,7 @@ export class CardsComponent {
     }
 
     ngOnDestroy() {
-        this.wishlistSubscription.unsubscribe();
+        // this.wishlistSubscription.unsubscribe();
         this.getUserSubscription.unsubscribe();
     }
 

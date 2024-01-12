@@ -2,10 +2,11 @@ import { Component, ViewChild, ElementRef, PLATFORM_ID, Inject } from '@angular/
 import { NgForm } from '@angular/forms';
 import { CommentsService } from '../../comment/services/comments.service';
 import { ProductService } from 'src/app/product/services/product.service';
-import { IComment } from '../../comment/services/comments.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ModalService } from '../modal.service';
+import { IProduct } from 'src/app/product/models/product.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-comment-modal',
@@ -22,13 +23,19 @@ export class CreateCommentModalComponent {
     textarea: string = ''
     textareaError: boolean = false
     selectedFileUrls: any[] = []
+    product: IProduct | null = null
+    productSubscription!: Subscription
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         public commentsService: CommentsService, 
         public authService: AuthService,
         public modalService: ModalService,
-        private productService: ProductService) {}
+        private productService: ProductService) {
+            this.productSubscription = this.productService.product$.subscribe(prod => {
+                this.product = prod
+            })
+        }
 
     sendComment(form: NgForm) {
         if (this.textarea.length === 0) this.textareaError = true 
@@ -39,7 +46,7 @@ export class CreateCommentModalComponent {
             return 
         } 
 
-        const data: IComment = {
+        const data: any = {
             raiting: this.raiting,
             advantages: this.advantages,
             disadvantages: this.disadvantages,
@@ -51,15 +58,17 @@ export class CreateCommentModalComponent {
             data.photos = urls
         }
 
-        const prodId = this.productService.product._id
-        this.commentsService.addComment(prodId, data).subscribe({
-            next: response => {
-                this.modalService.closeDialog()
-                this.modalService.openDialog('thanks-modal')
-                this.productService.getCurrentProduct(prodId)
-            },
-            error: error => console.log(error)
-        })
+        if (this.product) {
+            const prodId = this.product._id
+            this.commentsService.addComment(prodId, data).subscribe({
+                next: response => {
+                    this.modalService.closeDialog()
+                    this.modalService.openDialog('thanks-modal')
+                    this.productService.getCurrentProduct(prodId)
+                },
+                error: error => console.log(error)
+            })
+        }
     }
 
     handleFileChange(event: any) {
@@ -122,6 +131,10 @@ export class CreateCommentModalComponent {
         } else {
             imageToRotate.rotate = imageToRotate.rotate + 90
         }
+    }
+
+    ngOnDestroy() {
+        this.productSubscription.unsubscribe();
     }
 
 }

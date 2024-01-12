@@ -1,23 +1,23 @@
-<div class="product__info info">
+<div *ngIf="product" class="product__info info">
     <div class="stickyWrapper">
         <div class="info__main-sticky">
             <!-- карусель фото і відео -->
             <div class="info__image">
                 <app-carousel
-                    [slidesArr]="ProductService.product.images"
+                    [slidesArr]="product.images"
                     [extended]="true"
                     [show_indicators]="false">
                 </app-carousel>
             </div>
             <button
-                *ngIf="ProductService.product.video"
+                *ngIf="product.video"
                 class="info__videoBtn"
                 (click)="scrollToBlock('videoBlock')">
                 <mat-icon>play_circle</mat-icon>
             </button>
             <!-- загальний опис товару -->
             <div class="characteristics-top">
-                <p>{{ ProductService.product.info_brief }}</p>
+                <p>{{ product.info_brief }}</p>
             </div>
             <div class="info__guarantee">
                 <img
@@ -41,16 +41,16 @@
             <div class="trade__price">
                 <!-- ціна -->
                 <app-price
-                    [price]="ProductService.price"
+                    [price]="product.price"
                     [big]="true">
                 </app-price>
                 <!-- наявність -->
                 <p class="trade__price-status">
-                    {{ ProductService.sellStatus }}
+                    {{ product.sellStatus }}
                 </p>
             </div>
             <div class="trade__buy price-buy-panel__btn">
-                <div *ngIf="checkIfProductInCart(ProductService.product._id); else buy">
+                <div *ngIf="checkIfProductInCart(product._id); else buy">
                     <div class="inCart-block">
                         <mat-icon class="inCart-icon">shopping_cart</mat-icon>
                         <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">
@@ -72,10 +72,10 @@
                 </button>
                 <button 
                     class="btn btn-icon btn-icon-orange" 
-                    (click)="onAddToWishlist(ProductService.product._id)"
+                    (click)="onAddToWishlist(product._id)"
                     aria-label="Додати до улюблених">
                     <mat-icon class="btn-icon__icon">
-                        {{isInWishlist ? 'favorite' : 'favorite_border'}}
+                        {{product.isInWishlist ? 'favorite' : 'favorite_border'}}
                     </mat-icon>
                 </button>
             </div>
@@ -89,7 +89,7 @@
         <!-- продавець -->
         <section class="info__item mb24 seller">
             <p class="seller__title">
-                Продавець: <span>{{ ProductService.seller }}</span>
+                Продавець: <span>{{ product.seller }}</span>
             </p>
             <div class="seller__image">
                 <img
@@ -129,6 +129,7 @@
 <!-- <app-cards [data]="newProds"></app-cards> -->
 <!-- характеристики -->
 <section
+    *ngIf="product"
     class="product__characteristicsAndReviews info"
     #characteristicsAndReviewsBlock>
     <div class="info__main">
@@ -138,11 +139,11 @@
             class="characteristic">
             <h3 class="characteristic__title">
                 Опис
-                <span>{{ ProductService.product.title }}</span>
+                <span>{{ product.title }}</span>
             </h3>
             <ul>
                 <li
-                    *ngFor="let item of ProductService.product.info_full"
+                    *ngFor="let item of product.info_full"
                     class="characteristic__textBlock">
                     <p class="characteristic__textItem bold">
                         {{ item.heading }}
@@ -162,21 +163,15 @@
         <!-- блок характеристик товару -->
         <app-characteristics-block
             [limited]="true"
-            [productTitle]="ProductService.product.title"
-            [textArray]="ProductService.product.info"
-            [link]="
-                '/' +
-                ProductService.product.engName +
-                '/' +
-                ProductService.product.id +
-                '/characteristics'
-            ">
+            [productTitle]="product.title"
+            [textArray]="product.info"
+            [link]="'/' + product.engName + '/' + product._id + '/characteristics'">
         </app-characteristics-block>
         <!-- додаткові матеріали -->
         <div class="characteristic">
             <h3 class="characteristic__title">
                 Додаткові матеріали
-                <span>{{ ProductService.product.title }}</span>
+                <span>{{ product.title }}</span>
             </h3>
             <ul class="documents">
                 <li class="documents__item">
@@ -219,20 +214,20 @@
     <!-- відгуки -->
     <div class="comments info__desc">
         <app-comments-panel
-            [comments]="ProductService.product.reviews_data"
-            [link]="'/' + ProductService.product.engName + '/' + ProductService.product._id + '/comments'" >
+            [comments]="product.reviews_data"
+            [link]="'/' + product.engName + '/' + product._id + '/comments'" >
         </app-comments-panel>
     </div>
 </section>
 <!-- відео блок -->
 <section
-    *ngIf="ProductService.product.video"
+    *ngIf="product && product.video"
     class="product__video video">
     <div
         class="video__wrapper"
         #videoBlock>
         <app-carousel
-            [slidesArr]="ProductService.product.video"
+            [slidesArr]="product.video"
             [extendedBig]="true"
             [extendedBigWide]="true"
             [show_indicators]="false"

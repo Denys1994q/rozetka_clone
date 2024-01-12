@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
 import { CommentsService } from 'src/app/comment/services/comments.service';
-import { ProductTabsService } from '../../services/product-tabs.service';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-product-comments',
@@ -21,15 +21,16 @@ export class ProductCommentsComponent {
         private modalService: ModalService, 
         public commentsService: CommentsService, 
         private productService: ProductService,
-        private scrollService: ScrollService,
-        private productTabsService: ProductTabsService ) {}
+        private scrollService: ScrollService) {}
 
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('comments')
-        this.productTabsService.setBaseView(false)
+        this.productService.setBaseView(false)
         this.commentsService.sortProdComments('З фото і відео')
-        this.commentsWithPhotoVideo = this.commentsService.comments.filter((item: any) => item.photo || item.video)
+
+        this.commentsWithPhotoVideo = this.commentsService.comments$.pipe(filter((item: any) => item.photo || item.video)
+);
     }
 
     ngAfterViewInit() {

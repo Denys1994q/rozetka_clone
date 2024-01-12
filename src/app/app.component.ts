@@ -40,8 +40,8 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.authService.getUser().subscribe({
-            next: user => this.wishlistService.setWishlistItems(user.wishlist),
-            error: error => console.log('Помилка при виконанні запиту:', error.error.message)
+            next: () => {},
+            error: error => console.log('user auth failed', error.error.message)
         })
         if (typeof window !== 'undefined' && localStorage) {
             localStorage.setItem('side-banner', 'active')

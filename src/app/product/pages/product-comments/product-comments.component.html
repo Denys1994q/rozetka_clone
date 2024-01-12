@@ -33,6 +33,6 @@
     </div>
     <app-comments-panel
         [withFilters]="true"
-        [comments]="commentsService.filteredComments">
+        [comments]="commentsService.filteredComments$ | async">
     </app-comments-panel>
 </div>

@@ -1,40 +1,40 @@
-<div *ngIf="ProductService.getOneProductLoading">
+<div *ngIf="loading$ | async">
     <app-skeleton [variant]="'category'"></app-skeleton>
 </div>
-<div *ngIf="ProductService.getOneProductError">
+<div *ngIf="error$ | async">
     <app-error [errorMsg]="ProductService.getOneProductErrorMsg"></app-error>
 </div>
-<article *ngIf="ProductService.product && !ProductService.getOneProductLoading" class="product" >
+<article *ngIf="product && !(loading$ | async)" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
-    <ng-container *ngIf="ProductService.category && ProductService.subCategory">
-        <app-breadcrumbs [data]="[ProductService.category.name, ProductService.subCategory.name]"></app-breadcrumbs>
+    <ng-container *ngIf="product.category && product.subCategory">
+        <app-breadcrumbs [data]="[product.category, product.subCategory]"></app-breadcrumbs>
     </ng-container>
     <!-- назва товару -->
     <h1 class="product__title">
-        {{ ProductService.product.title }}
+        {{ product.title }}
     </h1>
     <!-- панель рейтингу -->
     <section class="product__rating">
         <app-rating
             [fixed]="true"
-            [activeIconIndex]="ProductService.raiting">
+            [activeIconIndex]="product.raiting">
         </app-rating>
         <a
-            routerLink="{{ '/' + ProductService.product.engName + '/' + ProductService.product._id + '/comments' }}">
-            {{ ProductService.product.reviews_data.length }} відгуків
+            routerLink="{{ '/' + product.engName + '/' + product._id + '/comments' }}">
+            {{ product.reviews_data.length }} відгуків
         </a>
         <p class="product__code">
             <span> Код: </span>
-            {{ deviceService.isMobileView ? (ProductService.product._id | slice:0:10) + '...' : ProductService.product._id }}
+            {{ deviceService.isMobileView ? (product._id | slice:0:10) + '...' : product._id }}
         </p>
     </section>
     <!-- таби: коментарі, відгуки, фото, відео -->
     <app-tabs
-        [data]="ProductService.tabs"
-        [startRoute]="ProductService.product.engName + '/' + ProductService.product._id">
+        [data]="ProductService.productTabs"
+        [startRoute]="product.engName + '/' + product._id">
     </app-tabs>
     <!-- контент для табів з роутер-аутлету -->
-    <ng-container *ngIf="productTabsService.baseView; else tabsView">
+    <ng-container *ngIf="ProductService.baseView; else tabsView">
         <router-outlet></router-outlet>
     </ng-container>
     <ng-template #tabsView>
@@ -49,42 +49,40 @@
                 <section class="info__item mb16 card">
                     <div class="card__image">
                         <img
-                            src="{{ ProductService.product.image }}"
+                            src="{{ product.image }}"
                             alt="good" />
                     </div>
                     <p class="card__title">
-                        {{ ProductService.product.title }}
+                        {{ product.title }}
                     </p>
                 </section>
                 <div class="info__item mb16">
                     <section class="price">
                         <div class="trade__price">
                             <app-price
-                                [price]="ProductService.price"
+                                [price]="product.price"
                                 [big]="true">
                             </app-price>
                             <p class="trade__price-status">
-                                {{ ProductService.sellStatus }}
+                                {{ product.sellStatus }}
                             </p>
                         </div>
                         <div class="trade__btns">
                             <button class="btn btn-icon btn-icon-grey">
-                                <mat-icon class="btn-icon__icon"
-                                    >balance</mat-icon
-                                >
+                                <mat-icon class="btn-icon__icon">balance</mat-icon>
                             </button>
                             <button 
                                 class="btn btn-icon btn-icon-orange"
-                                (click)="onAddToWishlist(ProductService.product._id)"
+                                (click)="onAddToWishlist(product._id)"
                                 aria-label="Додати до улюблених">
                                 <mat-icon class="btn-icon__icon">
-                                    {{isInWishlist ? 'favorite' : 'favorite_border'}}
+                                    {{product.isInWishlist ? 'favorite' : 'favorite_border'}}
                                 </mat-icon>
                             </button>
                         </div>
                     </section>
                     <section class="trade__buy">
-                        <div *ngIf="cartService.checkIfProductInCart(ProductService.product._id); else buy">
+                        <div *ngIf="cartService.checkIfProductInCart(product._id); else buy">
                             <div class="inCart-block">
                                 <mat-icon class="inCart-icon">shopping_cart</mat-icon>
                                 <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">
@@ -103,8 +101,8 @@
                     </section>
                 </div>
                 <section class="info__item mb16 seller">
-                    <p class="seller__title">Продавець: <span>{{ ProductService.seller }}</span></p>
-                    <div class="seller__image" *ngIf="ProductService.seller === 'Rozetka'">
+                    <p class="seller__title">Продавець: <span>{{ product.seller }}</span></p>
+                    <div class="seller__image" *ngIf="product.seller === 'Rozetka'">
                         <img src="../../../assets/rozetka-seller.svg" alt="rozetka" />
                     </div>
                 </section>
@@ -114,13 +112,13 @@
         <!-- адаптив: панель продукту -->
         <section class="product-panel">
             <img
-                src="{{ ProductService.product.image }}"
+                src="{{ product.image }}"
                 alt="product-panel__img"
                 class="product-panel__img" />
-            <p class="product-panel__title">{{ ProductService.product.title }}</p>
-            <app-price [price]="ProductService.price"> </app-price>
+            <p class="product-panel__title">{{ product.title }}</p>
+            <app-price [price]="product.price"> </app-price>
             <div class="trade__buy">
-                <div *ngIf="cartService.checkIfProductInCart(ProductService.product._id); else adaptive_buy">
+                <div *ngIf="cartService.checkIfProductInCart(product._id); else adaptive_buy">
                     <div class="inCart-block">
                         <mat-icon class="inCart-icon">shopping_cart</mat-icon>
                         <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">

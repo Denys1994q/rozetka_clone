@@ -1,7 +1,8 @@
 import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { ProductTabsService } from '../../services/product-tabs.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { IProduct } from '../../models/product.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-video',
@@ -9,16 +10,25 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
   styleUrls: ['./product-video.component.sass']
 })
 export class ProductVideoComponent {
+    product: IProduct | null = null
+    productSubscription!: Subscription
 
     constructor(
         private scrollService: ScrollService,
-        public productService: ProductService, 
-        private productTabsService: ProductTabsService) {}
+        public productService: ProductService) {
+            this.productSubscription = this.productService.product$.subscribe(prod => {
+                this.product = prod
+            })
+        }
 
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('video')
-        this.productTabsService.setBaseView(false)
+        this.productService.setBaseView(false)
+    }
+
+    ngOnDestroy() {
+        this.productSubscription.unsubscribe();
     }
 
 }

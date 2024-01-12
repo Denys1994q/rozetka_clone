@@ -18,7 +18,7 @@ export class SearchResultBtnComponent {
 
     cancelAll() {
         this.clearAllClicked.emit();
-        if (this.CommentsService.comments) {
+        if (this.CommentsService.comments$) {
             this.CommentsService.resetSortType()
             this.CommentsService.filterProdComments()
         }

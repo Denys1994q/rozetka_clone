@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
 import { IProduct } from 'src/app/product/models/product.model';
-import { ProductService } from 'src/app/product/services/product.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -12,9 +11,9 @@ export class CartService {
     productInCart!: boolean 
     orderConfirmed: boolean = false
 
-    constructor(private modalService: ModalService, private productService: ProductService) { }
+    constructor(private modalService: ModalService) { }
 
-    getCart(): any {
+    getCart(prodId?: string): any {
         let cartData;
         if (typeof window !== 'undefined' && localStorage) {
             cartData = localStorage.getItem('shoppingCart');
@@ -23,8 +22,8 @@ export class CartService {
             this.productsFromStorage = JSON.parse(cartData) 
             this.getTotal()
         }
-        if (this.productService.product && this.productService.product._id) {
-            this.checkIfProductInCart(this.productService.product._id)
+        if (prodId) {
+            this.checkIfProductInCart(prodId)
         }
     }
 
@@ -82,7 +81,6 @@ export class CartService {
         }
         this.modalService.openDialog('cart')
         this.getTotal()
-        // this.checkIfProductInCart(this.productService.product._id)
         this.checkIfProductInCart(product._id)
     }
 
@@ -134,11 +132,9 @@ export class CartService {
         }
         const newData = parsedCartData.filter((prod: any) => prod._id !== id)
         localStorage.setItem('shoppingCart', JSON.stringify(newData));
-        this.getCart()
+        this.getCart(id)
         this.getTotal()
-        if (this.productService.product && this.productService.product._id) {
-            this.checkIfProductInCart(this.productService.product._id)
-        }
+        // this.checkIfProductInCart(id)
     }
 
     // Очистити корзину

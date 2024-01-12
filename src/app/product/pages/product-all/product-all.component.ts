@@ -5,9 +5,10 @@ import { CartService } from 'src/app/cart/services/cart.service';
 import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
-import { ProductTabsService } from '../../services/product-tabs.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { IProduct } from '../../models/product.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product-all',
@@ -18,8 +19,7 @@ export class ProductAllComponent {
     showFullText: boolean = false
     hideBtn: boolean = false
     slides: Slide[] = []
-    prodIdsInWishlist: string[] = [] 
-    isInWishlist!: boolean
+    product: IProduct | null = null
     @ViewChild('videoBlock') videoBlock!: ElementRef;
     @ViewChild('characteristicsAndReviewsBlock') characteristicsAndReviewsBlock!: ElementRef;
 
@@ -29,25 +29,16 @@ export class ProductAllComponent {
         private wishlistService: WishlistService,
         public ProductService: ProductService, 
         public cartService: CartService, 
-        public productTabsService: ProductTabsService,
         private scrollService: ScrollService,
-        public modalService: ModalService) {}
+        public modalService: ModalService) {
+            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
+                this.product = prod
+            })
+        }
 
     ngOnInit() {
         this.scrollService.scrollToTop()
-        this.productTabsService.setBaseView(true)
-        this.authService.getUser().subscribe({
-            next: user => {
-                if (user && user.wishlist) {
-                    this.wishlistService.setWishlistItems(user.wishlist)
-                    user.wishlist.map((item: any) => this.prodIdsInWishlist.push(item._id))
-                if (this.prodIdsInWishlist.includes(this.ProductService.product._id)) {
-                    this.isInWishlist = true
-                }
-                } 
-            },
-            error: err => console.log(err)
-        })
+        this.ProductService.setBaseView(true)
     }
 
     showFullBlock() {
@@ -71,7 +62,7 @@ export class ProductAllComponent {
     }
 
     addToCart() {
-        this.cartService.addToShoppingCart({...this.ProductService.product, amount: 1})  
+        this.cartService.addToShoppingCart({...this.product, amount: 1})  
     }
 
     checkIfProductInCart(id: string) {
@@ -93,21 +84,14 @@ export class ProductAllComponent {
             this.modalService.openDialog('login');
         }
         try {
-            if (this.prodIdsInWishlist.includes(productId)) {
+            if (this.product?.isInWishlist) {
                 this.wishlistService.removeFromWishlist([productId]).subscribe({
-                    next: resp => {
-                        this.isInWishlist = false
-                        this.prodIdsInWishlist = this.prodIdsInWishlist.filter(item => item !== productId)
-                    },
+                    next: () => this.ProductService.updateProductWishlistStatus(false),
                     error: err => console.log(err)
                 })
             } else {
                 this.wishlistService.addToWishlist(productId).subscribe({
-                    next: resp => {
-                        this.isInWishlist = true
-                        this.prodIdsInWishlist.push(productId)
-                        this.wishlistService.setWishlistItems(resp.updatedWishlist)
-                    },
+                    next: () => this.ProductService.updateProductWishlistStatus(true),
                     error: err => console.log(err)
                 })
             }

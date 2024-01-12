@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RecentlyViewedService } from '../../services/recently-viewed.service';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-cabinet-recently-viewed',
@@ -8,15 +8,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./cabinet-recently-viewed.component.sass']
 })
 export class CabinetRecentlyViewedPage {
+    loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(public recentlyViewedService: RecentlyViewedService) {}
 
-    // loading
-    loading: boolean = false
     private subscription!: Subscription;
 
     ngOnInit() {
-        this.loading = true
+        this.loading$.next(true)
         this.subscription = this.recentlyViewedService.getRecentlyViewedProds().subscribe({
             next: resp => this.handleUserUpdate(resp.products),
             error: err => this.handleUserUpdate(null)
@@ -24,18 +23,18 @@ export class CabinetRecentlyViewedPage {
     }
 
     handleClearAllClick() {
-        this.loading = true
+        this.loading$.next(true)
         this.recentlyViewedService.removeAllRecentlyViewedProds().subscribe({
             next: response => {
-                this.loading = false
+                this.loading$.next(false)
                 this.recentlyViewedService.setRecentlyViewedItems(response.updatedProds)
             },
-            error: err => this.loading = false
+            error: err => this.loading$.next(false)
         })
     }
 
     handleUserUpdate(products: any) {
-        this.loading = false;
+        this.loading$.next(false)
         if (products) {
             this.recentlyViewedService.setRecentlyViewedItems(products);
         }
@@ -44,7 +43,7 @@ export class CabinetRecentlyViewedPage {
     onCardDeleteBtnClick(prodId: string) {
         this.recentlyViewedService.removeOneRecentlyViewedProd(prodId).subscribe({
             next: resp => {
-                this.loading = true
+                this.loading$.next(true)
                 this.subscription = this.recentlyViewedService.getRecentlyViewedProds().subscribe({
                     next: resp => this.handleUserUpdate(resp.products),
                     error: err => this.handleUserUpdate(null)

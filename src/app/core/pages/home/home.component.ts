@@ -8,6 +8,9 @@ import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { makeStateKey, TransferState } from '@angular/core';
 import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
 import { ScrollService } from '../../services/scroll.service';
+import { BehaviorSubject } from 'rxjs';
+import { ICategory } from 'src/app/categories/models/categories.model';
+import { IProduct } from 'src/app/product/models/product.model';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +19,14 @@ import { ScrollService } from '../../services/scroll.service';
 })
 export class HomeComponent implements AfterViewInit {
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
+    allCategories$ = new BehaviorSubject<ICategory[]>([])
     allCategoriesError: boolean = false
     newProductsError: boolean = false
     moreProductsError: boolean = false
     recommendedProductsError: boolean = false
+    newProds: IProduct[] = []
+    moreProds: IProduct[] = []
+    recommendedProds: IProduct[] = []
 
     constructor(
         private transferState: TransferState,
@@ -31,7 +38,17 @@ export class HomeComponent implements AfterViewInit {
         private elementRef: ElementRef,
         private scrollService: ScrollService,
         public cartService: CartService)
-    {}
+    {
+        this.productService.newProds$.subscribe(prods => {
+            this.newProds = prods 
+        });
+        this.productService.moreProds$.subscribe(prods => {
+            this.moreProds = prods 
+        });
+        this.productService.recommendedProds$.subscribe(prods => {
+            this.recommendedProds = prods 
+        });
+    }
 
     ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId)) {
@@ -81,7 +98,7 @@ export class HomeComponent implements AfterViewInit {
         if (isPlatformServer(this.platformId)) {
             this.categoriesApiService.getAllCategories().subscribe({
                 next: data => {
-                    this.productService.setAllCategories(data)
+                    this.allCategories$.next(data)
                     this.transferState.set(this.ALL_CATEGORIES_KEY, data)
                 },
                 error: error => this.allCategoriesError = true
@@ -91,10 +108,10 @@ export class HomeComponent implements AfterViewInit {
             this.scrollService.scrollToTop()
             const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
             if (cachedCategories) {
-                this.productService.setAllCategories(cachedCategories)
+                this.allCategories$.next(cachedCategories)
             } else {
                 this.categoriesApiService.getAllCategories().subscribe({
-                    next: data => this.productService.setAllCategories(data),
+                    next: data => this.allCategories$.next(data),
                     error: err => this.allCategoriesError = true
                   })
             }

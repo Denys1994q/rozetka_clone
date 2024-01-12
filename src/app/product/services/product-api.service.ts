@@ -36,4 +36,9 @@ export class ProductApiService {
         return this.http.get<IProduct[]>(apiUrl);
     }
 
+    searchProducts(prodName: string): Observable<IProduct[]> {
+        const apiUrl = `${this.backendUrl}/search/${prodName}` 
+        return this.http.get<IProduct[]>(apiUrl)
+    }
+
 }

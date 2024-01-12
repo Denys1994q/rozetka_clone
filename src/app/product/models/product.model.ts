@@ -1,3 +1,7 @@
+import { ICategory } from "src/app/categories/models/categories.model"
+import { IComment } from "src/app/comment/models/comment.model"
+import { Slide } from "src/app/carousel/carousel.component"
+
 interface Img {
     url: string
 }
@@ -5,17 +9,6 @@ interface Img {
 interface Info {
     heading: string,
     text: string
-}
-
-interface Review {
-    author: string,
-    date: Date,
-    text: string,
-    rating?: number,
-    raiting?: number,
-    likes: number,
-    dislikes: number,
-    photo: string
 }
 
 interface Price {
@@ -26,23 +19,32 @@ interface Price {
 export interface ISearchStatus {
     searchPosition: string,
     title: string,
-    option: string | Price | boolean
+    option: any
 }
 
 export interface IProduct {
     _id: string,
     title: string,
     engName: string,
+    category?: string,
+    subCategory?: string,
     image: string,
     image_mob?: string,
     image2: string,
     images: Img[],
+    video?: any,
     info_brief: string,
     info_full: Info[],
     info: Info[],
-    reviews_data: Review[],
+    rating?: number,
+    raiting?: number,
+    price: Price,
+    seller: string,
+    sellStatus: string,
+    reviews_data: IComment[],
     date: Date,
     searchStatus: ISearchStatus[],
     amount?: number,
     addedDate?: Date,
+    isInWishlist?: boolean
 }

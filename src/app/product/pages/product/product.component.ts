@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { CartService } from 'src/app/cart/services/cart.service';
@@ -7,12 +7,11 @@ import { ModalService } from 'src/app/modals/modal.service';
 import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
-import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductTabsService } from '../../services/product-tabs.service';
-import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product',
@@ -20,12 +19,12 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
   styleUrls: ['./product.component.sass']
 })
 export class ProductComponent {
-    product!: IProduct
-    isInWishlist: boolean = false
-    prodIdsInWishlist: string[] = [] 
+    product: IProduct | null = null
+    loading$!: Observable<boolean>
+    error$!: Observable<boolean>
+    unsubscribe$ = new Subject()
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
         public deviceService: DeviceService,
         private router: Router, 
         public route:ActivatedRoute, 
@@ -36,63 +35,32 @@ export class ProductComponent {
         public cartService: CartService,
         public modalService: ModalService,
         private recentlyViewedService: RecentlyViewedService,
-        private categoriesApiService: CategoriesApiService,
-        private scrollService: ScrollService,
-        public productTabsService: ProductTabsService
-    ) {}
+        private scrollService: ScrollService) {
+            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
+                this.product = prod
+            })
+            this.loading$ = this.ProductService.getOneProductLoading$
+            this.error$ = this.ProductService.getOneProductError$
+        }
 
     ngOnInit() {
-        this.scrollService.scrollToTop()
-
         this.route.params.subscribe(params => {
             const productId = params['productId'];
-            // отримуємо з сервісу інфо щодо товару по його айді
             this.ProductService.getCurrentProduct(productId)
-            this.findCategory(productId)
 
-            this.recentlyViewedService.addToRecentlyViewedProds(productId).subscribe({
-                next: response => console.log(response),
-                error: err => console.log(err)
-            })
-
-            this.authService.getUser().subscribe({
-                next: user => {
-                    if (user && user.wishlist) {
-                        this.isInWishlist = false
-                        this.wishlistService.setWishlistItems(user.wishlist)
-                        this.prodIdsInWishlist = user.wishlist.map((item: any) => item._id)
-                        if (this.prodIdsInWishlist.includes(this.ProductService.product._id)) {
-                            this.isInWishlist = true
-                        }
-                    } 
-                },
+            this.recentlyViewedService.addToRecentlyViewedProds(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                next: () => {},
                 error: err => console.log(err)
             })
         })
-       
+    }
+
+    ngAfterViewInit() {
+        this.scrollService.scrollToTop()
     }
 
     addToCart() {
-        this.cartService.addToShoppingCart({...this.ProductService.product, amount: 1})  
-    }
-
-    findCategory(urlId: string) {
-        this.categoriesApiService.getAllCategories().subscribe({
-            next: response => {
-                response.find((category: any) => {
-                    category.subCategories.find((sub: any) => {
-                    sub.products.find((prod: any) => {
-                        if (prod._id === urlId) {
-                            this.cartService.getCart()
-                            this.ProductService.setCategory(category)
-                            this.ProductService.setSubcategory(sub)
-                        }
-                    })
-                    })
-                })
-            },
-            error: err => console.log(err)
-        })
+        this.cartService.addToShoppingCart({...this.product, amount: 1})  
     }
 
     onAddToWishlist(productId: string) {
@@ -100,21 +68,14 @@ export class ProductComponent {
             this.modalService.openDialog('login');
         }
         try {
-            if (this.prodIdsInWishlist.includes(productId)) {
-                this.wishlistService.removeFromWishlist([productId]).subscribe({
-                    next: resp => {
-                        this.isInWishlist = false
-                        this.prodIdsInWishlist = this.prodIdsInWishlist.filter(item => item !== productId)
-                    },
+            if (this.product?.isInWishlist) {
+                this.wishlistService.removeFromWishlist([productId]).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: resp => this.ProductService.updateProductWishlistStatus(false),
                     error: err => console.log(err)
                 })
             } else {
-                this.wishlistService.addToWishlist(productId).subscribe({
-                    next: resp => {
-                        this.isInWishlist = true
-                        this.prodIdsInWishlist.push(productId)
-                        this.wishlistService.setWishlistItems(resp.updatedWishlist)
-                    },
+                this.wishlistService.addToWishlist(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: resp => this.ProductService.updateProductWishlistStatus(true),
                     error: err => console.log(err)
                 })
             }
@@ -124,7 +85,7 @@ export class ProductComponent {
     }
 
     ngOnDestroy() {
-        this.ProductService.product = null
+        this.ProductService.resetProduct()
     }
  
 }

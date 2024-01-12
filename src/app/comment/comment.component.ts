@@ -3,29 +3,9 @@ import { CommentsService } from './services/comments.service';
 import { ProductService } from '../product/services/product.service';
 import { AuthService } from '../core/services/auth.service';
 import { UserData } from '../core/services/auth.service';
-
-interface Vote {
-  user: string
-}
-
-export interface Comment {
-  author?: string,
-  user?: any,
-  date?: Date,
-  text?: string,
-  content?: string,
-  rating?: number, 
-  raiting?: number,
-  advantages?: string,
-  disadvantages?: string,
-  likes: Vote[],
-  dislikes: Vote[],
-  photo?: string,
-  photos?: string[],
-  _id: string,
-  video?: string,
-  createdAt: Date
-}
+import { IComment } from './models/comment.model';
+import { IProduct } from '../product/models/product.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comment',
@@ -33,16 +13,22 @@ export interface Comment {
   styleUrls: ['./comment.component.sass']
 })
 export class CommentComponent {
-    @Input() comment!: Comment
+    @Input() comment!: IComment
     totalLikes: number = 0
     totalDislikes: number = 0
     isLiked: boolean  = false
     isDisliked: boolean  = false
+    product: IProduct | null = null
+    productSubscription!: Subscription
 
     constructor(
         private commentsService: CommentsService, 
         private authService: AuthService,
-        private productService: ProductService) {}
+        private productService: ProductService) {
+            this.productSubscription = this.productService.product$.subscribe(prod => {
+                this.product = prod
+            })
+        }
 
     ngOnInit() {
         this.totalLikes = this.comment.likes.length
@@ -57,29 +43,37 @@ export class CommentComponent {
 
     addLike(commentId: string) {
         if (this.isLiked) return
-        const prodId = this.productService.product._id
-        this.commentsService.addLike(prodId, commentId).subscribe({
-            next: resp => {
-                this.totalLikes = resp.likes
-                this.totalDislikes = resp.dislikes
-                this.isLiked = true
-                this.isDisliked = false
-            },
-            error: err => console.log(err)
-        })
+        if (this.product) {
+            const prodId = this.product._id
+            this.commentsService.addLike(prodId, commentId).subscribe({
+                next: resp => {
+                    this.totalLikes = resp.likes
+                    this.totalDislikes = resp.dislikes
+                    this.isLiked = true
+                    this.isDisliked = false
+                },
+                error: err => console.log(err)
+            })
+        }
     }
 
     addDislike(commentId: string) {
         if (this.isDisliked) return
-        const prodId = this.productService.product._id
-        this.commentsService.addDislike(prodId, commentId).subscribe({
-            next: resp => {
-                this.totalDislikes = resp.dislikes
-                this.totalLikes = resp.likes
-                this.isDisliked = true
-                this.isLiked = false
-            },
-            error: err => console.log(err)
-        })
+        if (this.product) {
+            const prodId = this.product._id
+            this.commentsService.addDislike(prodId, commentId).subscribe({
+                next: resp => {
+                    this.totalDislikes = resp.dislikes
+                    this.totalLikes = resp.likes
+                    this.isDisliked = true
+                    this.isLiked = false
+                },
+                error: err => console.log(err)
+            })
+        }
+    }
+
+    ngOnDestroy() {
+        this.productSubscription.unsubscribe();
     }
 }
