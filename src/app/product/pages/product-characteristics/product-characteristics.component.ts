@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
 import { IProduct } from '../../models/product.model';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product-characteristics',
@@ -11,12 +11,11 @@ import { Subscription } from 'rxjs';
 })
 export class ProductCharacteristicsComponent {
     product: IProduct | null = null
-    productSubscription!: Subscription
 
     constructor(
         public ProductService: ProductService, 
         private scrollService: ScrollService) {
-            this.productSubscription = this.ProductService.product$.subscribe(prod => {
+            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
                 this.product = prod
             })
         }
@@ -25,10 +24,6 @@ export class ProductCharacteristicsComponent {
         this.ProductService.checkActiveTab('characteristics')
         this.scrollService.scrollToTop()
         this.ProductService.setBaseView(false)
-    }
-
-    ngOnDestroy() {
-        this.productSubscription.unsubscribe();
     }
 
 }

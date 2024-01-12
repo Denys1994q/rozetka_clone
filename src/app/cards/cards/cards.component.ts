@@ -4,7 +4,7 @@ import { CartService } from 'src/app/cart/services/cart.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { SnackBarComponent } from 'src/app/shared/components/snackBar/snack-bar.component';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ModalService } from 'src/app/modals/modal.service';
 
@@ -42,13 +42,11 @@ export class CardsComponent {
     activeIndex!: number | boolean
     prodIdsInTheCart: string[] = [] 
     prodIdsInWishlist: string[] = [] 
-    private wishlistSubscription!: Subscription;
-    private getUserSubscription!: Subscription;
-
     modData!: any
+    unsubscribe$ = new Subject()
 
     ngOnInit() { 
-        this.getUserSubscription = this.authService.getUser().subscribe({
+        this.authService.getUser().pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: userData => {
                 if (!userData) {
                     this.prodIdsInWishlist = []
@@ -153,16 +151,15 @@ export class CardsComponent {
         }
         try {
             if (this.prodIdsInWishlist.includes(productId)) {
-                this.wishlistService.removeFromWishlist([productId]).subscribe({
-                    next: resp => {
+                this.wishlistService.removeFromWishlist([productId]).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: () => {
                         this.prodIdsInWishlist = this.prodIdsInWishlist.filter(item => item !== productId)
                     },
                     error: err => console.log(err)
                 })
             } else {
-                this.wishlistService.addToWishlist(productId).subscribe({
-                    next: resp => {
-                        console.log(resp)
+                this.wishlistService.addToWishlist(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: () => {
                         this.prodIdsInWishlist.push(productId)
                     },
                     error: err => console.log(err)
@@ -182,11 +179,6 @@ export class CardsComponent {
 
     checkIfProductInWishlist(id: string) {
         return this.prodIdsInWishlist.includes(id) ? true : false
-    }
-
-    ngOnDestroy() {
-        // this.wishlistSubscription.unsubscribe();
-        this.getUserSubscription.unsubscribe();
     }
 
 }

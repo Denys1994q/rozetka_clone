@@ -4,7 +4,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil  } from 'rxjs';
 
 @Component({
   selector: 'app-cabinet-wishlist',
@@ -16,10 +16,7 @@ export class CabinetWishlistPage {
     allCardsChecked!: boolean
     loading: boolean = false
     wishlistItems: IProduct[] = []
-    private getUserSubscription!: Subscription;
-    private sortWishlistSubscription!: Subscription;
-    private removeFromWishlistSubscription!: Subscription;
-    private sortRemovedWishlistSubscription!: Subscription
+    unsubscribe$ = new Subject()
 
     constructor(
         public productService: ProductService, 
@@ -29,7 +26,7 @@ export class CabinetWishlistPage {
 
     ngOnInit() {
         this.loading = true
-        this.getUserSubscription = this.authService.getUser().subscribe({
+        this.authService.getUser().pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: user => {
                 this.loading = false
                 this.wishlistItems = user.wishlist
@@ -39,7 +36,7 @@ export class CabinetWishlistPage {
     }
 
     onSelectChange(e: string) {
-        this.sortWishlistSubscription = this.wishlistService.sortWishlist(e).subscribe({
+        this.wishlistService.sortWishlist(e).pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: response => this.wishlistService.setWishlistItems(response.sortedWishlist)
         })
     }
@@ -65,13 +62,15 @@ export class CabinetWishlistPage {
     }
 
     handleDeleteFromWishlistClick() {
-        this.removeFromWishlistSubscription = this.wishlistService.removeFromWishlist(this.checkedProds).subscribe({
-            next: response => {
-                this.sortRemovedWishlistSubscription = this.wishlistService.sortWishlist(this.wishlistService.activeSortOption).subscribe({
-                    next: res => {
-                        this.wishlistItems = res.sortedWishlist  
-                        this.checkedProds = [];
-                    } 
+        this.wishlistService.removeFromWishlist(this.checkedProds).pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: () => {
+                this.wishlistService.sortWishlist(this.wishlistService.activeSortOption)
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe({
+                        next: res => {
+                            this.wishlistItems = res.sortedWishlist  
+                            this.checkedProds = [];
+                        } 
                 })
             },
             error: err => console.log(err)
@@ -82,19 +81,6 @@ export class CabinetWishlistPage {
         this.wishlistItems.map(item => {
             this.cartService.addToShoppingCart({...item, amount: 1})
         })
-    }
-
-    ngOnDestroy() {
-        this.getUserSubscription.unsubscribe();
-        if (this.sortWishlistSubscription) {
-            this.sortWishlistSubscription.unsubscribe();
-        }
-        if (this.removeFromWishlistSubscription) {
-            this.removeFromWishlistSubscription.unsubscribe();
-        }
-        if (this.sortRemovedWishlistSubscription) {
-            this.sortRemovedWishlistSubscription.unsubscribe()
-        }
     }
 
 }

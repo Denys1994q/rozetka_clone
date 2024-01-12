@@ -6,7 +6,8 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ModalService } from '../modal.service';
 import { IProduct } from 'src/app/product/models/product.model';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-create-comment-modal',
@@ -24,7 +25,7 @@ export class CreateCommentModalComponent {
     textareaError: boolean = false
     selectedFileUrls: any[] = []
     product: IProduct | null = null
-    productSubscription!: Subscription
+    unsubscribe$ = new Subject()
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -32,7 +33,7 @@ export class CreateCommentModalComponent {
         public authService: AuthService,
         public modalService: ModalService,
         private productService: ProductService) {
-            this.productSubscription = this.productService.product$.subscribe(prod => {
+            this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
                 this.product = prod
             })
         }
@@ -60,7 +61,7 @@ export class CreateCommentModalComponent {
 
         if (this.product) {
             const prodId = this.product._id
-            this.commentsService.addComment(prodId, data).subscribe({
+            this.commentsService.addComment(prodId, data).pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: response => {
                     this.modalService.closeDialog()
                     this.modalService.openDialog('thanks-modal')
@@ -72,7 +73,7 @@ export class CreateCommentModalComponent {
     }
 
     handleFileChange(event: any) {
-        this.commentsService.uploadPhoto(event.target.files[0]).subscribe({
+        this.commentsService.uploadPhoto(event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: resp => {
                 const obj = {
                     url: resp.url,
@@ -131,10 +132,6 @@ export class CreateCommentModalComponent {
         } else {
             imageToRotate.rotate = imageToRotate.rotate + 90
         }
-    }
-
-    ngOnDestroy() {
-        this.productSubscription.unsubscribe();
     }
 
 }

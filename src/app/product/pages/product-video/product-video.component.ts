@@ -2,7 +2,7 @@ import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
 import { IProduct } from '../../models/product.model';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product-video',
@@ -11,12 +11,11 @@ import { Subscription } from 'rxjs';
 })
 export class ProductVideoComponent {
     product: IProduct | null = null
-    productSubscription!: Subscription
 
     constructor(
         private scrollService: ScrollService,
         public productService: ProductService) {
-            this.productSubscription = this.productService.product$.subscribe(prod => {
+            this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
                 this.product = prod
             })
         }
@@ -25,10 +24,6 @@ export class ProductVideoComponent {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('video')
         this.productService.setBaseView(false)
-    }
-
-    ngOnDestroy() {
-        this.productSubscription.unsubscribe();
     }
 
 }

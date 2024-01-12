@@ -2,10 +2,9 @@ import { Component, Input } from '@angular/core';
 import { CommentsService } from './services/comments.service';
 import { ProductService } from '../product/services/product.service';
 import { AuthService } from '../core/services/auth.service';
-import { UserData } from '../core/services/auth.service';
 import { IComment } from './models/comment.model';
 import { IProduct } from '../product/models/product.model';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-comment',
@@ -19,13 +18,12 @@ export class CommentComponent {
     isLiked: boolean  = false
     isDisliked: boolean  = false
     product: IProduct | null = null
-    productSubscription!: Subscription
 
     constructor(
         private commentsService: CommentsService, 
         private authService: AuthService,
         private productService: ProductService) {
-            this.productSubscription = this.productService.product$.subscribe(prod => {
+            this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
                 this.product = prod
             })
         }
@@ -73,7 +71,4 @@ export class CommentComponent {
         }
     }
 
-    ngOnDestroy() {
-        this.productSubscription.unsubscribe();
-    }
 }

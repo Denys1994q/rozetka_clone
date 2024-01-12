@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RecentlyViewedService } from '../../services/recently-viewed.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cabinet-recently-viewed',
@@ -9,14 +9,13 @@ import { Subscription, BehaviorSubject } from 'rxjs';
 })
 export class CabinetRecentlyViewedPage {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    unsubscribe$ = new Subject()
 
     constructor(public recentlyViewedService: RecentlyViewedService) {}
 
-    private subscription!: Subscription;
-
     ngOnInit() {
         this.loading$.next(true)
-        this.subscription = this.recentlyViewedService.getRecentlyViewedProds().subscribe({
+        this.recentlyViewedService.getRecentlyViewedProds().pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: resp => this.handleUserUpdate(resp.products),
             error: err => this.handleUserUpdate(null)
         })
@@ -44,18 +43,12 @@ export class CabinetRecentlyViewedPage {
         this.recentlyViewedService.removeOneRecentlyViewedProd(prodId).subscribe({
             next: resp => {
                 this.loading$.next(true)
-                this.subscription = this.recentlyViewedService.getRecentlyViewedProds().subscribe({
+                this.recentlyViewedService.getRecentlyViewedProds().pipe(takeUntil(this.unsubscribe$)).subscribe({
                     next: resp => this.handleUserUpdate(resp.products),
                     error: err => this.handleUserUpdate(null)
                 })
             } 
         })
-    }
-
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
     }
 
 }
