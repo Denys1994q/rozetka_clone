@@ -1,8 +1,6 @@
 import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
-import { IProduct } from '../../models/product.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product-video',
@@ -10,15 +8,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   styleUrls: ['./product-video.component.sass']
 })
 export class ProductVideoComponent {
-    product: IProduct | null = null
 
     constructor(
         private scrollService: ScrollService,
-        public productService: ProductService) {
-            this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
-                this.product = prod
-            })
-        }
+        public productService: ProductService) {}
 
     ngOnInit() {
         this.scrollService.scrollToTop()

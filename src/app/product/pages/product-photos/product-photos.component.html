@@ -3,6 +3,6 @@
         <img
             src="{{ photo.url }}"
             class="photo"
-            alt="{{ product?.title + '-photo' }}" />
+            alt="{{ (this.productService.product$ | async)?.title + '-photo' }}" />
     </li>
 </ul>

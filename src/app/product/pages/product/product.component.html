@@ -2,9 +2,9 @@
     <app-skeleton [variant]="'category'"></app-skeleton>
 </div>
 <div *ngIf="error$ | async">
-    <app-error [errorMsg]="ProductService.getOneProductErrorMsg"></app-error>
+    <app-error [errorMsg]="productService.getOneProductErrorMsg"></app-error>
 </div>
-<article *ngIf="product && !(loading$ | async)" class="product" >
+<article *ngIf="!(loading$ | async) && (product$ | async) as product" class="product" >
     <!-- url товару: категорія, підкатегорія... -->
     <ng-container *ngIf="product.category && product.subCategory">
         <app-breadcrumbs [data]="[product.category, product.subCategory]"></app-breadcrumbs>
@@ -30,11 +30,11 @@
     </section>
     <!-- таби: коментарі, відгуки, фото, відео -->
     <app-tabs
-        [data]="ProductService.productTabs"
+        [data]="productService.productTabs"
         [startRoute]="product.engName + '/' + product._id">
     </app-tabs>
     <!-- контент для табів з роутер-аутлету -->
-    <ng-container *ngIf="ProductService.baseView; else tabsView">
+    <ng-container *ngIf="productService.baseView; else tabsView">
         <router-outlet></router-outlet>
     </ng-container>
     <ng-template #tabsView>
@@ -59,12 +59,9 @@
                 <div class="info__item mb16">
                     <section class="price">
                         <div class="trade__price">
-                            <app-price
-                                [price]="product.price"
-                                [big]="true">
-                            </app-price>
+                            <app-price [price]="product.price" [big]="true"></app-price>
                             <p class="trade__price-status">
-                                {{ product.sellStatus }}
+                                {{ (product$ | async)?.sellStatus }}
                             </p>
                         </div>
                         <div class="trade__btns">
@@ -73,7 +70,7 @@
                             </button>
                             <button 
                                 class="btn btn-icon btn-icon-orange"
-                                (click)="onAddToWishlist(product._id)"
+                                (click)="onAddToWishlist(product)"
                                 aria-label="Додати до улюблених">
                                 <mat-icon class="btn-icon__icon">
                                     {{product.isInWishlist ? 'favorite' : 'favorite_border'}}
@@ -93,7 +90,7 @@
                         <ng-template #buy>
                             <button 
                                 class="btn iconed-btn btn-medium btn-green width100"
-                                (click)="addToCart()">
+                                (click)="addToCart(product)">
                                 <mat-icon class="iconed-btn__icon">shopping_cart</mat-icon>
                                 Купити
                             </button>

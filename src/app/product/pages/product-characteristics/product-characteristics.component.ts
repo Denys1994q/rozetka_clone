@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
-import { IProduct } from '../../models/product.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product-characteristics',
@@ -10,15 +8,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   styleUrls: ['./product-characteristics.component.sass']
 })
 export class ProductCharacteristicsComponent {
-    product: IProduct | null = null
 
     constructor(
         public ProductService: ProductService, 
-        private scrollService: ScrollService) {
-            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
-                this.product = prod
-            })
-        }
+        private scrollService: ScrollService) {}
 
     ngOnInit() {
         this.ProductService.checkActiveTab('characteristics')

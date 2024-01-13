@@ -105,7 +105,7 @@ export class CartService {
     }
 
     
-    checkIfProductInCart(id: string) {
+    checkIfProductInCart(id: any) {
         let cartData;
         if (typeof window !== 'undefined' && localStorage) {
             cartData = localStorage.getItem('shoppingCart');

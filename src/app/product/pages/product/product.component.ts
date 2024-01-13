@@ -1,17 +1,15 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { SearchResultsService } from 'src/app/categories/services/search-results.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { IProduct } from '../../models/product.model';
 import { ModalService } from 'src/app/modals/modal.service';
 import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-product',
@@ -19,34 +17,30 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   styleUrls: ['./product.component.sass']
 })
 export class ProductComponent {
-    product: IProduct | null = null
+    product$!: Observable<IProduct | null>
     loading$!: Observable<boolean>
     error$!: Observable<boolean>
     unsubscribe$ = new Subject()
 
     constructor(
         public deviceService: DeviceService,
-        private router: Router, 
         public route:ActivatedRoute, 
-        public ProductService: ProductService, 
+        public productService: ProductService, 
         private authService: AuthService,
         private wishlistService: WishlistService,
-        public SearchResultsService: SearchResultsService,
         public cartService: CartService,
         public modalService: ModalService,
         private recentlyViewedService: RecentlyViewedService,
         private scrollService: ScrollService) {
-            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
-                this.product = prod
-            })
-            this.loading$ = this.ProductService.getOneProductLoading$
-            this.error$ = this.ProductService.getOneProductError$
+            this.product$ = this.productService.product$
+            this.loading$ = this.productService.getOneProductLoading$
+            this.error$ = this.productService.getOneProductError$
         }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
             const productId = params['productId'];
-            this.ProductService.getCurrentProduct(productId)
+            this.productService.getCurrentProduct(productId)
 
             this.recentlyViewedService.addToRecentlyViewedProds(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: () => {},
@@ -59,23 +53,23 @@ export class ProductComponent {
         this.scrollService.scrollToTop()
     }
 
-    addToCart() {
-        this.cartService.addToShoppingCart({...this.product, amount: 1})  
+    addToCart(product: IProduct) {
+        this.cartService.addToShoppingCart({...product, amount: 1})  
     }
 
-    onAddToWishlist(productId: string) {
+    onAddToWishlist(product: IProduct) {
         if (!this.authService.isAuthenticated()) {
             this.modalService.openDialog('login');
         }
         try {
-            if (this.product?.isInWishlist) {
-                this.wishlistService.removeFromWishlist([productId]).pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: resp => this.ProductService.updateProductWishlistStatus(false),
+            if (product.isInWishlist) {
+                this.wishlistService.removeFromWishlist([product._id]).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: () => this.productService.updateProductWishlistStatus(false),
                     error: err => console.log(err)
                 })
             } else {
-                this.wishlistService.addToWishlist(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: resp => this.ProductService.updateProductWishlistStatus(true),
+                this.wishlistService.addToWishlist(product._id).pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: () => this.productService.updateProductWishlistStatus(true),
                     error: err => console.log(err)
                 })
             }
@@ -85,7 +79,7 @@ export class ProductComponent {
     }
 
     ngOnDestroy() {
-        this.ProductService.resetProduct()
+        this.productService.resetProduct()
     }
  
 }

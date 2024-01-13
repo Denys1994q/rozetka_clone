@@ -1,5 +1,5 @@
 <app-characteristics-block
     [full]="true"
-    [productTitle]="product?.title"
-    [textArray]="product?.info">
+    [productTitle]="(this.ProductService.product$ | async)?.title"
+    [textArray]="(this.ProductService.product$ | async)?.info">
 </app-characteristics-block>
