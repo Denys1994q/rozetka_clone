@@ -12,10 +12,12 @@ import { WishlistApiService } from '../../services/wishlist-api.service';
   styleUrls: ['./cabinet-wishlist.component.sass']
 })
 export class CabinetWishlistPage {
-    unsubscribe$ = new Subject<void>()
     wishlistItems$ = this.wishlistService.products$
     activeSortOption$ = this.wishlistService.activeSortOption$
     checkboxClickedId$: Subject<string> = new Subject<string>
+    unsubscribe$ = new Subject<void>()
+    allChecked!: boolean
+
     checkedProducts$ = this.checkboxClickedId$.pipe(
         takeUntil(this.unsubscribe$),
         scan<any, any>((checkedProducts: any, prodId: any) => {
@@ -32,6 +34,7 @@ export class CabinetWishlistPage {
             }
         }, []),
     )
+    
 
     constructor(
         private cartService: CartService,
@@ -51,6 +54,7 @@ export class CabinetWishlistPage {
     }
 
     onSelectChange(e: string) {
+        this.allChecked = false
         this.wishlistService.setActiveSortOption(e)
     }
 
@@ -59,6 +63,7 @@ export class CabinetWishlistPage {
     }
 
     handleSelectAllClick(wishlistItems: IProduct[]) {
+        this.allChecked = !this.allChecked
         wishlistItems.map((item: IProduct) => this.checkboxClickedId$.next(item._id))
     }
 
@@ -67,8 +72,11 @@ export class CabinetWishlistPage {
     }
 
     handleDeleteFromWishlistClick(checkedProducts: string[]) {
-        this.wishlistService.deleteFromWishlist(checkedProducts);
-        this.checkboxClickedId$.next('')
+        this.allChecked = false
+        if (checkedProducts.length > 0) {
+            this.wishlistService.deleteFromWishlist(checkedProducts);
+            this.checkboxClickedId$.next('')
+        }
     }
 
     handleBuyProdsClick(wishlistItems: IProduct[]) {

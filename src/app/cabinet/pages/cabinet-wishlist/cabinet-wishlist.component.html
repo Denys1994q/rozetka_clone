@@ -39,17 +39,15 @@
                         <li
                             class="param"
                             *ngIf="checkedProducts$ | async as checkedProducts"
+                            (click)="handleDeleteFromWishlistClick(checkedProducts)"
                             [class.param-active]="checkedProducts.length > 0">
                             <mat-icon
-                                (click)="handleDeleteFromWishlistClick(checkedProducts)"
                                 [class.disabledIcon]="checkedProducts.length === 0"
                                 class="param-icon">
                                     delete_outline
                             </mat-icon>
-                            <button
-                                (click)="handleDeleteFromWishlistClick(checkedProducts)"
-                                [disabled]="checkedProducts.length === 0">
-                                    Видалити
+                            <button [disabled]="checkedProducts.length === 0">
+                                Видалити
                             </button>
                         </li>
                     </ul>
@@ -71,7 +69,7 @@
                             [full]="true"
                             [data]="{ products: wishlistItems.value || []}"
                             [withCheckbox]="true"
-                            [allCardsChecked]="wishlistItems.value.length === (checkedProducts$ | async)?.length"
+                            [allCardsChecked]="allChecked"
                             [size]="'big'"
                             (cardsCheckboxChange)="onCardsCheckboxChange($event)">
                         </app-cards>

@@ -3,9 +3,7 @@ import { Router, NavigationEnd, Event } from '@angular/router';
 import {filter} from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 import { DeviceService } from './core/services/device.service';
-import { CartService } from './cart/services/cart.service';
 import { Subject, takeUntil } from 'rxjs';
-import { WishlistService } from './cabinet/services/wishlist.service';
 import { WishlistBtnService } from './btns/wishlist-btn/wishlist-btn.service';
 import { IProduct } from './product/models/product.model';
 import { WishlistApiService } from './cabinet/services/wishlist-api.service';
@@ -24,7 +22,6 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router, 
         private deviceService: DeviceService,
-        private cartService: CartService,
         private wishlistBtnService: WishlistBtnService,
         private wishlistApiService: WishlistApiService,
         private authService: AuthService ) {
@@ -60,7 +57,6 @@ export class AppComponent implements OnInit {
         this.authService.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: user =>  this.wishlistApiService.getWishlist().pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: products => {
-                    console.log(products)
                     if (products.value) {
                         const prodIds = products.value.map((item: IProduct) => item._id)
                         this.wishlistBtnService.setProductsIds(prodIds)

@@ -41,4 +41,5 @@ export class CheckboxComponent {
   checkIfActive(input: any) {
     return this.SearchResultsService.selectedInputs.find(k => k.options.find((s: any) => s.label === input))
   }
+
 }

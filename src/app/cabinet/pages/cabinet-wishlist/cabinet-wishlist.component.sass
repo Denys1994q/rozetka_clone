@@ -82,17 +82,23 @@
     button
         color: #3e77aa
         cursor: pointer
+        &:hover
+            color: #ff7878
     &-active
         cursor: pointer
     &:hover
         color: #ff7878
+        button
+            color: #ff7878
     button[disabled]
+        cursor: auto
         color: #a6a5a5
 .param-icon
     font-size: 2rem
     height: auto
     width: auto
     margin-right: 1rem
+    cursor: auto
     &--active
         cursor: pointer
 .disabledIcon
