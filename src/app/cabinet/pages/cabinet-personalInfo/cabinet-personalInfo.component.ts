@@ -122,20 +122,16 @@ export class CabinetPersonalInfoPage {
     }
 
     logout() {
-            this.authService.logout().subscribe({
-              next: () => {},
-              error: (error) => {
-                console.error('Помилка при виконанні запиту:', error);
-              }
-            })
+        this.authService.logout().subscribe({
+            next: () => {},
+            error: error => console.error('Помилка при виконанні запиту:', error)
+        })
     }
 
     deleteAccount() {
         this.authService.deleteUser().subscribe({
             next: () => {},
-            error: (error) => {
-              console.error('Помилка при виконанні запиту:', error);
-            }
+            error: error => console.error('Помилка при виконанні запиту:', error)
         })
     }
 
