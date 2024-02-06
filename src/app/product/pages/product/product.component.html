@@ -35,7 +35,7 @@
     </app-tabs>
     <!-- контент для табів з роутер-аутлету -->
     <ng-container>
-        <section class="product-section">
+        <section [class.product-section]="!mainPage">
             <div [class.product-section__info]="!mainPage">
                 <!-- роути під конкретний таб -->
                 <!-- ліва частина сторінки -->
