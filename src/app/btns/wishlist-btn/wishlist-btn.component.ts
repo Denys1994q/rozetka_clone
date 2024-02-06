@@ -16,13 +16,18 @@ export class WishlistBtnComponent {
     constructor(public wishlistBtnService: WishlistBtnService, private authService: AuthService) { }
 
     ngOnInit() {
-        this.authService.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-            if (user) {
-                this.wishlistBtnService.wishlistProdsIds$.pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: prods => this.isInWishlist = prods.includes(this.productId)
-                })
-            }
+        this.wishlistBtnService.wishlistProdsIds$.pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: prods => this.isInWishlist = prods.includes(this.productId)
         })
+
+        // this.authService.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+        //     console.log('in btn user data', user)
+        //     if (user) {
+        //         this.wishlistBtnService.wishlistProdsIds$.pipe(takeUntil(this.unsubscribe$)).subscribe({
+        //             next: prods => this.isInWishlist = prods.includes(this.productId)
+        //         })
+        //     }
+        // })
     }
 
     handleBtnClick() {

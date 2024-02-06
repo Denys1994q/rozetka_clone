@@ -107,10 +107,10 @@ export class AuthService {
         };
         return this.http.get<any>(url,options).pipe(
             tap(response => {
-                this.userDataSubject.next(null);
                 if (typeof window !== 'undefined' && localStorage) {
                     localStorage.removeItem('authToken');
                 }
+                this.userDataSubject.next(null);
                 this.router.navigate(['/']);
             })
         )

@@ -57,13 +57,18 @@ export class AppComponent implements OnInit {
             localStorage.setItem('side-banner', 'active')
         }
         this.deviceService.detectDevice()
-        this.wishlistApiService.getWishlist().pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: products => {
-                if (products.value) {
-                    const prodIds = products.value.map((item: IProduct) => item._id)
-                    this.wishlistBtnService.setProductsIds(prodIds)
+        this.authService.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: user =>  this.wishlistApiService.getWishlist().pipe(takeUntil(this.unsubscribe$)).subscribe({
+                next: products => {
+                    console.log(products)
+                    if (products.value) {
+                        const prodIds = products.value.map((item: IProduct) => item._id)
+                        this.wishlistBtnService.setProductsIds(prodIds)
+                    } else {
+                        this.wishlistBtnService.setProductsIds([])
+                    }
                 }
-            }
+            })
         })
     }
 
