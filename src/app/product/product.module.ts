@@ -20,6 +20,7 @@ import { SkeletonModule } from '../skeleton/skeleton.module';
 import { PriceModule } from '../price/price.module';
 import { CardsModule } from '../cards/cards.module';
 import { ErrorModule } from '../error/error.module';
+import { BtnsModule } from '../btns/btns.module';
 // import { RouterModule } from '@angular/router';
 
 // const routes = [
@@ -60,7 +61,8 @@ import { ErrorModule } from '../error/error.module';
     SkeletonModule,
     PriceModule,
     CardsModule,
-    ErrorModule
+    ErrorModule,
+    BtnsModule
   ], 
   exports: [
     CharacteristicsBlockComponent,

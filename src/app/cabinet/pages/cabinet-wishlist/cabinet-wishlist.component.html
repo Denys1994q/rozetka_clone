@@ -1,4 +1,4 @@
-<section class="wishlist">
+<section class="wishlist" *ngIf="wishlistItems$ | async as wishlistItems">
     <!-- title -->
     <h2 class="wishlist__title">Список бажань</h2>
     <section class="wishlist__details details">
@@ -8,99 +8,102 @@
             </h3>
         </div>
         <!-- loading -->
-        <div *ngIf="loading; else content">
+        <div *ngIf="wishlistItems.isLoading; else content">
             <div class="spinner">
                 <mat-progress-spinner diameter="32" mode="indeterminate"></mat-progress-spinner>
             </div>
         </div>
         <!-- content -->
-        <ng-template #content>
-            <div *ngIf="wishlistItems.length" class="details__paramsWrapper">
-                <!-- search options list -->
-                <ul class="details__params">
-                    <!-- search option item -->
-                    <li class="param">
-                        <button
-                            *ngIf="!allCardsChecked; else reset"
-                            (click)="handleSelectAllClick()">
-                            Вибрати все
-                        </button>
-                        <ng-template #reset>
-                            <mat-icon
-                                (click)="handleResetAllClick()"
-                                class="param-icon param-icon--active">
-                                done_all
-                            </mat-icon>
-                            <button (click)="handleResetAllClick()">Скинути вибір</button>
-                        </ng-template>
-                    </li>
-                     <!-- search option item -->
-                    <li
-                        class="param"
-                        [class.param-active]="checkedProds.length > 0">
-                        <mat-icon
-                            (click)="handleDeleteFromWishlistClick()"
-                            [class.disabledIcon]="checkedProds.length === 0"
-                            class="param-icon">
-                            delete_outline
-                        </mat-icon>
-                        <button
-                            (click)="handleDeleteFromWishlistClick()"
-                            [disabled]="checkedProds.length === 0">
-                            Видалити
-                        </button>
-                    </li>
-                </ul>
-                 <!-- filters -->
-                <div class="details__filters">
-                    <app-select
-                        [name]="'filters'"
-                        [options]="wishlistService.sortOptions"
-                        [activeOption]="wishlistService.sortOptions[0]"
-                        (selectChangeEvent)="onSelectChange($event)">
-                    </app-select>
-                </div>
-            </div>
-            <div class="details__main">
-                <ng-container
-                    *ngIf="wishlistItems.length; else empty">
-                    <!-- list cards -->
-                    <app-cards
-                        [full]="true"
-                        [data]="{ products: wishlistItems || []}"
-                        [withCheckbox]="true"
-                        [allCardsChecked]="allCardsChecked"
-                        [size]="'big'"
-                        (cardCheckboxChange)="onCardCheckboxChange($event)">
-                    </app-cards>
-                </ng-container>
-                <!-- empty card -->
-                <ng-template #empty>
-                    <div class="emptyBlock">
-                        <img
-                            src="https://res.cloudinary.com/dw60kllwn/image/upload/v1697731684/cabinet-dummy-error_omrmml.svg"
-                            class="emptyBlock__img"
-                            alt="no-products-img" />
-                        <h3 class="emptyBlock__text">
-                            Упс! Ваш список бажань пустий
-                        </h3>
-                        <p class="emptyBlock__subtitle">Наповніть його товарами</p>
-                        <a routerLink="/">
-                            <button class="emptyBlock__btn">
-                                Перейти на головну
+        <ng-template #content >
+            <ng-container>
+                <div *ngIf="wishlistItems.value.length > 0" class="details__paramsWrapper">
+                    <!-- search options list -->
+                    <ul class="details__params">
+                        <!-- search option item -->
+                        <li class="param">
+                            <button
+                                *ngIf="wishlistItems.length !== (checkedProducts$ | async)?.length; else reset"
+                                (click)="handleSelectAllClick(wishlistItems.value)">
+                                Вибрати все
                             </button>
-                        </a>
+                            <ng-template #reset>
+                                <mat-icon
+                                    (click)="handleResetAllClick()"
+                                    class="param-icon param-icon--active">
+                                    done_all
+                                </mat-icon>
+                                <button (click)="handleResetAllClick()">Скинути вибір</button>
+                            </ng-template>
+                        </li>
+                         <!-- search option item -->
+                        <li
+                            class="param"
+                            *ngIf="checkedProducts$ | async as checkedProducts"
+                            [class.param-active]="checkedProducts.length > 0">
+                            <mat-icon
+                                (click)="handleDeleteFromWishlistClick(checkedProducts)"
+                                [class.disabledIcon]="checkedProducts.length === 0"
+                                class="param-icon">
+                                    delete_outline
+                            </mat-icon>
+                            <button
+                                (click)="handleDeleteFromWishlistClick(checkedProducts)"
+                                [disabled]="checkedProducts.length === 0">
+                                    Видалити
+                            </button>
+                        </li>
+                    </ul>
+                     <!-- filters -->
+                    <div class="details__filters">
+                        <app-select
+                            [name]="'filters'"
+                            [options]="wishlistApiService.sortOptions"
+                            [activeOption]="activeSortOption$ | async"
+                            (selectChangeEvent)="onSelectChange($event)">
+                        </app-select>
                     </div>
-                </ng-template>
-                <!-- total -->
-                <div class="details__total total" *ngIf="wishlistItems.length">
-                    <div class="total__quantity quantity">
-                        <p class="quantity__amount">{{wishlistItems.length}} товари на суму</p>
-                        <p class="quantity__price">{{wishlistService.total}} &#x20b4;</p>
-                    </div>
-                    <button class="total__btn" (click)="handleBuyProdsClick()">Купити все</button>
                 </div>
-            </div>
+                <div class="details__main">
+                    <ng-container
+                        *ngIf="wishlistItems.value.length > 0; else empty">
+                        <!-- list cards -->
+                        <app-cards
+                            [full]="true"
+                            [data]="{ products: wishlistItems.value || []}"
+                            [withCheckbox]="true"
+                            [allCardsChecked]="wishlistItems.value.length === (checkedProducts$ | async)?.length"
+                            [size]="'big'"
+                            (cardsCheckboxChange)="onCardsCheckboxChange($event)">
+                        </app-cards>
+                    </ng-container>
+                    <!-- empty card -->
+                    <ng-template #empty>
+                        <div class="emptyBlock">
+                            <img
+                                src="https://res.cloudinary.com/dw60kllwn/image/upload/v1697731684/cabinet-dummy-error_omrmml.svg"
+                                class="emptyBlock__img"
+                                alt="no-products-img" />
+                            <h3 class="emptyBlock__text">
+                                Упс! Ваш список бажань пустий
+                            </h3>
+                            <p class="emptyBlock__subtitle">Наповніть його товарами</p>
+                            <a routerLink="/">
+                                <button class="emptyBlock__btn">
+                                    Перейти на головну
+                                </button>
+                            </a>
+                        </div>
+                    </ng-template>
+                    <!-- total -->
+                    <div class="details__total total" *ngIf="wishlistItems.value.length">
+                        <div class="total__quantity quantity">
+                            <p class="quantity__amount">{{wishlistItems.value.length}} товари на суму</p>
+                            <p class="quantity__price">{{wishlistApiService.totalPrice}} &#x20b4;</p>
+                        </div>
+                        <button class="total__btn" (click)="handleBuyProdsClick(wishlistItems.value)">Купити все</button>
+                    </div>
+                </div>
+            </ng-container>
         </ng-template>
     </section>
 </section>

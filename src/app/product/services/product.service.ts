@@ -3,7 +3,6 @@ import { ProductApiService } from './product-api.service';
 import { IProduct } from '../models/product.model';
 import { CommentsService } from 'src/app/comment/services/comments.service';
 import { BehaviorSubject, map } from 'rxjs';
-import { AuthService } from 'src/app/core/services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -11,7 +10,6 @@ export class ProductService {
     product$ = new BehaviorSubject<IProduct | null>(null)
     tab: number = 0
     productTabs: {name: string, link: string}[] = []
-    baseView: boolean = false
     newProds$ = new BehaviorSubject<IProduct[]>([]) 
     moreProds$ = new BehaviorSubject<IProduct[]>([]) 
     recommendedProds$ = new BehaviorSubject<IProduct[]>([]) 
@@ -23,7 +21,6 @@ export class ProductService {
 
     constructor(
         private CommentsService: CommentsService, 
-        private authService: AuthService,
         private productApiService: ProductApiService) {}
 
     setNewProducts(data: IProduct[]) {
@@ -46,7 +43,7 @@ export class ProductService {
                     response.price = response.searchStatus.find((status: any) => status.searchPosition === 'price')?.option
                     response.sellStatus = response.searchStatus.find((status: any) => status.searchPosition === 'sell_status')?.option
                     response.seller = response.searchStatus.find((status: any) => status.searchPosition === 'seller')?.option
-                    response.raiting = this.setProductRaiting(response)
+                    response.raiting = this.setProductRaiting(response)        
                     return response 
                 }),
             )  
@@ -54,7 +51,6 @@ export class ProductService {
                 next: (response: IProduct) => {
                     this.product$.next({...response})
                     this.CommentsService.setComments(response.reviews_data)
-                    this.checkIfProdInWishlist(id)
                     this.createTabs(response.video)
                     this.checkActiveTab(urlId)
                     this.getOneProductLoading$.next(false)
@@ -67,15 +63,6 @@ export class ProductService {
                     }
                 }
             })
-    }
-
-    updateProductWishlistStatus(boolean: boolean) {
-        const currentProduct = this.product$.getValue();
-        const updatedProd: any = {
-            ...currentProduct,
-            isInWishlist: boolean
-        };
-        this.product$.next(updatedProd)
     }
 
     createTabs(video: string) {
@@ -120,34 +107,12 @@ export class ProductService {
         })
     }
 
-    checkIfProdInWishlist(id: string) {
-        this.authService.getUser().subscribe({
-            next: user => {
-                if (user && user.wishlist) {
-                    if (user.wishlist.find((item: any) => item._id === id)) {
-                        const currentProduct = this.product$.getValue();
-                        const updatedProd: any = {
-                            ...currentProduct,
-                            isInWishlist: true
-                        };
-                        this.product$.next(updatedProd);
-                    }
-                } 
-            },
-            error: err => console.log(err)
-        })
-    }
-
     resetFoundedProducts() {
         this.foundedProducts = []
     }
 
     setTab(i: number) {
         this.tab = i
-    }
-
-    setBaseView(value: boolean) {
-        this.baseView = value
     }
 
     resetProduct() {

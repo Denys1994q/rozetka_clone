@@ -3,13 +3,14 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { IProduct } from '../../models/product.model';
 import { ModalService } from 'src/app/modals/modal.service';
-import { RecentlyViewedService } from 'src/app/cabinet/services/recently-viewed.service';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { ActivatedRoute } from '@angular/router';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, filter } from 'rxjs';
+import { Router } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
+import { RecentlyViewedApiService } from 'src/app/cabinet/services/recently-viewed-api.service';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -20,17 +21,18 @@ export class ProductComponent {
     product$!: Observable<IProduct | null>
     loading$!: Observable<boolean>
     error$!: Observable<boolean>
-    unsubscribe$ = new Subject()
+    isInWishlist!: boolean
+    unsubscribe$ = new Subject<void>()
+    mainPage: boolean = true
 
     constructor(
         public deviceService: DeviceService,
         public route:ActivatedRoute, 
+        private router: Router,
         public productService: ProductService, 
-        private authService: AuthService,
-        private wishlistService: WishlistService,
         public cartService: CartService,
         public modalService: ModalService,
-        private recentlyViewedService: RecentlyViewedService,
+        private recentlyViewedApiService: RecentlyViewedApiService,
         private scrollService: ScrollService) {
             this.product$ = this.productService.product$
             this.loading$ = this.productService.getOneProductLoading$
@@ -38,15 +40,21 @@ export class ProductComponent {
         }
 
     ngOnInit() {
+        const snapshot: ActivatedRouteSnapshot = this.route.snapshot;
+        snapshot.firstChild && snapshot.firstChild?.url.length > 0 ? this.mainPage = false : null
         this.route.params.subscribe(params => {
             const productId = params['productId'];
             this.productService.getCurrentProduct(productId)
-
-            this.recentlyViewedService.addToRecentlyViewedProds(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
+            this.recentlyViewedApiService.addToRecentlyViewedProds(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: () => {},
                 error: err => console.log(err)
             })
         })
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+          ).subscribe(() => {
+            this.mainPage = !this.route.snapshot.children[0].url.length
+        });
     }
 
     ngAfterViewInit() {
@@ -57,29 +65,11 @@ export class ProductComponent {
         this.cartService.addToShoppingCart({...product, amount: 1})  
     }
 
-    onAddToWishlist(product: IProduct) {
-        if (!this.authService.isAuthenticated()) {
-            this.modalService.openDialog('login');
-        }
-        try {
-            if (product.isInWishlist) {
-                this.wishlistService.removeFromWishlist([product._id]).pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: () => this.productService.updateProductWishlistStatus(false),
-                    error: err => console.log(err)
-                })
-            } else {
-                this.wishlistService.addToWishlist(product._id).pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: () => this.productService.updateProductWishlistStatus(true),
-                    error: err => console.log(err)
-                })
-            }
-        } catch (error) {
-            console.error(error); 
-        }
-    }
-
     ngOnDestroy() {
         this.productService.resetProduct()
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
+
  
 }

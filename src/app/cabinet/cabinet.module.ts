@@ -14,6 +14,7 @@ import { CabinetAsideModule } from '../aside/cabinet-aside/cabinet-aside.module'
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CardsModule } from '../cards/cards.module';
+import { ErrorModule } from '../error/error.module';
 
 const routes = [
   {path: '', component: CabinetPage, canActivate: [AuthGuard], children: [
@@ -57,7 +58,8 @@ const routes = [
     ProductModule,
     BtnsModule,
     CabinetAsideModule,
-    CardsModule
+    CardsModule,
+    ErrorModule
   ],
   exports: [],
 })

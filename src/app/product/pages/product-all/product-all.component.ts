@@ -4,11 +4,11 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from 'src/app/cart/services/cart.service';
 import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ScrollService } from 'src/app/core/services/scroll.service';
-import { IProduct } from '../../models/product.model';
+import { IProduct, IProductCart } from '../../models/product.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-product-all',
@@ -20,25 +20,25 @@ export class ProductAllComponent {
     hideBtn: boolean = false
     slides: Slide[] = []
     product: IProduct | null = null
+    isInWishlist!: boolean
+    unsubscribe$ = new Subject<void>()
     @ViewChild('videoBlock') videoBlock!: ElementRef;
     @ViewChild('characteristicsAndReviewsBlock') characteristicsAndReviewsBlock!: ElementRef;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthService,
-        private wishlistService: WishlistService,
-        public ProductService: ProductService, 
+        public productService: ProductService, 
         public cartService: CartService, 
         private scrollService: ScrollService,
         public modalService: ModalService) {
-            this.ProductService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
+            this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
                 this.product = prod
             })
         }
 
     ngOnInit() {
         this.scrollService.scrollToTop()
-        this.ProductService.setBaseView(true)
     }
 
     showFullBlock() {
@@ -62,42 +62,15 @@ export class ProductAllComponent {
     }
 
     addToCart() {
-        this.cartService.addToShoppingCart({...this.product, amount: 1})  
-    }
-
-    checkIfProductInCart(id: string) {
-        if (isPlatformBrowser(this.platformId)) {
-            const cartData: any = localStorage.getItem('shoppingCart');
-            const productsFromStorage = JSON.parse(cartData) 
-            if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return false
+        if (this.product) {
+            const data: IProductCart = {...this.product, amount: 1}
+            this.cartService.addToShoppingCart(data)  
         }
     }
-  
-    onAddToWishlist(productId: string) {
-        if (!this.authService.isAuthenticated()) {
-            this.modalService.openDialog('login');
-        }
-        try {
-            if (this.product?.isInWishlist) {
-                this.wishlistService.removeFromWishlist([productId]).subscribe({
-                    next: () => this.ProductService.updateProductWishlistStatus(false),
-                    error: err => console.log(err)
-                })
-            } else {
-                this.wishlistService.addToWishlist(productId).subscribe({
-                    next: () => this.ProductService.updateProductWishlistStatus(true),
-                    error: err => console.log(err)
-                })
-            }
-        } catch (error) {
-            console.error(error); 
-        }
+ 
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
 
 }

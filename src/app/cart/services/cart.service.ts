@@ -1,156 +1,118 @@
 import { Injectable } from '@angular/core';
-import { ModalService } from 'src/app/modals/modal.service';
-import { IProduct } from 'src/app/product/models/product.model';
+import { IProductCart } from 'src/app/product/models/product.model';
+import { of, tap, Observable, Subject, shareReplay, map, merge, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 
 export class CartService {
-    productsFromStorage: IProduct[] = []
-    totalProductsNumber = 0
-    totalPrice = 0
-    productInCart!: boolean 
-    orderConfirmed: boolean = false
+    addToCartClick$ = new Subject<IProductCart>()
+    removeFromCartClick$ = new Subject<string>()
+    updateCartClick$ = new Subject<IProductCart>()
+    isOrderConfirmed$ = new Subject<boolean>()
 
-    constructor(private modalService: ModalService) { }
+    products$: Observable<IProductCart[]> = merge(
+        of(null),
+        this.addToCartClick$.pipe(
+            tap(product => this.addProd(product))
+        ),
+        this.removeFromCartClick$.pipe(
+            tap(prodId => this.removeProd(prodId))
+        ),
+        this.updateCartClick$.pipe(
+            tap(product => {
+                const data = this.getStorageValue();
+                data && this.updateProd(data, product._id, product.amount);
+            })
+        ),
+        this.isOrderConfirmed$
+      ).pipe(
+        switchMap(() => {
+            const data = this.getStorageValue();
+            return of(data ? JSON.parse(data) : null);
+        }),
+        shareReplay(1)
+      );
 
-    getCart(prodId?: string): any {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        if (cartData) {
-            this.productsFromStorage = JSON.parse(cartData) 
-            this.getTotal()
-        }
-        if (prodId) {
-            this.checkIfProductInCart(prodId)
-        }
+    totalPrice$ = this.products$.pipe(
+        map((products) => {
+            if (!products) return 0;
+            return products.reduce((accumulator: number, product: any) => {
+              const price = product.searchStatus.find((item: any) => item.searchPosition === 'price')?.option?.new || 0;
+              return accumulator + product.amount * price;
+            }, 0);
+          })
+    )
+
+    totalProductsNumber$ = this.products$.pipe(
+        map(() => {
+            const data = this.getStorageValue();
+            const products = data ? JSON.parse(data) : null
+            if (!products) return 0;
+            return products.reduce((accumulator: number, product: any) => accumulator + product.amount, 0);
+        }),
+    )
+
+    addToShoppingCart(product: IProductCart): void {
+        this.addToCartClick$.next(product)
     }
 
-    getTotal() {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        if (cartData) {
-            this.productsFromStorage = JSON.parse(cartData) 
-        }
-        // видалити не працюэ 
-        let totalAmount = 0
-        if ((this.productsFromStorage && this.productsFromStorage.length > 0)) {
-            totalAmount  = this.productsFromStorage.reduce((accumulator: number, product: any) => accumulator + product.amount, 0);
-            this.totalProductsNumber = totalAmount
+    updateShoppingCart(product: IProductCart) {
+        this.updateCartClick$.next(product)
+    }
+
+    addProd(product: IProductCart) {
+        if (typeof window === 'undefined' && !localStorage) return
+        const data = this.getStorageValue()
+        // якщо корзини немає - створюємо, якщо є - додаємо продукт в існуючу
+        if (!data) {
+            this.setStorageValue([product])
         } else {
-            this.totalProductsNumber = 0
-        }
-        this.getTotalPrice()
-    }
-
-    getTotalPrice() {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        if (cartData) {
-            this.productsFromStorage = JSON.parse(cartData) 
-        }
-        if (this.productsFromStorage && this.productsFromStorage.length > 0) {
-            this.totalPrice = this.productsFromStorage.reduce((accumulator: number, product: any) => accumulator + product.amount * product.searchStatus.find((item: any) => item.searchPosition === 'price').option.new, 0);
-        } else {
-            this.totalPrice = 0
-        }
-    }
-
-    addToShoppingCart(product: any): void {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        if (cartData) {
-            const parsedCartData = JSON.parse(cartData)
-            if (parsedCartData.find((prod: any) => prod._id === product._id)) {
-                this.findAndUdpate(product._id, 1)
-            } else {
-                parsedCartData.unshift(product)
-                localStorage.setItem('shoppingCart', JSON.stringify(parsedCartData));
+            const cartData = JSON.parse(data ? data : '');
+            const productIndex = cartData.findIndex((prod: IProductCart) => prod._id === product._id);
+            if (productIndex > -1) {
+                return
             }
-        } else {
-            const data = []
-            data.unshift(product)
-            localStorage.setItem('shoppingCart',  JSON.stringify(data))
-        }
-        this.modalService.openDialog('cart')
-        this.getTotal()
-        this.checkIfProductInCart(product._id)
-    }
-
-    findAndUdpate(id: number, value: number) {
-        if (typeof window !== 'undefined' && localStorage) {
-            const cartData: any = localStorage.getItem('shoppingCart');
-            const parsedCartData = JSON.parse(cartData);
-            // Пошук товару за _id
-            const productIndex = parsedCartData.findIndex((prod: any) => prod._id === id);
-            if (productIndex !== -1) {
-                // Якщо товар знайдено, оновити кількість
-                parsedCartData[productIndex].amount = value;
-            } else {
-                // Якщо товар не знайдено, створити новий об'єкт
-                const newProduct = { _id: id, amount: value };
-                // Додати новий товар до корзини
-                parsedCartData.unshift(newProduct);
-            }
-            localStorage.setItem('shoppingCart', JSON.stringify(parsedCartData));
-            this.getTotal()
+            cartData.unshift(product);
+            this.setStorageValue(cartData)
         }
     }
 
+    updateProd(data: string, id: string, amount: number) {
+        if (typeof window === 'undefined' && !localStorage) return
+        const parsedCartData = JSON.parse(data)
+        const productIndex = parsedCartData.findIndex((prod: IProductCart) => prod._id === id);
+        parsedCartData[productIndex].amount = amount;
+        this.setStorageValue(parsedCartData)
+    }
     
-    checkIfProductInCart(id: any) {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        let productsFromStorage;
-        if (cartData) {
-            productsFromStorage = JSON.parse(cartData) 
-        }
-        if (productsFromStorage && productsFromStorage.find((product: any) => product._id === id)) {
-            return true
-        } else {
-            return false
-        }
+    removeProd(prodId: string) {
+        if (typeof window === 'undefined' && !localStorage) return
+        const data = this.getStorageValue();
+        const parsedCartData = data && JSON.parse(data);
+        const newData = parsedCartData.filter((prod: any) => prod._id !== prodId)
+        this.setStorageValue(newData)
     }
-
+ 
     removeFromCart(id: string) {
-        let cartData;
-        if (typeof window !== 'undefined' && localStorage) {
-            cartData = localStorage.getItem('shoppingCart');
-        }
-        let parsedCartData;
-        if (cartData) {
-            parsedCartData = JSON.parse(cartData);
-        }
-        const newData = parsedCartData.filter((prod: any) => prod._id !== id)
-        localStorage.setItem('shoppingCart', JSON.stringify(newData));
-        this.getCart(id)
-        this.getTotal()
-        // this.checkIfProductInCart(id)
+        this.removeFromCartClick$.next(id)
     }
 
-    // Очистити корзину
-    clearCart(): void {
+    setOrderConfirmed(): void {
         if (typeof window !== 'undefined' && localStorage) {
-            localStorage.removeItem('shoppingCart');
-            this.productsFromStorage = []
-            this.totalProductsNumber = 0
-            this.totalPrice = 0
-            this.productInCart = false
+            this.setStorageValue([])
         }
+        this.isOrderConfirmed$.next(true)
     }
 
-    // Підтвердити замовлення
-    setOrderConfirmed(value: boolean): void {
-        this.orderConfirmed = value;
+    setStorageValue(value: any) {
+        if (typeof window === 'undefined' && !localStorage) return
+        localStorage.setItem('shoppingCart', JSON.stringify(value));
     }
-    
+
+    getStorageValue() {
+        if (typeof window === 'undefined' && !localStorage) return
+        return localStorage.getItem('shoppingCart');
+    }
+
 }
+

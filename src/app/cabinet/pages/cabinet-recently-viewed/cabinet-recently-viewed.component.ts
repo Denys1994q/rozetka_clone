@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RecentlyViewedService } from '../../services/recently-viewed.service';
-import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
+import { RecentlyViewedApiService } from '../../services/recently-viewed-api.service';
 
 @Component({
   selector: 'app-cabinet-recently-viewed',
@@ -8,47 +8,22 @@ import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
   styleUrls: ['./cabinet-recently-viewed.component.sass']
 })
 export class CabinetRecentlyViewedPage {
-    loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    unsubscribe$ = new Subject()
+    products$ = this.recentlyViewedService.products$
+    error$ = this.recentlyViewedApiService.error$
 
-    constructor(public recentlyViewedService: RecentlyViewedService) {}
+    constructor(
+        private recentlyViewedService: RecentlyViewedService, 
+        private recentlyViewedApiService: RecentlyViewedApiService) {}
 
-    ngOnInit() {
-        this.loading$.next(true)
-        this.recentlyViewedService.getRecentlyViewedProds().pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: resp => this.handleUserUpdate(resp.products),
-            error: err => this.handleUserUpdate(null)
-        })
+    onCardDeleteBtnClick(productId: string) {
+        this.recentlyViewedService.deleteFromRecentlyViewed(productId)
     }
 
     handleClearAllClick() {
-        this.loading$.next(true)
-        this.recentlyViewedService.removeAllRecentlyViewedProds().subscribe({
-            next: response => {
-                this.loading$.next(false)
-                this.recentlyViewedService.setRecentlyViewedItems(response.updatedProds)
-            },
-            error: err => this.loading$.next(false)
-        })
+        this.recentlyViewedService.deleteAllFromRecentlyViewed()
     }
 
-    handleUserUpdate(products: any) {
-        this.loading$.next(false)
-        if (products) {
-            this.recentlyViewedService.setRecentlyViewedItems(products);
-        }
+    ngOnDestroy() {
+        this.recentlyViewedApiService.resetError()
     }
-
-    onCardDeleteBtnClick(prodId: string) {
-        this.recentlyViewedService.removeOneRecentlyViewedProd(prodId).subscribe({
-            next: resp => {
-                this.loading$.next(true)
-                this.recentlyViewedService.getRecentlyViewedProds().pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: resp => this.handleUserUpdate(resp.products),
-                    error: err => this.handleUserUpdate(null)
-                })
-            } 
-        })
-    }
-
 }

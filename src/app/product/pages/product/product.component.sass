@@ -96,6 +96,8 @@
             margin-top: -.6rem
     &__btns
         display: flex
+        justify-content: center
+        align-items: center
         @include respond(phoneXXL)
             margin-left: auto
 // seller
@@ -256,20 +258,9 @@
             display: none
     &__price
     &__btn
-.btn-inCart
-    border-bottom: 1px dotted
-.inCart-block
-    display: flex
-    justify-content: center
-    align-items: center
-    gap: 1rem
-.inCart-icon
-    color: $main-green
-.btn-link
-    margin: 0
 .mb16
     margin-bottom: 1.6rem
-    
+
 :host
     ::ng-deep app-price
         .price-panel__regular

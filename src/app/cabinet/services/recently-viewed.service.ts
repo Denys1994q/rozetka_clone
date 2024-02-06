@@ -1,72 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, switchMap, combineLatest, tap, BehaviorSubject } from 'rxjs';
 import { IProduct } from 'src/app/product/models/product.model';
+import { RecentlyViewedApiService } from './recently-viewed-api.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class RecentlyViewedService {
-    private backendUrl = 'https://evergreen-purrfect-agenda.glitch.me';
 
-    constructor(private http: HttpClient) { }
+    constructor(private recentlyViewedApiService: RecentlyViewedApiService) {}
 
-    private recentlyViewedItemsSubject = new BehaviorSubject<IProduct[]>([]);
-    recentlyViewedtItems$: Observable<any[]> = this.recentlyViewedItemsSubject.asObservable();
+    deleteOneClick$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null)
+    deleteAllClick$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
-    setRecentlyViewedItems(data: IProduct[]) {
-        this.recentlyViewedItemsSubject.next(data)
-    }
+    products$: Observable<{isLoading: boolean; value: IProduct[] | null}> = combineLatest([
+        this.deleteAllClick$,
+        this.deleteOneClick$
+    ]).pipe(
+        switchMap(([deleteAllClick, deleteOneIdClick]) => {
+            if (deleteAllClick) {
+                return this.handleDeleteAll();
+            } else if (deleteOneIdClick) {
+                return this.handleDeleteOne(deleteOneIdClick);
+            } else {
+                return this.recentlyViewedApiService.getRecentlyViewedProds();
+            }
+        })
+    );
 
-    addToRecentlyViewedProds(productId: string):Observable<{message: string}> {
-        if (typeof window !== 'undefined' && localStorage) {
-            const apiUrl = `${this.backendUrl}/add-to-recentlyViewedProds/${productId}` 
-            const token = localStorage.getItem('authToken');
-            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-            const options = {
-                headers,
-                withCredentials: true
-            };
-            return this.http.post<{message: string, updatedWishlist: string[]}>(apiUrl, null, options);
-        } else {
-            return throwError('Local storage is not available.');
-        }
-    }
-
-    removeAllRecentlyViewedProds() {
-        if (typeof window !== 'undefined' && localStorage) {
-            const apiUrl = `${this.backendUrl}/remove-recentlyViewedProds` 
-            const token = localStorage.getItem('authToken');
-            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-            const options = {
-                headers,
-                withCredentials: true
-            };
-            return this.http.delete<{message: string, updatedProds: []}>(apiUrl, options)
-        } else {
-            return throwError('Local storage is not available.');
-        }
-    }
-
-    removeOneRecentlyViewedProd(prodId: string) {
-        if (typeof window !== 'undefined' && localStorage) {
-            const apiUrl = `${this.backendUrl}/remove-one-recentlyViewedProd/${prodId}`;
-            const token = localStorage.getItem('authToken');
-            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-            return this.http.delete<{message: string}>(apiUrl, { headers, withCredentials: true });
-        } else {
-            return throwError('Local storage is not available.');
-        }
-    }
-
-    getRecentlyViewedProds() {
-        if (typeof window !== 'undefined' && localStorage) {
-            const apiUrl = `${this.backendUrl}/recentlyViewedProds`;
-            const token = localStorage.getItem('authToken');
-            const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-            return this.http.get<{products: any[]}>(apiUrl, { headers, withCredentials: true });
-        } else {
-            return throwError('Local storage is not available.');
-        }
+    private handleDeleteAll(): Observable<{isLoading: boolean; value: IProduct[] | null}> {
+        return this.recentlyViewedApiService.removeAllRecentlyViewedProds().pipe(
+            switchMap(() => this.recentlyViewedApiService.getRecentlyViewedProds()),
+            tap(() => this.deleteAllClick$.next(false))
+        );
     }
     
+    private handleDeleteOne(productId: string): Observable<{isLoading: boolean; value: IProduct[] | null}> {
+        return this.recentlyViewedApiService.removeOneRecentlyViewedProd(productId).pipe(
+            switchMap(() => this.recentlyViewedApiService.getRecentlyViewedProds()),
+            tap(() => this.deleteOneClick$.next(null))
+        );
+    }
+
+    deleteFromRecentlyViewed(id: string) {
+        this.deleteOneClick$.next(id)
+    }
+
+    deleteAllFromRecentlyViewed() {
+        this.deleteAllClick$.next(true)
+    }
+   
 }

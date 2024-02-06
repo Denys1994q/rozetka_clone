@@ -62,7 +62,6 @@ export class AuthService {
             tap(response => {
                 if (response && typeof window !== 'undefined' && localStorage) {
                     localStorage.setItem('authToken', response.token);
-                    // this.wishlistService.setWishlistItems(response.wishlist)
                     this.userDataSubject.next(response);
                 } 
             }),
@@ -93,19 +92,9 @@ export class AuthService {
             withCredentials: true
         };
         return this.http.get<any>(url, options).pipe(
-            map(response => {
-                if (response && response.wishlist) {
-                  response.wishlist = response.wishlist.map((wishlistItem: any) => ({
-                    ...wishlistItem.product, 
-                    addedDate: wishlistItem.addedDate 
-                  }));
-                }
-                return response;
-            }),
             tap(response => {
                 if (response) {
                     this.userDataSubject.next(response);
-                    // this.wishlistService.setWishlistItems(response.wishlist)
                 } 
             })
         )
@@ -122,7 +111,6 @@ export class AuthService {
                 if (typeof window !== 'undefined' && localStorage) {
                     localStorage.removeItem('authToken');
                 }
-                // this.wishlistService.setWishlistItems([])
                 this.router.navigate(['/']);
             })
         )

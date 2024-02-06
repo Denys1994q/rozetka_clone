@@ -1,0 +1,30 @@
+<!-- Кнопка з текстом -->
+<ng-container *ngIf="textBtn; else withoutTextBtn">
+    <ng-container *ngIf="isInCart; else notInCart">
+        <div class="inCart-block">
+            <mat-icon class="inCart-icon">shopping_cart</mat-icon>
+            <button class="btn btn-link btn-inCart" (click)="openModal()">
+                В кошику
+            </button>
+        </div>
+    </ng-container>
+    <ng-template #notInCart>
+        <button 
+            class="btn iconed-btn btn-medium btn-green width100"
+            (click)="addToCart(product)">
+            <mat-icon class="iconed-btn__icon">shopping_cart</mat-icon>
+            Купити
+        </button>
+    </ng-template>
+</ng-container>
+<!-- Кнопка без тексту (лише значок корзини) -->
+<ng-template #withoutTextBtn>
+    <button
+        (click)="addToCart(product)"
+        class="btn-icon btn-icon--small"
+        aria-label="Відкрити корзину">
+        <mat-icon class="inCart-icon">
+            {{isInCart ? 'shopping_cart' : 'add_shopping_cart' }}
+        </mat-icon>
+    </button>
+</ng-template>

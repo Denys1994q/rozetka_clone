@@ -4,16 +4,19 @@
             <img class="rozetka-logo" src="../../../../assets/rozetka-logo.svg" alt="rozetka-logo" />
         </a>
     </header>
-    <h1 *ngIf="cartService.orderConfirmed; else notConfirmed" class="order__subtitle thanks-title">
+    <h1 *ngIf="isOrderConfirmed$ | async; else notConfirmed" class="order__subtitle thanks-title">
         Дякуємо, ваше замовлення прийнято. 
     </h1>
     <ng-template #notConfirmed>
-        <div class="checkout__main">
+        <div class="checkout__main" *ngIf="products$ | async as products">
             <div class="order">
                 <h1 class="order__title">Замовлення</h1>
                 <div class="order__subtitleWrapper">
                     <h2 class="order__subtitle">Товари</h2>
-                    <button *ngIf="cartService.totalProductsNumber > 0" class="btn-link edit-btn" (click)="modalService.openDialog('cart')">
+                    <button 
+                        *ngIf="totalProductsNumber$ | async" 
+                        class="btn-link edit-btn" 
+                        (click)="modalService.openDialog('cart')">
                         <mat-icon class="burger-icon header-icon">
                             edit
                         </mat-icon>
@@ -21,7 +24,7 @@
                     </button>
                 </div>
                 <ul class="order__list">
-                    <li class="order__item" *ngFor="let product of cartService.productsFromStorage">
+                    <li class="order__item" *ngFor="let product of products">
                         <img class="order__img" src={{product.image}} alt="product-image">
                         <h3 class="order__productTitle">{{product.title}}</h3>
                         <div>{{getPrice(product).option.new}} &#x20b4; X {{product.amount}} од.</div>
@@ -29,17 +32,19 @@
                     </li>
                 </ul>
             </div>
-            <div class="total">
+            <div class="total" *ngIf="totalProductsNumber$ | async as totalProdsNum">
                 <h2 class="order__title">Разом</h2>
                 <div class="total__item">
-                    <p>{{cartService.totalProductsNumber}}  товари на суму</p>
-                    <p>{{cartService.totalPrice}} &#x20b4;</p>
+                    <p>{{totalProdsNum}}  товари на суму</p>
+                    <p>{{cartService.totalPrice$ | async}} &#x20b4;</p>
                 </div>
                 <div class="total__item">
                     <p>До сплати</p>
-                    <p class="total__price">{{cartService.totalPrice}} &#x20b4;</p>
+                    <p class="total__price">{{cartService.totalPrice$ | async}} &#x20b4;</p>
                 </div>
-                <button *ngIf="cartService.totalProductsNumber > 0" class="order-btn" (click)="confirmOrder()">Замовлення підтверджую</button>
+                <button class="order-btn" (click)="confirmOrder(products)">
+                    Замовлення підтверджую
+                </button>
             </div>
         </div>
     </ng-template>

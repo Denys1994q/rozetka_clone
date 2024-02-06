@@ -44,7 +44,12 @@ export interface IProduct {
     reviews_data: IComment[],
     date: Date,
     searchStatus: ISearchStatus[],
-    amount?: number,
     addedDate?: Date,
-    isInWishlist?: boolean
+    isInWishlist?: boolean,
+    isInCart?: boolean
+    isAvailable: boolean
+}
+
+export interface IProductCart extends IProduct {
+    amount: number
 }

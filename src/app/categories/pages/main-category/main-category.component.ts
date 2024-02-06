@@ -12,7 +12,7 @@ export class MainCategoryComponent implements OnInit {
   category!: any 
   getOneCategoryLoading: boolean = false
   getOneCategoryError: boolean = false
-  
+
   constructor(
     public router: Router, 
     public route: ActivatedRoute, 

@@ -6,16 +6,16 @@ import { HomeComponent } from './pages/home/home.component';
 import { ErrorComponent } from './pages/error/error.component';
 import { ProductModule } from '../product/product.module';
 import { HttpClientModule } from '@angular/common/http';
-import { CartModule } from '../cart/cart.module';
 import { CarouselModule } from '../carousel/carousel.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { SkeletonModule } from '../skeleton/skeleton.module';
 import { CategoriesAsideModule } from '../aside/categories-aside/categories-aside.module';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
-import { MatBadgeModule } from '@angular/material/badge';
 import { CardsModule } from '../cards/cards.module';
 import { PriceModule } from '../price/price.module';
 import { RouterModule } from '@angular/router';
+import { BtnsModule } from '../btns/btns.module';
+import { CartModule } from '../cart/cart.module';
 
 @NgModule({
   declarations: [
@@ -32,12 +32,12 @@ import { RouterModule } from '@angular/router';
     CarouselModule,
     ProductModule,
     SharedModule,
-    CartModule,
     SkeletonModule,
     CategoriesAsideModule,
-    MatBadgeModule,
     CardsModule,
-    PriceModule
+    PriceModule,
+    BtnsModule,
+    CartModule
   ],
   exports: [
     ErrorComponent,

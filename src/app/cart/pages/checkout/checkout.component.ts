@@ -3,6 +3,7 @@ import { CartService } from '../../services/cart.service';
 import { ModalService } from 'src/app/modals/modal.service';
 import { OrdersService } from 'src/app/cabinet/services/orders.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { IProductCart } from 'src/app/product/models/product.model';
 
 @Component({
   selector: 'app-checkout-page',
@@ -11,6 +12,9 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class CheckoutPage {
     orderConfirmed: boolean = false
+    totalProductsNumber$ = this.cartService.totalProductsNumber$
+    products$ = this.cartService.products$
+    isOrderConfirmed$ = this.cartService.isOrderConfirmed$
 
     constructor(
         public cartService: CartService, 
@@ -19,7 +23,6 @@ export class CheckoutPage {
         public modalService: ModalService) {}
 
     ngOnInit() {
-        this.cartService.setOrderConfirmed(false)
         this.modalService.closeDialog()
     }
 
@@ -33,18 +36,16 @@ export class CheckoutPage {
         return price
     }
 
-    confirmOrder() {
+    confirmOrder(products: IProductCart[]) {
         if (this.authService.isAuthenticated()) {
-            this.cartService.productsFromStorage.map(item => {
+            products.map(item => {
                 this.ordersService.addToOrdersList(item._id).subscribe({
-                    next: response => this.cartService.setOrderConfirmed(true),
-                    error: err => console.log(err),
-                    complete: () => this.cartService.clearCart()
+                    next: response => this.cartService.setOrderConfirmed(),
+                    error: err => console.log(err)
                 })
             })
         } else {
-            this.cartService.setOrderConfirmed(true)
-            this.cartService.clearCart()
+            this.cartService.setOrderConfirmed()
         }
     }
 

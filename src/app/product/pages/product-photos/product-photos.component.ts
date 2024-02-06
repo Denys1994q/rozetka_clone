@@ -17,7 +17,6 @@ export class ProductPhotosComponent {
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('photos')
-        this.productService.setBaseView(false)
         const product = this.productService.product$.getValue();
         this.photos = product?.images.filter((image: any) => image.url)
     }

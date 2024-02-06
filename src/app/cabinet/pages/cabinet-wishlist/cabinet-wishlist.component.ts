@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ProductService } from 'src/app/product/services/product.service';
-import { WishlistService } from '../../services/wishlist.service';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { IProduct } from 'src/app/product/models/product.model';
+import { Subject, takeUntil, scan} from 'rxjs';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { Subject, takeUntil  } from 'rxjs';
+import { WishlistService } from '../../services/wishlist.service';
+import { WishlistBtnService } from 'src/app/btns/wishlist-btn/wishlist-btn.service';
+import { WishlistApiService } from '../../services/wishlist-api.service';
 
 @Component({
   selector: 'app-cabinet-wishlist',
@@ -12,75 +12,73 @@ import { Subject, takeUntil  } from 'rxjs';
   styleUrls: ['./cabinet-wishlist.component.sass']
 })
 export class CabinetWishlistPage {
-    checkedProds: string[] = []
-    allCardsChecked!: boolean
-    loading: boolean = false
-    wishlistItems: IProduct[] = []
-    unsubscribe$ = new Subject()
+    unsubscribe$ = new Subject<void>()
+    wishlistItems$ = this.wishlistService.products$
+    activeSortOption$ = this.wishlistService.activeSortOption$
+    checkboxClickedId$: Subject<string> = new Subject<string>
+    checkedProducts$ = this.checkboxClickedId$.pipe(
+        takeUntil(this.unsubscribe$),
+        scan<any, any>((checkedProducts: any, prodId: any) => {
+            if (prodId) {
+                const newSet = new Set(checkedProducts);
+                if (newSet.has(prodId)) {
+                    newSet.delete(prodId);
+                } else {
+                    newSet.add(prodId);
+                }
+                return Array.from(newSet);
+            } else {
+                return Array.from([]);
+            }
+        }, []),
+    )
 
     constructor(
-        public productService: ProductService, 
-        public authService: AuthService, 
-        public wishlistService: WishlistService,
-        private cartService: CartService) {}
+        private cartService: CartService,
+        public wishlistApiService: WishlistApiService,
+        private wishlistBtnService: WishlistBtnService,
+        public wishlistService: WishlistService) {
+            this.checkboxClickedId$.pipe(takeUntil(this.unsubscribe$)).subscribe()
+        }
 
     ngOnInit() {
-        this.loading = true
-        this.authService.getUser().pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: user => {
-                this.loading = false
-                this.wishlistItems = user.wishlist
-            },
-            error: err => this.loading = false
+        this.wishlistService.deleteProducts$.pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: resp => {
+                const prodIds = resp.updatedWishlist.map((item: IProduct) => item._id)
+                this.wishlistBtnService.setProductsIds(prodIds)
+            } 
         })
     }
 
     onSelectChange(e: string) {
-        this.wishlistService.sortWishlist(e).pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: response => this.wishlistService.setWishlistItems(response.sortedWishlist)
-        })
+        this.wishlistService.setActiveSortOption(e)
     }
 
-    onCardCheckboxChange(prodId: string) {
-        if (this.checkedProds.includes(prodId)) {
-            this.checkedProds = this.checkedProds.filter(productId => productId !== prodId)
-        } else {
-            this.checkedProds.push(prodId)
-        }
+    onCardsCheckboxChange(prodId: string) {
+        this.checkboxClickedId$.next(prodId)
     }
 
-    handleSelectAllClick() {
-        this.allCardsChecked = true
-        this.wishlistItems.map((item) => {
-            this.checkedProds.push(item._id)
-        })
+    handleSelectAllClick(wishlistItems: IProduct[]) {
+        wishlistItems.map((item: IProduct) => this.checkboxClickedId$.next(item._id))
     }
 
     handleResetAllClick() {
-        this.allCardsChecked = false
-        this.checkedProds = []
+        this.checkboxClickedId$.next('')
     }
 
-    handleDeleteFromWishlistClick() {
-        this.wishlistService.removeFromWishlist(this.checkedProds).pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: () => {
-                this.wishlistService.sortWishlist(this.wishlistService.activeSortOption)
-                    .pipe(takeUntil(this.unsubscribe$))
-                    .subscribe({
-                        next: res => {
-                            this.wishlistItems = res.sortedWishlist  
-                            this.checkedProds = [];
-                        } 
-                })
-            },
-            error: err => console.log(err)
-        });
+    handleDeleteFromWishlistClick(checkedProducts: string[]) {
+        this.wishlistService.deleteFromWishlist(checkedProducts);
+        this.checkboxClickedId$.next('')
     }
 
-    handleBuyProdsClick() {
-        this.wishlistItems.map(item => {
-            this.cartService.addToShoppingCart({...item, amount: 1})
-        })
+    handleBuyProdsClick(wishlistItems: IProduct[]) {
+        wishlistItems.map(prod => this.cartService.addToShoppingCart({...prod, amount: 1}))
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
 
 }
+

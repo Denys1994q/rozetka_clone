@@ -3,7 +3,6 @@ import { ModalService } from 'src/app/modals/modal.service';
 import { Slide } from 'src/app/carousel/carousel.component';
 import { ProductApiService } from 'src/app/product/services/product-api.service';
 import { ProductService } from 'src/app/product/services/product.service';
-import { CartService } from 'src/app/cart/services/cart.service';``
 import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { makeStateKey, TransferState } from '@angular/core';
 import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
@@ -11,11 +10,12 @@ import { ScrollService } from '../../services/scroll.service';
 import { BehaviorSubject } from 'rxjs';
 import { ICategory } from 'src/app/categories/models/categories.model';
 import { IProduct } from 'src/app/product/models/product.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+  styleUrls: ['./home.component.sass'],
 })
 export class HomeComponent implements AfterViewInit {
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
@@ -27,6 +27,7 @@ export class HomeComponent implements AfterViewInit {
     newProds: IProduct[] = []
     moreProds: IProduct[] = []
     recommendedProds: IProduct[] = []
+    unsubscribe$ = new Subject<void>()
 
     constructor(
         private transferState: TransferState,
@@ -36,18 +37,41 @@ export class HomeComponent implements AfterViewInit {
         public productApiService: ProductApiService,
         private categoriesApiService: CategoriesApiService,
         private elementRef: ElementRef,
-        private scrollService: ScrollService,
-        public cartService: CartService)
+        private scrollService: ScrollService)
     {
-        this.productService.newProds$.subscribe(prods => {
+        this.productService.newProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
             this.newProds = prods 
         });
-        this.productService.moreProds$.subscribe(prods => {
+        this.productService.moreProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
             this.moreProds = prods 
         });
-        this.productService.recommendedProds$.subscribe(prods => {
+        this.productService.recommendedProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
             this.recommendedProds = prods 
         });
+    }
+
+    ngOnInit() {
+        if (isPlatformServer(this.platformId)) {
+            this.categoriesApiService.getAllCategories().pipe(takeUntil(this.unsubscribe$)).subscribe({
+                next: data => {
+                    this.allCategories$.next(data)
+                    this.transferState.set(this.ALL_CATEGORIES_KEY, data)
+                },
+                error: error => this.allCategoriesError = true
+            })
+        }
+        else {
+            this.scrollService.scrollToTop()
+            const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
+            if (cachedCategories) {
+                this.allCategories$.next(cachedCategories)
+            } else {
+                this.categoriesApiService.getAllCategories().pipe(takeUntil(this.unsubscribe$)).subscribe({
+                    next: data => this.allCategories$.next(data),
+                    error: err => this.allCategoriesError = true
+                  })
+            }
+        }
     }
 
     ngAfterViewInit() {
@@ -66,17 +90,17 @@ export class HomeComponent implements AfterViewInit {
         entries.forEach((entry: any) => {
             if (entry.isIntersecting) {
             if (entry.target.classList.contains('newProds')) {
-                this.productApiService.getNewProducts().subscribe({
+                this.productApiService.getNewProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
                     next: response => this.productService.setNewProducts(response),
                     error: err => this.newProductsError = true
                 })
             } else if (entry.target.classList.contains('moreProds')) {
-                this.productApiService.getMoreProducts().subscribe({
+                this.productApiService.getMoreProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
                     next: response => this.productService.setMoreProducts(response),
                     error: err => this.moreProductsError = true
                   })
             } else if (entry.target.classList.contains('recommendedProds')) {
-                this.productApiService.getRecommendedProducts().subscribe({
+                this.productApiService.getRecommendedProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
                     next: response => this.productService.setRecommendedProducts(response),
                     error: err => this.recommendedProductsError = true
                   })
@@ -93,32 +117,6 @@ export class HomeComponent implements AfterViewInit {
         observer.observe(target2);
         observer.observe(target3);
     }
-
-    ngOnInit() {
-        if (isPlatformServer(this.platformId)) {
-            this.categoriesApiService.getAllCategories().subscribe({
-                next: data => {
-                    this.allCategories$.next(data)
-                    this.transferState.set(this.ALL_CATEGORIES_KEY, data)
-                },
-                error: error => this.allCategoriesError = true
-            })
-        }
-        else {
-            this.scrollService.scrollToTop()
-            const cachedCategories = this.transferState.get<any>(this.ALL_CATEGORIES_KEY, null);
-            if (cachedCategories) {
-                this.allCategories$.next(cachedCategories)
-            } else {
-                this.categoriesApiService.getAllCategories().subscribe({
-                    next: data => this.allCategories$.next(data),
-                    error: err => this.allCategoriesError = true
-                  })
-            }
-            this.cartService.getCart()
-        }
-    }
-
 
     slides: Slide[] = [
         {
@@ -141,6 +139,11 @@ export class HomeComponent implements AfterViewInit {
     openDialog() {
         this.modalService.closeDialog()
         this.modalService.openDialog('login')
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
   
 }

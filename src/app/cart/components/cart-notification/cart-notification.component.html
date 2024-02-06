@@ -1,4 +1,4 @@
-<div *ngIf="cartService.totalProductsNumber > 0" class="cart-notification">
+<div *ngIf="totalProductsNumber$ | async as totalProductsNumber" class="cart-notification">
     <div class="cart-notification__number">
         <mat-icon
             class="cart-notification__icon"
@@ -6,12 +6,12 @@
             shopping_cart
         </mat-icon>
         <p class="cart-notification__heading">
-            У кошику <span>{{ cartService.totalProductsNumber }}</span> товари
-            на суму <span>{{ cartService.totalPrice }} ₴</span>
+            У кошику <span>{{ totalProductsNumber }}</span> товари
+            на суму <span>{{ totalPrice$ | async }} ₴</span>
         </p>
     </div>
     <ul class="cart-notification__list">
-        <li *ngFor="let product of cartService.productsFromStorage">
+        <li *ngFor="let product of products$ | async">
             <button
                 matBadge="{{ product.amount }}"
                 matBadgePosition="above after"

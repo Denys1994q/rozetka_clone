@@ -26,7 +26,6 @@ export class ProductCommentsComponent {
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('comments')
-        this.productService.setBaseView(false)
         this.commentsService.sortProdComments('З фото і відео')
 
         this.commentsWithPhotoVideo = this.commentsService.comments$.pipe(filter((item: any) => item.photo || item.video)

@@ -38,80 +38,9 @@
         width: 50%
     &-big
         width: 25%
-    &-hiddenBorder
-        border-bottom: none
-        border-right: none
     &-withOpacity
         opacity: .4
-    &-innerWrapper
-        // height: 33rem
-        &-big
-            height: 43rem
-    &__btn
-        display: block
-        margin-left: auto
-    &__image
-        width: 13rem
-        height: 14rem
-        object-fit: contain
-        margin-bottom: 1.6rem
-        &-big
-            width: 23rem
-            height: 24rem
-    &__title
-        font-weight: normal
-        margin-bottom: .8rem
-        display: block
-        color: #333
-        font-size: 1.4rem
-        &:hover
-            color: red
-            text-decoration: underline
-        @include respond(phoneL)
-            font-size: 1.2rem
-    &__price
-        margin-top: auto
-        display: flex
-        justify-content: space-between
-    &__info
-        margin-top: 1.5rem
-//
-.info
-    font-size: 1.2rem
-    display: flex
-    align-items: flex-start
-    flex-wrap: wrap
-    &__heading
-        color: $btn-grey
-        margin-right: .5rem
-    &__text
-        color: $main-blue
-        margin-bottom: .5rem
-
-// button-icon
-.btn-icon
-    cursor: pointer
-    &__img
-        transition: all .2s ease
-        color: #ffa900
-.shopping-cart
-    color: $main-green
-
-.card-back
-    display: none
-    -webkit-box-shadow: 0px 0px 15px -3px rgba(126, 121, 126, 0.76)
-    -moz-box-shadow: 0px 0px 15px -3px rgba(109, 107, 109, 0.76)
-    box-shadow: 0px 0px 15px -3px rgba(194, 193, 194, 0.76)
-    z-index: 2
-    position: absolute
-    top: -10px
-    left: 0
-    width: 100%
-    background: #fff
-    padding-top: 26px
-.card-back--active
-    display: block
-
+// 
 .no-cards-found
     text-align: center
     margin-top: 60px
@@ -130,42 +59,3 @@
         align-items: center
         color: $main-blue
         margin-right: 1rem
-.checkboxWrapper
-    position: absolute
-    top: 1.2rem
-    right: 1.2rem
-    z-index: 99
-.delete-icon
-    color: #797878
-    transition: all .2s ease
-.delete-btn
-    display: block
-    margin-left: auto
-    cursor: pointer
-
-:host
-    ::ng-deep app-rating
-        .raiting__icon
-            width: 1.8rem
-            height: 2rem
-            font-size: unset
-        .reviews
-            margin-left: 1rem
-            font-size: 1.2rem
-    ::ng-deep app-checkbox
-        .checkbox-wrapper__label::before
-            width: 2.4rem
-            height: 2.4rem
-            top: 50%
-            left: 50%
-            transform: translate(-50%, -50%)
-        .checkbox-wrapper__label:hover::before
-            border: 1px solid black
-        .checkbox-wrapper
-            width: 3rem
-            height: 3rem
-            display: flex
-            justify-content: center
-            align-items: center
-        .checkbox-wrapper:hover
-            background: #f4faf6

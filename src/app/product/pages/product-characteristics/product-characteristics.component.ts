@@ -16,7 +16,6 @@ export class ProductCharacteristicsComponent {
     ngOnInit() {
         this.ProductService.checkActiveTab('characteristics')
         this.scrollService.scrollToTop()
-        this.ProductService.setBaseView(false)
     }
 
 }

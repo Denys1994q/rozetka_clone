@@ -35,7 +35,10 @@
         </button>
         <!-- картки -->
         <ng-container *ngIf="newProds && newProds.length > 0 ">
-            <app-cards [data]="{category: 'Гарячі новинки', products: newProds}"></app-cards>
+            <app-cards 
+                [withWishlistOption]="true" 
+                [data]="{category: 'Гарячі новинки', products: newProds}">
+            </app-cards>
         </ng-container>
         <div
             class="newProds"
@@ -48,7 +51,10 @@
         </div>
         <ng-container *ngIf="moreProds && moreProds.length > 0">
             <div>
-                <app-cards [data]="{category: 'Більше товарів для вибору', products: moreProds}"></app-cards>
+                <app-cards 
+                    [withWishlistOption]="true" 
+                    [data]="{category: 'Більше товарів для вибору', products: moreProds}">
+                </app-cards>
             </div>
         </ng-container>
         <div
@@ -61,7 +67,9 @@
             <h4>Вибачте, сервіс тимчасово не працює</h4>
         </div>
         <ng-container *ngIf="recommendedProds && recommendedProds.length > 0">
-            <app-cards [data]="{category: 'Рекомендовані', products: recommendedProds}"></app-cards>
+            <app-cards 
+                [withWishlistOption]="true" 
+                [data]="{category: 'Рекомендовані', products: recommendedProds}"></app-cards>
         </ng-container>
         <div
             class="recommendedProds"

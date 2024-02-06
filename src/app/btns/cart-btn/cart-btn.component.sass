@@ -1,0 +1,28 @@
+@import 'mixins'
+@import 'variables'
+
+.custom-badge
+    position: relative
+    & .mat-badge-content
+        background-color: $main-green
+        color: white
+.header-icon
+    font-size: 2.6rem
+    width: 4rem
+    height: 4rem
+    display: flex
+    align-items: center
+    justify-content: center
+    border-radius: .3rem
+    color: #fff
+    cursor: pointer
+    @include respond(tab-land)
+        margin-right: 2rem
+    @include respond(phoneXXL)
+        margin-right: 0
+    &:hover
+        transition: all .2s ease-in-out
+        background: #4d4b4b
+    &-user
+        @include respond(tab-port)
+            display: none

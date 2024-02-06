@@ -25,7 +25,6 @@ export class SearchResultsService {
         'За рейтингом',
         'Від дешевих до дорогих',
         'Від дорогих до дешевих',
-        'Новинки'
     ]
     // позиція сортування
     sortType: string = this.optionsToSort[0]
@@ -273,9 +272,7 @@ export class SearchResultsService {
             this.currentSubcategory.products = [...this.currentSubcategory.products].sort((a: any,b: any) => b.searchStatus.find((it: any) => it.searchPosition === 'price').option.new - a.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new)
         } else if (sortType === 'Від дешевих до дорогих') {
             this.currentSubcategory.products = [...this.currentSubcategory.products].sort((a: any,b: any) => a.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new - b.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new)
-        } else if (sortType === 'Новинки') {
-            this.currentSubcategory.products = [...this.currentSubcategory.products].sort((a: any,b: any) => a.date - b.date)
-        }
+        } 
     }
 
     resetRaitingValue() {

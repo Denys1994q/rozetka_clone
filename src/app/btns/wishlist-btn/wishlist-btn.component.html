@@ -1,0 +1,8 @@
+<button 
+    class="btn btn-icon btn-icon-orange btn-icon--small wishlist-btn" 
+    (click)="handleBtnClick()"
+    aria-label="Додати до улюблених">
+    <mat-icon class="btn-icon__icon">
+        {{isInWishlist ? 'favorite' : 'favorite_border'}}
+    </mat-icon>
+</button>

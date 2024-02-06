@@ -66,20 +66,7 @@
             <li
                 class="header-actions__item"
                 (click)="modalService.openDialog('cart')">
-                <button
-                    matBadge="{{
-                        cartService.totalProductsNumber > 0
-                            ? cartService.totalProductsNumber
-                            : ''
-                    }}"
-                    matBadgePosition="above after"
-                    class="custom-badge"
-                    aria-label="Відкрити корзину">
-                    <mat-icon
-                        class="header-icon"
-                        aria-label="Відкрити корзину">shopping_cart
-                    </mat-icon>
-                </button>
+                <app-cart-btn [withBadge]="totalProductsNumber$ | async"></app-cart-btn>
             </li>
         </ul>
     </div>

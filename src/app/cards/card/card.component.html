@@ -1,0 +1,144 @@
+<!-- ONE SIDE CARD -->
+<ng-container *ngIf="!isDoubleSided">
+    <div class="wishlistBtn-wrapper" *ngIf="!withCheckbox && withWishlistOption">
+        <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
+    </div>
+    <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+        <img
+            [src]="product.image_mob ? product.image_mob : product.image"
+            [attr.loading]="'lazy'"
+            class="card__image"
+            alt="product-image" />
+    </a>
+    <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+        <h3 class="card__title">{{ product.title }}</h3>
+    </a>
+    <div class="card__price">
+        <app-price [price]="getPriceObject(product)"></app-price>
+    </div>
+</ng-container>
+
+<!-- TWO SIDES CARD -->
+<ng-container *ngIf="isDoubleSided">
+<!-- withCheckbox -->
+    <div *ngIf="withCheckbox" class="checkboxWrapper">
+        <app-checkbox
+            [searchId]="product._id"
+            [variant]="'cabinet'"
+            [allChecked]="allCardsChecked"
+            (checkboxChange)="onCheckboxChange(product._id)" />
+    </div>
+    <!-- front side of card -->
+    <div 
+        (mouseenter)="handleMouseEnterCard()"
+        [ngStyle]="{ opacity: isBackCardVisible ? '0' : '1' }"
+        [class.card-hiddenBorder]="isBackCardVisible">
+        <div
+            class="card-innerWrapper"
+            [class.card-innerWrapper-big]="size === 'big'">
+            <!-- Кнопка видалити -->
+            <button 
+                *ngIf="withDeleteOption" 
+                class="delete-btn btn-icon btn-icon--small"
+                (click)="onCardDeleteBtnClick(product._id)">
+                <mat-icon class="delete-icon" aria-label="Видалити товар зі списку">
+                delete_outline
+                </mat-icon>
+            </button>
+            <!-- Кнопка додати до улюблених товарів -->
+            <div class="wishlistBtn-wrapper" *ngIf="!withCheckbox && withWishlistOption">
+                <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
+            </div>
+            <!-- Зображення товару -->
+            <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+                <img
+                    class="card__image"
+                    [class.card__image-big]="size === 'big'"
+                    src="{{product.image_mob ? product.image_mob : product.image}}"
+                    alt="product-image" />
+            </a>
+            <!-- Заголовок товару -->
+            <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+                <h3 class="card__title">{{ product.title }}</h3>
+            </a>
+            <!-- Рейтинг товару -->
+            <app-rating
+                [fixed]="true"
+                [activeIconIndex]="product.raiting"
+                [numReviews]="product.reviews_data.length">
+            </app-rating>
+            <!-- Ціна і корзина для товару -->
+            <div class="card__price">
+                <app-price [price]="getPriceObject(product)"></app-price>
+                <app-buy-btn [product]="product"></app-buy-btn>
+            </div>
+        </div>
+    </div>
+    <!-- back side of card -->
+    <div
+        *ngIf="isBackCardVisible"
+        (mouseleave)="handleMouseLeaveCard()"
+        class="card card-back card-back--active">
+        <div
+            class="card-innerWrapper"
+            [class.card-innerWrapper-big]="size === 'big'">
+            <!-- Кнопка видалити -->
+            <button 
+                *ngIf="withDeleteOption" 
+                class="delete-btn"
+                (click)="onCardDeleteBtnClick(product._id)">
+                <mat-icon 
+                    class="delete-icon btn-icon btn-icon--small" 
+                    aria-label="Видалити товар зі списку">
+                    delete_outline
+                </mat-icon>
+            </button>
+            <!-- Кнопка додати до улюблених товарів -->
+            <div class="wishlistBtn-wrapper" *ngIf="!withCheckbox && withWishlistOption">
+                <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
+            </div>
+            <!-- Зображення товару -->
+            <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+                <img
+                    *ngIf="product.image2; else basicImg"
+                    src="{{ product.image2 }}"
+                    class="card__image"
+                    [class.card__image-big]="size === 'big'"
+                    alt="product-image" />
+                <ng-template #basicImg>
+                    <img
+                        src="{{ product.image }}"
+                        class="card__image"
+                        [class.card__image-big]="size === 'big'"
+                        alt="product-image" />
+                </ng-template>
+            </a>
+            <!-- Заголовок товару -->
+            <a routerLink="{{ '/' + product.engName + '/' + product._id }}">
+                <h3 class="card__title">{{ product.title }}</h3>
+            </a>
+            <!-- Рейтинг товару -->
+            <app-rating
+                [fixed]="true"
+                [activeIconIndex]="product.raiting"
+                [numReviews]="product.reviews_data.length">
+            </app-rating>
+            <!-- Ціна і корзина для товару -->
+            <div class="card__price">
+                <app-price [price]="getPriceObject(product)"></app-price>
+                <app-buy-btn [product]="product"></app-buy-btn>
+            </div>
+        </div>
+        <!-- Додаткова інформація про товар -->
+        <ng-container *ngIf="product.info">
+            <ul class="card__info">
+                <li
+                    class="info"
+                    *ngFor="let infoitem of product.info">
+                    <p class="info__heading">{{ infoitem.heading }}:</p>
+                    <span class="info__text">{{ infoitem.text }}</span>
+                </li>
+            </ul>
+        </ng-container>
+    </div>
+</ng-container>

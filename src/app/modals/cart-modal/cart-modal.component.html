@@ -4,98 +4,98 @@
         (click)="removeFromOpenedToDelete($event)">
         <app-modal-header [title]="'Кошик'"></app-modal-header>
         <div class="cart-content">
-            <div
-                *ngIf="
-                    cartService.productsFromStorage &&
-                        cartService.productsFromStorage.length > 0;
-                    else emptyCart
-                ">
-                <ul class="cart-list">
-                    <li
-                        class="cart-item"
-                        *ngFor="let product of cartService.productsFromStorage">
-                        <div class="cart-item__main">
-                            <img
-                                class="cart-item__photo"
-                                src="{{ product.image }}"
-                                alt="product-image" />
-                            <a href="">
-                                <h3 class="cart-item__heading">
-                                    {{ product.title }}
-                                </h3>
-                            </a>
-                            <div class="more">
-                                <button
-                                    class="more-btn"
-                                    (click)="addToOpenedToDelete(product._id)">
-                                    <mat-icon class="modal-login__close">
-                                        more_vert
-                                    </mat-icon>
-                                </button>
-                                <div
-                                    class="more-block"
-                                    *ngIf="openedForDeleting === product._id"
-                                    (click)="
-                                        cartService.removeFromCart(product._id)
-                                    ">
-                                    <mat-icon class="modal-login__close">
-                                        delete_outline
-                                    </mat-icon>
-                                    Видалити
+            <ng-container *ngIf="products$ | async as products">
+                <div *ngIf="products && products.length > 0; else emptyCart">
+                    <ul class="cart-list">
+                        <li
+                            class="cart-item"
+                            *ngFor="let product of products">
+                            <div class="cart-item__main">
+                                <img
+                                    class="cart-item__photo"
+                                    src="{{ product.image }}"
+                                    alt="product-image" />
+                                <a href="">
+                                    <h3 class="cart-item__heading">
+                                        {{ product.title }}
+                                    </h3>
+                                </a>
+                                <div class="more">
+                                    <button
+                                        class="more-btn"
+                                        (click)="addToOpenedToDelete(product._id)">
+                                        <mat-icon class="modal-login__close">
+                                            more_vert
+                                        </mat-icon>
+                                    </button>
+                                    <div
+                                        class="more-block"
+                                        *ngIf="openedForDeleting === product._id"
+                                        (click)="
+                                            cartService.removeFromCart(product._id)
+                                        ">
+                                        <mat-icon class="modal-login__close">
+                                            delete_outline
+                                        </mat-icon>
+                                        Видалити
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="cart-item__price">
-                            <app-counter
-                                [productId]="product._id"
-                                [startValue]="
-                                    product.amount ? product.amount : 1
-                                "
-                                (counterChange)="onCounterChange($event)">
-                            </app-counter>
-                            <div class="priceBlock">
-                                <div
-                                    *ngIf="
-                                        getPrice(product).option.old;
-                                        else normal
-                                    ">
-                                    <p class="price-old">
-                                        {{ getPrice(product).option.old }}
-                                        &#x20b4;
-                                    </p>
-                                    <p class="price-new">
-                                        {{ getPrice(product).option.new }}
-                                        &#x20b4;
-                                    </p>
+                            <div class="cart-item__price">
+                                <app-counter
+                                    [product]="product"
+                                    [startValue]="
+                                        product.amount ? product.amount : 1
+                                    "
+                                    (counterChange)="onCounterChange($event)">
+                                </app-counter>
+                                <div class="priceBlock">
+                                    <div
+                                        *ngIf="
+                                            getPrice(product).option.old;
+                                            else normal
+                                        ">
+                                        <p class="price-old">
+                                            {{ getPrice(product).option.old }}
+                                            &#x20b4;
+                                        </p>
+                                        <p class="price-new">
+                                            {{ getPrice(product).option.new }}
+                                            &#x20b4;
+                                        </p>
+                                    </div>
+                                    <ng-template #normal>
+                                        <p class="price-normal">
+                                            {{ getPrice(product).option.new }}
+                                            &#x20b4;
+                                        </p>
+                                    </ng-template>
                                 </div>
-                                <ng-template #normal>
-                                    <p class="price-normal">
-                                        {{ getPrice(product).option.new }}
-                                        &#x20b4;
-                                    </p>
-                                </ng-template>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="payment-block">
-                    <button
-                        class="btn continue-buying-btn"
-                        (click)="modalService.closeDialog()">
-                        Продовжити покупки
-                    </button>
-                    <div class="make-order">
-                        <p class="total-price">
-                            {{ cartService.totalPrice }} &#x20b4;
-                        </p>
+                        </li>
+                    </ul>
+                    <div class="payment-block">
                         <button
-                            class="order-btn"
-                            (click)="confirmOrder()">
-                            Оформити замовлення
+                            class="btn continue-buying-btn"
+                            (click)="modalService.closeDialog()">
+                            Продовжити покупки
                         </button>
+                        <div class="make-order">
+                            <p class="total-price">
+                                {{ totalPrice$ | async }} &#x20b4;
+                            </p>
+                            <a routerLink="/checkout">
+                                <button
+                                    class="order-btn"
+                                    (click)="confirmOrder()">
+                                    Оформити замовлення
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
+            
             <ng-template #emptyCart>
                 <img
                     class="cart-img"

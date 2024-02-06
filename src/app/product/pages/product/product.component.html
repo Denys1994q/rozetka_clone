@@ -34,18 +34,15 @@
         [startRoute]="product.engName + '/' + product._id">
     </app-tabs>
     <!-- контент для табів з роутер-аутлету -->
-    <ng-container *ngIf="productService.baseView; else tabsView">
-        <router-outlet></router-outlet>
-    </ng-container>
-    <ng-template #tabsView>
+    <ng-container>
         <section class="product-section">
-            <div class="product-section__info">
+            <div [class.product-section__info]="!mainPage">
                 <!-- роути під конкретний таб -->
                 <!-- ліва частина сторінки -->
                 <router-outlet></router-outlet>
             </div>
             <!-- права частина сторінки -->
-            <div class="product-section__card">
+            <div *ngIf="!mainPage" class="product-section__card">
                 <section class="info__item mb16 card">
                     <div class="card__image">
                         <img
@@ -61,40 +58,18 @@
                         <div class="trade__price">
                             <app-price [price]="product.price" [big]="true"></app-price>
                             <p class="trade__price-status">
-                                {{ (product$ | async)?.sellStatus }}
+                                {{ product.sellStatus }}
                             </p>
                         </div>
                         <div class="trade__btns">
                             <button class="btn btn-icon btn-icon-grey">
                                 <mat-icon class="btn-icon__icon">balance</mat-icon>
                             </button>
-                            <button 
-                                class="btn btn-icon btn-icon-orange"
-                                (click)="onAddToWishlist(product)"
-                                aria-label="Додати до улюблених">
-                                <mat-icon class="btn-icon__icon">
-                                    {{product.isInWishlist ? 'favorite' : 'favorite_border'}}
-                                </mat-icon>
-                            </button>
+                            <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
                         </div>
                     </section>
                     <section class="trade__buy">
-                        <div *ngIf="cartService.checkIfProductInCart(product._id); else buy">
-                            <div class="inCart-block">
-                                <mat-icon class="inCart-icon">shopping_cart</mat-icon>
-                                <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">
-                                    В кошику
-                                </button>
-                            </div>
-                        </div>
-                        <ng-template #buy>
-                            <button 
-                                class="btn iconed-btn btn-medium btn-green width100"
-                                (click)="addToCart(product)">
-                                <mat-icon class="iconed-btn__icon">shopping_cart</mat-icon>
-                                Купити
-                            </button>
-                        </ng-template>
+                        <app-buy-btn [textBtn]="true" [product]="product"></app-buy-btn>
                     </section>
                 </div>
                 <section class="info__item mb16 seller">
@@ -105,7 +80,6 @@
                 </section>
             </div>
         </section>
-        <!-- <app-cards [data]="newProds"></app-cards> -->
         <!-- адаптив: панель продукту -->
         <section class="product-panel">
             <img
@@ -115,21 +89,8 @@
             <p class="product-panel__title">{{ product.title }}</p>
             <app-price [price]="product.price"> </app-price>
             <div class="trade__buy">
-                <div *ngIf="cartService.checkIfProductInCart(product._id); else adaptive_buy">
-                    <div class="inCart-block">
-                        <mat-icon class="inCart-icon">shopping_cart</mat-icon>
-                        <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">
-                            В кошику
-                        </button>
-                    </div>
-                </div>
-                <ng-template #adaptive_buy>
-                    <button class="btn iconed-btn btn-medium btn-green width100">
-                        <mat-icon class="iconed-btn__icon">shopping_cart</mat-icon>
-                        Купити
-                    </button>
-                </ng-template>
+                <app-buy-btn [textBtn]="true" [product]="product"></app-buy-btn>
             </div>
         </section>
-    </ng-template>
+    </ng-container>
 </article>

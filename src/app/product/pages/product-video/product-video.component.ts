@@ -16,7 +16,6 @@ export class ProductVideoComponent {
     ngOnInit() {
         this.scrollService.scrollToTop()
         this.productService.checkActiveTab('video')
-        this.productService.setBaseView(false)
     }
 
 }

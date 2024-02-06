@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import {filter} from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
-import { WishlistService } from './cabinet/services/wishlist.service';
 import { DeviceService } from './core/services/device.service';
+import { CartService } from './cart/services/cart.service';
+import { Subject, takeUntil } from 'rxjs';
+import { WishlistService } from './cabinet/services/wishlist.service';
+import { WishlistBtnService } from './btns/wishlist-btn/wishlist-btn.service';
+import { IProduct } from './product/models/product.model';
+import { WishlistApiService } from './cabinet/services/wishlist-api.service';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +19,18 @@ import { DeviceService } from './core/services/device.service';
 export class AppComponent implements OnInit {
     showFooter: boolean = true
     showHeader: boolean = true
+    unsubscribe$ = new Subject<void>()
 
     constructor(
         private router: Router, 
-        private wishlistService: WishlistService,
         private deviceService: DeviceService,
+        private cartService: CartService,
+        private wishlistBtnService: WishlistBtnService,
+        private wishlistApiService: WishlistApiService,
         private authService: AuthService ) {
-            router.events.pipe(filter(event => event instanceof NavigationEnd))
+            router.events.pipe(
+                takeUntil(this.unsubscribe$),
+                filter(event => event instanceof NavigationEnd))
                 .subscribe({
                     next: (event: Event ) => {
                         if(event instanceof NavigationEnd ){
@@ -39,7 +49,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.authService.getUser().subscribe({
+        this.authService.getUser().pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: () => {},
             error: error => console.log('user auth failed', error.error.message)
         })
@@ -47,6 +57,19 @@ export class AppComponent implements OnInit {
             localStorage.setItem('side-banner', 'active')
         }
         this.deviceService.detectDevice()
+        this.wishlistApiService.getWishlist().pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: products => {
+                if (products.value) {
+                    const prodIds = products.value.map((item: IProduct) => item._id)
+                    this.wishlistBtnService.setProductsIds(prodIds)
+                }
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
 
 }

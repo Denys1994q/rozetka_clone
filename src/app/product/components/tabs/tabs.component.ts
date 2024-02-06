@@ -3,6 +3,7 @@ import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -12,6 +13,7 @@ import { filter } from 'rxjs/operators';
 export class TabsComponent {
     @Input() data!: any[]
     @Input() startRoute!: string
+    unsubscribe$ = new Subject<void>()
 
     constructor(public productService: ProductService, private router: Router) {}
 
@@ -22,7 +24,6 @@ export class TabsComponent {
         .subscribe((event: any) => {
             const lastLetterBeforeId = event.url.lastIndexOf('/')
             const tabName = event.url.slice(lastLetterBeforeId+1, lastLetterBeforeId+event.url.length-1)
-            console.log(tabName)
             if (this.data) {
                 this.data.map((item, index) => {
                     if (item.link === tabName) {
@@ -33,6 +34,11 @@ export class TabsComponent {
                 })
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
     }
 
 }

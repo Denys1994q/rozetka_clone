@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { IProduct } from 'src/app/product/models/product.model';
 
 @Component({
   selector: 'app-counter',
@@ -6,7 +7,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
   styleUrls: ['./counter.component.sass']
 })
 export class CounterComponent {
-    @Input() productId!: string; 
+    @Input() product!: IProduct; 
     @Input() startValue!: number; 
     @Output() counterChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -21,7 +22,7 @@ export class CounterComponent {
     }
 
     emitCounterChange() {
-        this.counterChange.emit({ productId: this.productId, value: this.startValue });
+        this.counterChange.emit({ product: this.product, value: this.startValue });
     }
 
 }

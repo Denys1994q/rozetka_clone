@@ -1,0 +1,18 @@
+<ng-container *ngIf="withBadge; else withoutBadge">
+    <button
+        matBadge="{{withBadge}}"
+        matBadgePosition="above after"
+        class="custom-badge"
+        aria-label="Відкрити корзину">
+        <mat-icon class="header-icon" aria-label="Відкрити корзину">
+            shopping_cart
+        </mat-icon>
+    </button>
+</ng-container>
+<ng-template #withoutBadge>
+    <button aria-label="Відкрити корзину">
+        <mat-icon class="header-icon" aria-label="Відкрити корзину">
+            shopping_cart
+        </mat-icon>
+    </button>
+</ng-template>

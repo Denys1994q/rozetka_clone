@@ -50,34 +50,13 @@
                 </p>
             </div>
             <div class="trade__buy price-buy-panel__btn">
-                <div *ngIf="checkIfProductInCart(product._id); else buy">
-                    <div class="inCart-block">
-                        <mat-icon class="inCart-icon">shopping_cart</mat-icon>
-                        <button class="btn btn-link btn-inCart" (click)="modalService.openDialog('cart')">
-                            В кошику
-                        </button>
-                    </div>
-                </div>
-                <ng-template #buy>
-                    <button class="btn iconed-btn btn-medium btn-green width100"
-                    (click)="addToCart()">
-                        <mat-icon class="iconed-btn__icon">shopping_cart</mat-icon>
-                        Купити
-                    </button>
-                </ng-template>
+                <app-buy-btn [textBtn]="true" [product]="product"></app-buy-btn>
             </div>
             <div class="trade__btns">
                 <button class="btn btn-icon btn-icon-grey" aria-label="Порівняти товари">
                     <mat-icon class="btn-icon__icon">balance</mat-icon>
                 </button>
-                <button 
-                    class="btn btn-icon btn-icon-orange" 
-                    (click)="onAddToWishlist(product._id)"
-                    aria-label="Додати до улюблених">
-                    <mat-icon class="btn-icon__icon">
-                        {{product.isInWishlist ? 'favorite' : 'favorite_border'}}
-                    </mat-icon>
-                </button>
+                <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
             </div>
         </section>
         <div class="info__item mb24 services">

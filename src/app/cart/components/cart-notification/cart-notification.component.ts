@@ -5,9 +5,12 @@ import { CartService } from '../../services/cart.service';
     selector: 'app-cart-notification',
     templateUrl: './cart-notification.component.html',
     styleUrls: ['./cart-notification.component.sass']
-  })
-  export class CartNotificationComponent {
+})
+export class CartNotificationComponent {
+    products$ = this.cartService.products$
+    totalProductsNumber$ = this.cartService.totalProductsNumber$
+    totalPrice$ = this.cartService.totalPrice$
     
-    constructor(public cartService: CartService) {}
+    constructor(private cartService: CartService) {}
 
-  }
+}

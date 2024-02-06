@@ -20,6 +20,8 @@ export class CheckboxComponent {
 
   service: boolean = false
 
+  ngOnInit() {}
+
   onCheck(e: any) {
     this.service = e.target.checked
   }

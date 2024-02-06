@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { IProduct } from 'src/app/product/models/product.model';
 
 @Injectable({
@@ -13,7 +13,12 @@ export class ProductApiService {
 
     getOneProduct(id: string) {
         const apiUrl = `${this.backendUrl}/products/${id}` 
-        return this.http.get<IProduct>(apiUrl);
+        return this.http.get<IProduct>(apiUrl).pipe(
+            map((response: IProduct) => {
+                response.raiting = this.setProductRaiting(response)        
+                return response 
+            }),
+        )  
     }
 
     getAllProducts(): Observable<IProduct[]> {
@@ -23,22 +28,29 @@ export class ProductApiService {
 
     getNewProducts(): Observable<IProduct[]> {
         const apiUrl = `${this.backendUrl}/newProducts` 
-        return this.http.get<IProduct[]>(apiUrl);
+        return this.http.get<IProduct[]>(apiUrl)
     }
 
     getMoreProducts(): Observable<IProduct[]> {
         const apiUrl = `${this.backendUrl}/moreProducts` 
-        return this.http.get<IProduct[]>(apiUrl);
+        return this.http.get<IProduct[]>(apiUrl)
     }
 
     getRecommendedProducts(): Observable<IProduct[]> {
         const apiUrl = `${this.backendUrl}/recommendedProducts` 
-        return this.http.get<IProduct[]>(apiUrl);
+        return this.http.get<IProduct[]>(apiUrl)
     }
 
     searchProducts(prodName: string): Observable<IProduct[]> {
         const apiUrl = `${this.backendUrl}/search/${prodName}` 
         return this.http.get<IProduct[]>(apiUrl)
+    }
+
+    private setProductRaiting(response: IProduct) {
+        const copy = {...response}
+        const totalRating = copy.reviews_data.reduce((sum, review: any) => sum + (review.rating || review.raiting), 0);
+        const averageRating = totalRating / copy.reviews_data.length;
+        return averageRating
     }
 
 }
