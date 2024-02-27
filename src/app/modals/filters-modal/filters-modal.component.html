@@ -11,7 +11,7 @@
         <div class="content__list">
             <div class="content__item" *ngFor="let item of items; let i = index">
                 <input
-                    [checked]="i === SearchResultsService.selectedRaitingIndex - 1"
+                    [checked]="i === searchResultsService.selectedRaitingIndex - 1"
                     type="radio"
                     id="rating{{ i }}"
                     name="rating"

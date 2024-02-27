@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, PLATFORM_ID, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { CommentsService } from '../../comment/services/comments.service';
 import { ProductService } from 'src/app/product/services/product.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -8,6 +7,7 @@ import { ModalService } from '../modal.service';
 import { IProduct } from 'src/app/product/models/product.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Subject, takeUntil } from 'rxjs';
+import { CommentsApiService } from 'src/app/comment/services/comments-api.service';
 
 @Component({
   selector: 'app-create-comment-modal',
@@ -29,12 +29,12 @@ export class CreateCommentModalComponent {
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
-        public commentsService: CommentsService, 
+        public commentsApiService: CommentsApiService, 
         public authService: AuthService,
         public modalService: ModalService,
         private productService: ProductService) {
             this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
-                this.product = prod
+                this.product = prod.value
             })
         }
 
@@ -61,11 +61,11 @@ export class CreateCommentModalComponent {
 
         if (this.product) {
             const prodId = this.product._id
-            this.commentsService.addComment(prodId, data).pipe(takeUntil(this.unsubscribe$)).subscribe({
+            this.commentsApiService.addComment(prodId, data).pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: response => {
                     this.modalService.closeDialog()
                     this.modalService.openDialog('thanks-modal')
-                    this.productService.getCurrentProduct(prodId)
+                    this.productService.getProduct(prodId)
                 },
                 error: error => console.log(error)
             })
@@ -73,7 +73,7 @@ export class CreateCommentModalComponent {
     }
 
     handleFileChange(event: any) {
-        this.commentsService.uploadPhoto(event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe({
+        this.commentsApiService.uploadPhoto(event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: resp => {
                 const obj = {
                     url: resp.url,

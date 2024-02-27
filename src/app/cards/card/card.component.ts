@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter} from "@angular/core";
 import { IProduct } from "src/app/product/models/product.model";
-import { WishlistService } from "src/app/cabinet/services/wishlist.service";
 
 @Component({
     selector: 'app-card',
@@ -19,8 +18,7 @@ export class CardComponent {
     @Output() cardDeleteBtnClick = new EventEmitter<any>();
     isBackCardVisible!: boolean
 
-    constructor(
-        public wishlistService: WishlistService) { }
+    constructor() { }
 
     handleMouseEnterCard() {
         this.isBackCardVisible = true

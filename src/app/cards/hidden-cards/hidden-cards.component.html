@@ -1,0 +1,17 @@
+<ng-container *ngIf="prods; else err">
+    <ng-container *ngIf="prods.length > 0">
+        <app-cards 
+            [withWishlistOption]="true" 
+            [data]="{category: category, products: prods}">
+        </app-cards>
+    </ng-container>
+    <div class={{className}} [hidden]="prods.length > 0">
+        <app-skeleton [variant]="'products'"></app-skeleton>
+    </div>
+</ng-container>
+<ng-template #err>
+    <div class="errorWrapper">
+        <mat-icon>error_outline</mat-icon>
+        <h4>Вибачте, сервіс тимчасово не працює</h4>
+    </div>
+</ng-template>

@@ -9,6 +9,7 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
 import { IProduct, IProductCart } from '../../models/product.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Subject } from 'rxjs';
+import { CommentVotingService } from 'src/app/comment/services/comment-voting.service';
 
 @Component({
   selector: 'app-product-all',
@@ -16,10 +17,11 @@ import { Subject } from 'rxjs';
   styleUrls: ['./product-all.component.sass']
 })
 export class ProductAllComponent {
+    comments$ = this.productService.comments$
     showFullText: boolean = false
     hideBtn: boolean = false
     slides: Slide[] = []
-    product: IProduct | null = null
+    product!: IProduct 
     isInWishlist!: boolean
     unsubscribe$ = new Subject<void>()
     @ViewChild('videoBlock') videoBlock!: ElementRef;
@@ -31,9 +33,12 @@ export class ProductAllComponent {
         public productService: ProductService, 
         public cartService: CartService, 
         private scrollService: ScrollService,
+        private commentVotingService: CommentVotingService,
         public modalService: ModalService) {
             this.productService.product$.pipe(takeUntilDestroyed()).subscribe(prod => {
-                this.product = prod
+                if (prod.value) {
+                    this.product = prod.value
+                }
             })
         }
 
@@ -59,6 +64,14 @@ export class ProductAllComponent {
                 });
             }
         }
+    }
+
+    onCommentsPanelLikeBtnClick(commentId: string) {
+        this.commentVotingService.addLike(commentId, this.product?._id)
+    }
+
+    onCommentsPanelDislikeBtnClick(commentId: string) {
+        this.commentVotingService.addDislike(commentId, this.product?._id)
     }
 
     addToCart() {

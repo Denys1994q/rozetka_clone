@@ -8,13 +8,13 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
   styleUrls: ['./product-characteristics.component.sass']
 })
 export class ProductCharacteristicsComponent {
+    product$ = this.productService.product$
 
     constructor(
-        public ProductService: ProductService, 
+        public productService: ProductService, 
         private scrollService: ScrollService) {}
 
     ngOnInit() {
-        this.ProductService.checkActiveTab('characteristics')
         this.scrollService.scrollToTop()
     }
 

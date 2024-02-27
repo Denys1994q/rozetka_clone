@@ -1,9 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IComment } from '../models/comment.model';
 import { ModalService } from 'src/app/modals/modal.service';
-import { SearchResultsService } from 'src/app/categories/services/search-results.service';
-import { ProductService } from '../../product/services/product.service';
 import { CommentsService } from '../services/comments.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-comments-panel',
@@ -11,29 +10,32 @@ import { CommentsService } from '../services/comments.service';
   styleUrls: ['./comments-panel.component.sass']
 })
 export class CommentsPanelComponent {
+    @Input() comments: IComment[] = []
+    @Input() link!: any 
+    @Output() commentsPanelLikeBtnClick = new EventEmitter<string>();
+    @Output() commentsPanelDislikeBtnClick = new EventEmitter<string>();
+
+    unsubscribe$ = new Subject<void>()
 
     constructor(
         private modalService: ModalService, 
-        public SearchResultsService: SearchResultsService, 
-        public ProductService: ProductService,
         public commentsService: CommentsService) {}
-
-    @Input() comments: IComment[] | null = []
-    @Input() withFilters: boolean = false
-    @Input() link!: any 
-
-    ngOnInit() {
-        this.SearchResultsService.removeAll()
-    }
 
     openDialog(type: string) {
         this.modalService.openDialog(type)
     }
 
-    onSelectChange(sortType: string) {
-        this.commentsService.sortProdComments(sortType)
+    onCommentLikeBtnClick(commentId: string) {
+        this.commentsPanelLikeBtnClick.emit(commentId)
     }
 
+    onCommentDislikeBtnClick(commentId: string) {
+        this.commentsPanelDislikeBtnClick.emit(commentId)
+    }
 
+    ngOnDestroy() {
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
+    }
   
 }

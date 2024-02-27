@@ -1,122 +1,95 @@
 import { Injectable } from '@angular/core';
 import { ProductApiService } from './product-api.service';
 import { IProduct } from '../models/product.model';
-import { CommentsService } from 'src/app/comment/services/comments.service';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, combineLatest, switchMap, shareReplay, tap } from 'rxjs';
+import { IComment } from 'src/app/comment/models/comment.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class ProductService {
-    product$ = new BehaviorSubject<IProduct | null>(null)
-    tab: number = 0
-    productTabs: {name: string, link: string}[] = []
-    newProds$ = new BehaviorSubject<IProduct[]>([]) 
-    moreProds$ = new BehaviorSubject<IProduct[]>([]) 
-    recommendedProds$ = new BehaviorSubject<IProduct[]>([]) 
-    foundedProducts: IProduct[] = []
-    getAllProductsLoading$ = new BehaviorSubject<boolean>(false) 
-    getOneProductLoading$ = new BehaviorSubject<boolean>(false) 
-    getOneProductError$ = new BehaviorSubject<boolean>(false) 
-    getOneProductErrorMsg: string = ''
 
-    constructor(
-        private CommentsService: CommentsService, 
-        private productApiService: ProductApiService) {}
+    constructor(private productApiService: ProductApiService, private authService: AuthService) {}
 
-    setNewProducts(data: IProduct[]) {
-        this.newProds$.next(data)
-    }
+    userId$ = new BehaviorSubject('')
+    updatedComments$ = new BehaviorSubject<IComment[] | []>([])
+    productId$ = new BehaviorSubject<string>('')
+    product$: Observable<{isLoading: boolean; value: IProduct | null }> = this.productId$.pipe(
+        switchMap(id => this.productApiService.getOneProduct(id)),
+        tap(data => {
+            if (data.value) {
+                this.authService.userData$.subscribe({
+                    next: (user) => {
+                        const comments = data.value?.reviews_data
+                        if (user && user._id) {
+                            const newComments = comments && comments.map(c => {
+                                if (c.likes.some(l => l.user === user?._id)) {
+                                    return {...c, isLiked: 1}
+                                } else if (c.dislikes.some(l => l.user === user?._id)) {
+                                    return {...c, isLiked: -1}
+                                } else {
+                                    return {...c, isLiked: 0}
+                                }
+                            })
+                            if (newComments) {
+                                this.comments$.next(newComments)
+                            }
+                        } else {
+                            comments && this.comments$.next(comments)
+                        }
+                    } 
+                })
+            }
+            
+        }),
+        shareReplay(1)
+    )
 
-    setMoreProducts(data: IProduct[]) {
-        this.moreProds$.next(data)
-    }
+    comments$ = new BehaviorSubject<IComment[] | []>([])
 
-    setRecommendedProducts(data: IProduct[]) {
-        this.recommendedProds$.next(data)
-    }
+    productTabs$ = this.product$.pipe(
+        map(prod => {
+            const tabs = [
+                { name: 'Усе про товар', link: '' },
+                { name: 'Характеристики', link: 'characteristics' },
+                { name: 'Відгуки', link: 'comments' },
+                { name: 'Фото', link: 'photos' }
+            ];
+            if (prod.value && prod.value.video) {
+                tabs.push({ name: 'Відео', link: 'video' });
+            }
+            return tabs;
+        }),
+        shareReplay(1)
+    );
+    urlParam$ = new BehaviorSubject('')
 
-    getCurrentProduct(id: string, urlId?: any) {
-        this.getOneProductError$.next(false)
-        this.getOneProductLoading$.next(true) 
-        this.productApiService.getOneProduct(id).pipe(
-                map((response: IProduct) => {
-                    response.price = response.searchStatus.find((status: any) => status.searchPosition === 'price')?.option
-                    response.sellStatus = response.searchStatus.find((status: any) => status.searchPosition === 'sell_status')?.option
-                    response.seller = response.searchStatus.find((status: any) => status.searchPosition === 'seller')?.option
-                    response.raiting = this.setProductRaiting(response)        
-                    return response 
-                }),
-            )  
-            .subscribe({
-                next: (response: IProduct) => {
-                    this.product$.next({...response})
-                    this.CommentsService.setComments(response.reviews_data)
-                    this.createTabs(response.video)
-                    this.checkActiveTab(urlId)
-                    this.getOneProductLoading$.next(false)
-                },
-                error: err => {
-                    this.getOneProductLoading$.next(false) 
-                    this.getOneProductError$.next(true)
-                    if (err.error.message) {
-                        this.getOneProductErrorMsg = 'Код помилки: ' + err.status + '. ' + err.error.message
-                    }
-                }
-            })
-    }
-
-    createTabs(video: string) {
-        const tabs = [
-            { name: 'Усе про товар', link: '' },
-            { name: 'Характеристики', link: 'characteristics' },
-            { name: 'Відгуки', link: 'comments' },
-            { name: 'Фото', link: 'photos' },
-        ]
-        if (video) {
-            this.productTabs = [
-                ...tabs,
-                { name: 'Відео', link: 'video' }
-            ]
-        } else {
-            this.productTabs = [...tabs]
-        }
-    }
-
-    checkActiveTab(urlId: any) {
-        this.productTabs.map((tab: any, index: any) => {
-            if (tab && tab.link === urlId) this.setTab(index)
-        })
-    }
-
-    setProductRaiting(response: IProduct) {
-        const copy = {...response}
-        const totalRating = copy.reviews_data.reduce((sum, review: any) => sum + (review.rating || review.raiting), 0);
-        const averageRating = totalRating / copy.reviews_data.length;
-        return averageRating
-    }
-
-    findProduct(name: string): any {
-        this.resetFoundedProducts()
-        this.getAllProductsLoading$.next(true)
-        this.productApiService.searchProducts(name).subscribe({
-            next: data => {
-                this.getAllProductsLoading$.next(false)
-                this.foundedProducts = data
-            },
-            error: err => console.log(err)
-        })
-    }
-
-    resetFoundedProducts() {
-        this.foundedProducts = []
-    }
-
-    setTab(i: number) {
-        this.tab = i
-    }
-
-    resetProduct() {
-        this.product$.next(null)
+    activeTab$ = combineLatest([this.urlParam$, this.productTabs$]).pipe(
+        switchMap(([urlParam, tabs]) => {
+          const activeTab = tabs.findIndex(tab => tab.link === urlParam);
+          return activeTab ? of(activeTab) : of(0);
+        }),
+        shareReplay(1)
+      );
+    
+    getProduct(id: string) {
+        this.productId$.next(id)
     }
     
+    checkActiveTab(urlParam: string) {
+        this.urlParam$.next(urlParam)
+    }
+
+    updateProdComments(id: string, comment: IComment, isLiked: number) {
+        const curComments = this.comments$.getValue();
+        const updatedComments = curComments.map(c => {
+            if (c._id === id) {
+                return {...comment, isLiked: isLiked, user: c.user};
+            } else {
+                return c;
+            }
+        });
+        this.comments$.next(updatedComments);
+    }
+        
 }

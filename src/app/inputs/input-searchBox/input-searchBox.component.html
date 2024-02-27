@@ -20,14 +20,14 @@
         <ul
             *ngIf="showOverlay"
             class="overlay-content">
-            <a *ngFor="let prod of ProductService.foundedProducts.slice(0,5)" routerLink="{{ '/' + prod.engName + '/' + prod._id }}">
+            <a *ngFor="let prod of productsSearchService.foundedProducts.slice(0,5)" routerLink="{{ '/' + prod.engName + '/' + prod._id }}">
                 <li>
                     <img class="overlay-content__image" src={{prod.image}} alt="prod-image">
                     {{prod.title}}
                 </li>
             </a>
 
-            <p *ngIf="ProductService.foundedProducts.length === 0 && !getAllProductsLoading">По вашому запиту нічого не знайдено. Уточніть свій запит</p>
+            <p *ngIf="productsSearchService.foundedProducts.length === 0 && !getAllProductsLoading">По вашому запиту нічого не знайдено. Уточніть свій запит</p>
         </ul>
     </div>
     <div

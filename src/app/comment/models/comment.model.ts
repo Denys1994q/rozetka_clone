@@ -16,9 +16,9 @@ interface Vote {
     disadvantages?: string,
     likes: Vote[],
     dislikes: Vote[],
-    photo?: string,
-    photos?: string[],
+    photos: string[],
     _id: string,
     video?: string,
-    createdAt: Date
+    createdAt: Date,
+    isLiked: number
   }

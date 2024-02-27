@@ -1,0 +1,48 @@
+<ng-container>
+    <div class="mb16 filters">
+        <button
+            class="btn btn-medium iconed-btn btn-blue filters-btn"
+            (click)="openDialog('filters')">
+            <mat-icon class="iconed-btn__icon">filter_alt</mat-icon>
+            Фільтри
+        </button>
+        <div class="filters-select">
+            <app-select
+                [name]="'filters'"
+                [options]="['З фото і відео', 'За датою', 'Найкорисніші']"
+                [activeOption]="commentsService.sortType$ | async"
+                (selectChangeEvent)="onSelectChange($event)">
+            </app-select>
+        </div>
+    </div>
+    <!-- результати пошуку -->
+    <app-search-result [selectedInputs]="SearchResultsService.selectedInputs">
+    </app-search-result>
+    <!-- comments -->
+    <div *ngIf="comments$ | async as comments">
+        <ul *ngIf="comments.length > 0; else noCommentsFound">
+            <li *ngFor="let comment of comments">
+                <app-comment
+                    (commentLikeBtnClick)="onCommentLikeBtnClick($event)"
+                    (commentDislikeBtnClick)="onCommentDislikeBtnClick($event)"
+                    [comment]="comment" >
+                </app-comment>
+            </li>
+        </ul>
+        <ng-template #noCommentsFound>
+            <div class="no-comments">
+                <img
+                    src="https://res.cloudinary.com/dw60kllwn/image/upload/v1707555606/product-comments-illustration_crxxun.svg"
+                    alt="no-comments-found" />
+                <p class="no-comments__heading">
+                    Відгуки до товару за такими фільтрами відсутні.
+                </p>
+                <p
+                    class="showMoreBtn"
+                    (click)="onWatchAllComments()">
+                    Дивитися всі відгуки
+                </p>
+            </div>
+        </ng-template>
+    </div>
+</ng-container>

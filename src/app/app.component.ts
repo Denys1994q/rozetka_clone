@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
-import {filter} from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 import { DeviceService } from './core/services/device.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap, switchMap, of, filter } from 'rxjs';
 import { WishlistBtnService } from './btns/wishlist-btn/wishlist-btn.service';
 import { IProduct } from './product/models/product.model';
 import { WishlistApiService } from './cabinet/services/wishlist-api.service';
@@ -54,18 +53,27 @@ export class AppComponent implements OnInit {
             localStorage.setItem('side-banner', 'active')
         }
         this.deviceService.detectDevice()
-        this.authService.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: user =>  this.wishlistApiService.getWishlist().pipe(takeUntil(this.unsubscribe$)).subscribe({
-                next: products => {
-                    if (products.value) {
-                        const prodIds = products.value.map((item: IProduct) => item._id)
-                        this.wishlistBtnService.setProductsIds(prodIds)
-                    } else {
-                        this.wishlistBtnService.setProductsIds([])
-                    }
+        this.authService.userData$.pipe(
+            takeUntil(this.unsubscribe$),
+            switchMap(user => {
+                if (user) {
+                    return this.wishlistApiService.getWishlist().pipe(
+                        takeUntil(this.unsubscribe$),
+                        tap(products => {
+                            if (products.value) {
+                                const prodIds = products.value.map((item: IProduct) => item._id);
+                                this.wishlistBtnService.setProductsIds(prodIds);
+                            } else {
+                                this.wishlistBtnService.setProductsIds([]);
+                            }
+                        }),
+                    );
+                } else {
+                    this.wishlistBtnService.setProductsIds([]);
+                    return of(null)
                 }
-            })
-        })
+            }),
+        ).subscribe();
     }
 
     ngOnDestroy() {

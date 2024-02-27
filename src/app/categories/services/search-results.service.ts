@@ -96,12 +96,13 @@ export class SearchResultsService {
                     category.subCategories.find((subcategory: any) => {
                       if (subcategory.id === id) {
                         this.currentCategory = category
-                        let productObservables: Observable<IProduct>[] = [];
-                        subcategory.products.forEach((prod: IProduct) => {
+                        let productObservables: Observable<any>[] = [];
+                        subcategory.products.forEach((prod: any) => {
                             productObservables.push(this.productApiService.getOneProduct(prod._id));
                         });
                         forkJoin(productObservables).subscribe({
-                            next: (responses: IProduct[]) => {
+                            next: (data: any) => {
+                                const responses = data.map((d: any) => d.value)
                                 this.currentSubcategory = subcategory
                                 this.currentSubcategory.products = responses;
                                 this.currentSubcategoryCopy = JSON.parse(JSON.stringify(subcategory))
@@ -218,7 +219,6 @@ export class SearchResultsService {
     removeAll() {
         if (this.currentSubcategoryCopy) {
             this.currentSubcategory = JSON.parse(JSON.stringify(this.currentSubcategoryCopy)) 
-            // додав нижче
             this.createSearchParams()
         }
         this.selectedInputs = []
@@ -244,9 +244,7 @@ export class SearchResultsService {
         })
         if (this.selectedInputs.length === 0 && !fromCommentsPanel) {     
             this.currentSubcategory = JSON.parse(JSON.stringify(this.currentSubcategoryCopy)) 
-             // додав нижче
             this.createSearchParams()
-            // нижче було
             this.sortData(this.sortType)     
         }
         if (!fromCommentsPanel) {
@@ -273,10 +271,6 @@ export class SearchResultsService {
         } else if (sortType === 'Від дешевих до дорогих') {
             this.currentSubcategory.products = [...this.currentSubcategory.products].sort((a: any,b: any) => a.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new - b.searchStatus.find((it: any) => it.searchPosition === 'price' ).option.new)
         } 
-    }
-
-    resetRaitingValue() {
-        this.selectedRaitingIndex = null
     }
 
 }

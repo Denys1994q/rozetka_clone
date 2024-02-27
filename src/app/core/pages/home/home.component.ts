@@ -1,15 +1,14 @@
-import { Component, AfterViewInit, ElementRef, Inject, PLATFORM_ID   } from '@angular/core';
+import { Component, Inject, PLATFORM_ID   } from '@angular/core';
 import { ModalService } from 'src/app/modals/modal.service';
 import { Slide } from 'src/app/carousel/carousel.component';
 import { ProductApiService } from 'src/app/product/services/product-api.service';
-import { ProductService } from 'src/app/product/services/product.service';
-import { isPlatformServer, isPlatformBrowser } from '@angular/common';
+import { ProductsService } from 'src/app/product/services/products.service';
+import { isPlatformServer } from '@angular/common';
 import { makeStateKey, TransferState } from '@angular/core';
 import { CategoriesApiService } from 'src/app/categories/services/categories-api.service';
 import { ScrollService } from '../../services/scroll.service';
 import { BehaviorSubject } from 'rxjs';
 import { ICategory } from 'src/app/categories/models/categories.model';
-import { IProduct } from 'src/app/product/models/product.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -17,38 +16,32 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass'],
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent  {
     private readonly ALL_CATEGORIES_KEY: any = makeStateKey<any[]>('allCategories');
     allCategories$ = new BehaviorSubject<ICategory[]>([])
     allCategoriesError: boolean = false
     newProductsError: boolean = false
     moreProductsError: boolean = false
     recommendedProductsError: boolean = false
-    newProds: IProduct[] = []
-    moreProds: IProduct[] = []
-    recommendedProds: IProduct[] = []
+    newProds$ = this.productsService.newProducts$
+    moreProds$ = this.productsService.moreProducts$
+    recommendedProds$ = this.productsService.recommendedProducts$
+    prodsError$ = this.productApiService.prodsError$ 
     unsubscribe$ = new Subject<void>()
+    cards = [
+        { prods: this.newProds$, category: 'Гарячі новинки', className: 'newProds' },
+        { prods: this.moreProds$, category: 'Більше товарів для вибору', className: 'moreProds' },
+        { prods: this.recommendedProds$, category: 'Рекомендовані', className: 'recommendedProds' }
+    ];
 
     constructor(
         private transferState: TransferState,
         @Inject(PLATFORM_ID) private platformId: Object,
         public modalService: ModalService, 
-        public productService: ProductService, 
+        public productsService: ProductsService, 
         public productApiService: ProductApiService,
         private categoriesApiService: CategoriesApiService,
-        private elementRef: ElementRef,
-        private scrollService: ScrollService)
-    {
-        this.productService.newProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
-            this.newProds = prods 
-        });
-        this.productService.moreProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
-            this.moreProds = prods 
-        });
-        this.productService.recommendedProds$.pipe(takeUntil(this.unsubscribe$)).subscribe(prods => {
-            this.recommendedProds = prods 
-        });
-    }
+        private scrollService: ScrollService) {}
 
     ngOnInit() {
         if (isPlatformServer(this.platformId)) {
@@ -74,48 +67,18 @@ export class HomeComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
-        if (isPlatformBrowser(this.platformId)) {
-          this.observeNewProds();
-        }
-    }
-
-    observeNewProds() {
-        const options = {
-            root: null, 
-            rootMargin: '0px',
-            threshold: 0.5 
-        };
-        const callback = (entries: any, observer: any) => {
-        entries.forEach((entry: any) => {
-            if (entry.isIntersecting) {
-            if (entry.target.classList.contains('newProds')) {
-                this.productApiService.getNewProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: response => this.productService.setNewProducts(response),
-                    error: err => this.newProductsError = true
-                })
-            } else if (entry.target.classList.contains('moreProds')) {
-                this.productApiService.getMoreProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: response => this.productService.setMoreProducts(response),
-                    error: err => this.moreProductsError = true
-                  })
-            } else if (entry.target.classList.contains('recommendedProds')) {
-                this.productApiService.getRecommendedProducts().pipe(takeUntil(this.unsubscribe$)).subscribe({
-                    next: response => this.productService.setRecommendedProducts(response),
-                    error: err => this.recommendedProductsError = true
-                  })
-            }
-            observer.unobserve(entry.target); 
-            }
-        });
-        };
-        const observer = new IntersectionObserver(callback, options);
-        const target1 = this.elementRef.nativeElement.querySelector('.moreProds'); 
-        const target2 = this.elementRef.nativeElement.querySelector('.newProds'); 
-        const target3 = this.elementRef.nativeElement.querySelector('.recommendedProds'); 
-        observer.observe(target1);
-        observer.observe(target2);
-        observer.observe(target3);
+    onIntersectionChange(className: string) {
+        switch (className) {
+            case 'newProds': 
+                this.productsService.getNewProducts()  
+                break
+            case 'moreProds': 
+                this.productsService.getMoreProducts()
+                break
+            case 'recommendedProds': 
+                this.productsService.getRecommendedProducts()
+                break
+        }  
     }
 
     slides: Slide[] = [

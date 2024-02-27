@@ -32,7 +32,7 @@ export class RecentlyViewedApiService {
             return this.http.get<any>(apiUrl, { headers, withCredentials: true }).pipe(
                 map(data => ({ isLoading: false, value: data.products })),
                 startWith({isLoading: true, value: null}),
-                catchError(error => {
+                catchError(() => {
                     this.isGetRecentlyViewedProds = true
                     this.errorStatus$.next(true)
                     return of({isLoading: false, value: null})

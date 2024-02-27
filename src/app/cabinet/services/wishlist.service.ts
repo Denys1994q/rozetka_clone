@@ -13,7 +13,7 @@ export class WishlistService {
         constructor(private wishlistApiService: WishlistApiService) {}
         
         products$: Observable<any> = combineLatest([ this.activeSortOption$, this.isProductDeleted$]).pipe(
-            switchMap(([sortOption]) => this.wishlistApiService.getWishlist(sortOption))    
+            switchMap(([sortOption]) => this.wishlistApiService.getWishlist(sortOption))
         )
 
         deleteProducts$ = this.prodIdsToDelete$.pipe(

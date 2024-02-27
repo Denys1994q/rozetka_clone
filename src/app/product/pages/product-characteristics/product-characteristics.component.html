@@ -1,5 +1,9 @@
-<app-characteristics-block
-    [full]="true"
-    [productTitle]="(this.ProductService.product$ | async)?.title"
-    [textArray]="(this.ProductService.product$ | async)?.info">
-</app-characteristics-block>
+<ng-container *ngIf="(product$ | async) as product">
+    <app-characteristics-block
+        [full]="true"
+        [productTitle]="product.value && product.value.title"
+        [textArray]="product.value && product.value.info">
+    </app-characteristics-block>
+</ng-container>
+
+

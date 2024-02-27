@@ -1,0 +1,32 @@
+@import 'btns'
+@import 'typography'
+@import 'mixins'
+
+.filters
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    align-items: center
+    @include respond(tab-port)
+        gap: 2rem
+.filters-btn
+    @include respond(tab-port)
+        width: 100%
+.filters-select
+    @include respond(tab-port)
+        width: 100%
+.no-comments
+    text-align: center
+    img
+        width: 24rem
+        height: 24rem
+    &__heading
+        font-size: 1.8rem
+        font-weight: 700
+        margin: 2rem
+
+:host
+    ::ng-deep
+        app-search-result
+        .results
+            margin-bottom: 1rem

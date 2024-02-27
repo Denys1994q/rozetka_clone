@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, map} from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 
 export interface UserData {
     name?: string;
@@ -34,7 +33,7 @@ export class AuthService {
     public userDataSubject = new BehaviorSubject<UserData | null>(null);
     public userData$ = this.userDataSubject.asObservable();
 
-    constructor(private http: HttpClient, private router: Router, private wishlistService: WishlistService) {}
+    constructor(private http: HttpClient, private router: Router) {}
 
     login({ emailPhone, password}: any): Observable<any> {
         const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -102,9 +101,7 @@ export class AuthService {
     
     logout(): Observable<any> {
         const url = `${this.backendUrl}/auth/logout`;
-        const options = {
-            withCredentials: true
-        };
+        const options = {withCredentials: true};
         return this.http.get<any>(url,options).pipe(
             tap(response => {
                 if (typeof window !== 'undefined' && localStorage) {

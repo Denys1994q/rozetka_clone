@@ -3,7 +3,7 @@ import { Observable, map, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IProduct } from 'src/app/product/models/product.model';
 import { ISearchStatus } from 'src/app/product/models/product.model';
-import { startWith } from 'rxjs';
+import { startWith, shareReplay } from 'rxjs';
 
 interface WishlistItemResponse {
     product: IProduct,
@@ -44,7 +44,7 @@ export class WishlistApiService {
                     this.calcucaleTotalPrice(response.wishlist)
                     return { isLoading: false, value: response.wishlist };
                 }),
-                startWith({isLoading: true})
+                startWith({isLoading: true}),
             )
         } else {
             return throwError('Local storage is not available.');

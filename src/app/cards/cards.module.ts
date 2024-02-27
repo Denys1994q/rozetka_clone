@@ -8,11 +8,14 @@ import { InputsModule } from '../inputs/inputs.module';
 import { RatingModule } from '../rating/rating.module';
 import { PriceModule } from '../price/price.module';
 import { CardComponent } from './card/card.component';
+import { HiddenCardsComponent } from './hidden-cards/hidden-cards.component';
 import { BtnsModule } from '../btns/btns.module';
+import { SkeletonModule } from '../skeleton/skeleton.module';
 
 @NgModule({
   declarations: [
     CategoryCardComponent,
+    HiddenCardsComponent,
     CardsComponent,
     CardComponent
   ],
@@ -21,12 +24,14 @@ import { BtnsModule } from '../btns/btns.module';
     RouterLink,
     MatIconModule,
     InputsModule,
+    SkeletonModule,
     RatingModule,
     PriceModule,
     BtnsModule,
   ],
   exports: [
     CategoryCardComponent,
+    HiddenCardsComponent,
     CardsComponent,
     CardComponent
   ],

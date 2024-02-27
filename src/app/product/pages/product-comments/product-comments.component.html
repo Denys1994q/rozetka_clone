@@ -1,26 +1,28 @@
 <div>
-    <div class="comments__item" *ngIf="commentsWithPhotoVideo.length > 0">
-        <div class="comment__header comment__header-title">
-            <p class="bold">Фотографії та відео покупців</p>
+    <ng-container *ngIf="commentsWithPhotoVideo$ | async as commentsWithPhotoVideo">
+        <div class="comments__item" *ngIf="commentsWithPhotoVideo.length > 0">
+            <div class="comment__header comment__header-title">
+                <p class="bold">Фотографії та відео покупців</p>
+            </div>
+            <div class="comment__main comment__sliderWrapper">
+                <ul #sliderList class="comment__sliderList">
+                    <li 
+                        #sliderItem 
+                        *ngFor="let comment of commentsWithPhotoVideo; let i = index"
+                        class="comment__sliderItem"
+                        (click)="openDialog('comments', i)">
+                        <img src="{{ comment.photos[0] }}" alt="comment-photo" />
+                    </li>
+                </ul>
+                <button
+                    *ngIf="commentsWithPhotoVideo.length > 8"
+                    class="comments__item comment__sliderBtn comment__sliderItem"
+                    (click)="openDialog('comments')">
+                    Ще
+                </button>
+            </div>
         </div>
-        <div class="comment__main comment__sliderWrapper">
-            <ul #sliderList class="comment__sliderList">
-                <li 
-                    #sliderItem 
-                    *ngFor="let comment of commentsWithPhotoVideo; let i = index"
-                    class="comment__sliderItem"
-                    (click)="openDialog('comments', i)">
-                    <img src="{{ comment.photo }}" alt="comment-photo" />
-                </li>
-            </ul>
-            <button
-                *ngIf="commentsWithPhotoVideo.length > 8"
-                class="comments__item comment__sliderBtn comment__sliderItem"
-                (click)="openDialog('comments')">
-                Ще
-            </button>
-        </div>
-    </div>
+    </ng-container>
     <div class="comments__item comment__leaveComment">
         <p class="fs20 comment__leaveComment-title">
             Залиште свій відгук про цей товар
@@ -31,8 +33,11 @@
             Написати відгук
         </button>
     </div>
-    <app-comments-panel
-        [withFilters]="true"
-        [comments]="commentsService.filteredComments$ | async">
-    </app-comments-panel>
+    <ng-container *ngIf="comments$ | async as comments">
+        <app-comments-filter-panel
+            (commentsPanelLikeBtnClick)="onCommentsPanelLikeBtnClick($event)"
+            (commentsPanelDislikeBtnClick)="onCommentsPanelDislikeBtnClick($event)"
+            [commentsFromApi]="comments">
+        </app-comments-filter-panel>
+    </ng-container>
 </div>

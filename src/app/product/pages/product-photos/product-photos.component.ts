@@ -1,6 +1,7 @@
 import { Component} from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-product-photos',
@@ -8,7 +9,10 @@ import { ScrollService } from 'src/app/core/services/scroll.service';
   styleUrls: ['./product-photos.component.sass']
 })
 export class ProductPhotosComponent {
-    photos!: any
+    prod$ = this.productService.product$
+    photos$ = this.prod$.pipe(
+        map(prod => prod?.value?.images.filter((image: any) => image.url))
+    );
 
     constructor(
         public productService: ProductService, 
@@ -16,9 +20,6 @@ export class ProductPhotosComponent {
 
     ngOnInit() {
         this.scrollService.scrollToTop()
-        this.productService.checkActiveTab('photos')
-        const product = this.productService.product$.getValue();
-        this.photos = product?.images.filter((image: any) => image.url)
     }
 
 }

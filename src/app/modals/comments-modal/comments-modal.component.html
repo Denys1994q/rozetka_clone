@@ -8,14 +8,18 @@
         <app-carousel
             [slidesArr]="slides"
             startSlideIndex="{{ data.startSlideIndex }}"
-            (activeSlideEvent)="receiveActiveSlideIndex($event)"></app-carousel>
+            (activeSlideEvent)="receiveActiveSlideIndex($event)">
+        </app-carousel>
     </div>
-    <div class="comments-modal__comment">
-        <app-comment
-            [comment]="
-                activeSlide || activeSlide === 0
-                    ? data.slides[activeSlide]
-                    : data.slides[data.startSlideIndex]
-            "></app-comment>
+    <div class="comments-modal__comment" *ngIf="productService.comments$ as comments">
+            <app-comment
+                (commentLikeBtnClick)="onCommentLikeBtnClick($event)"
+                (commentDislikeBtnClick)="onCommentDislikeBtnClick($event)"
+                [comment]="
+                    activeSlide || activeSlide === 0
+                        ? slides[activeSlide]
+                        : slides[data.startSlideIndex]
+                ">
+            </app-comment>
     </div>
 </div>

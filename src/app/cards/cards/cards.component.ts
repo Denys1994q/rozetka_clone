@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter  } from '@angular/core';
 import { IProduct } from 'src/app/product/models/product.model';
 import { CartService } from 'src/app/cart/services/cart.service';
-import { WishlistService } from 'src/app/cabinet/services/wishlist.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { SnackBarComponent } from 'src/app/shared/components/snackBar/snack-bar.component';
 
@@ -31,8 +30,7 @@ export class CardsComponent {
 
     constructor(
         public cartService: CartService,
-        private _snackBar: MatSnackBar,
-        public wishlistService: WishlistService) { }
+        private _snackBar: MatSnackBar) { }
 
     ngOnInit() { 
         if (typeof window !== 'undefined') {

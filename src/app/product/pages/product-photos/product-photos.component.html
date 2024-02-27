@@ -1,8 +1,8 @@
-<ul>
-    <li *ngFor="let photo of photos">
+<ul *ngIf="(prod$ | async) as prod">
+    <li *ngFor="let photo of photos$ | async">
         <img
             src="{{ photo.url }}"
             class="photo"
-            alt="{{ (this.productService.product$ | async)?.title + '-photo' }}" />
+            alt="{{ prod.value && prod.value.title + '-photo' }}" />
     </li>
 </ul>

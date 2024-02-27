@@ -32,9 +32,6 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="comment.photo" class="mb8 comment__photo">
-            <img src="{{ comment.photo }}" alt="comment-addedImage" />
-        </div>
         <ul *ngIf="comment.photos && comment.photos.length > 0" class="mb8 comment__photos comment__photo">
             <li *ngFor="let image of comment.photos">
                 <img src="{{ image }}" alt="comment-addedImage" />
@@ -49,22 +46,18 @@
             </button> -->
             <div class="comment__votes">
                 <div class="flex-center">
-                    <mat-icon 
-                        (click)="addLike(comment._id)" 
-                        class="icon-like flex-center"
-                        [class.icon-like--active]="isLiked">
-                        thumb_up_off_alt
-                    </mat-icon>
-                    <span class="likes-number">{{ totalLikes }}</span>
-                </div>
+                    <app-like-btn 
+                        (likeBtnClick)="onLikeBtnClick()"
+                        [isLiked]="comment.isLiked"
+                        [totalLikes]="comment.likes.length">
+                    </app-like-btn>
+                </div>                
                 <div class="flex-center">
-                    <mat-icon 
-                        (click)="addDislike(comment._id)"
-                        class="icon-dislike flex-center"
-                        [class.icon-dislike--active]="isDisliked">
-                        thumb_down_off_alt
-                    </mat-icon>
-                    <span class="likes-number">{{ totalDislikes }}</span>
+                    <app-dislike-btn 
+                        (dislikeBtnClick)="onDislikeBtnClick()"
+                        [isLiked]="comment.isLiked"
+                        [totalDislikes]="comment.dislikes.length">
+                    </app-dislike-btn>
                 </div>
             </div>
         </div>

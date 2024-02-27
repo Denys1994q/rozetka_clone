@@ -34,52 +34,14 @@
             Каталог товарів
         </button>
         <!-- картки -->
-        <ng-container *ngIf="newProds && newProds.length > 0 ">
-            <app-cards 
-                [withWishlistOption]="true" 
-                [data]="{category: 'Гарячі новинки', products: newProds}">
-            </app-cards>
+        <ng-container *ngFor="let card of cards">
+            <app-hidden-cards 
+                [prods]="card.prods | async" 
+                [category]="card.category"
+                (isIntersectedChange)="onIntersectionChange($event)"
+                [className]="card.className">
+            </app-hidden-cards>
         </ng-container>
-        <div
-            class="newProds"
-            [hidden]="newProductsError || (newProds && newProds.length !== 0)">
-            <app-skeleton [variant]="'products'"></app-skeleton>
-        </div>
-        <div *ngIf="newProductsError" class="errorWrapper">
-            <mat-icon>error_outline</mat-icon>
-            <h4>Вибачте, сервіс тимчасово не працює</h4>
-        </div>
-        <ng-container *ngIf="moreProds && moreProds.length > 0">
-            <div>
-                <app-cards 
-                    [withWishlistOption]="true" 
-                    [data]="{category: 'Більше товарів для вибору', products: moreProds}">
-                </app-cards>
-            </div>
-        </ng-container>
-        <div
-            class="moreProds"
-            [hidden]="moreProductsError || (moreProds && moreProds.length !== 0)">
-            <app-skeleton [variant]="'products'"></app-skeleton>
-        </div>
-        <div *ngIf="moreProductsError" class="errorWrapper">
-            <mat-icon>error_outline</mat-icon>
-            <h4>Вибачте, сервіс тимчасово не працює</h4>
-        </div>
-        <ng-container *ngIf="recommendedProds && recommendedProds.length > 0">
-            <app-cards 
-                [withWishlistOption]="true" 
-                [data]="{category: 'Рекомендовані', products: recommendedProds}"></app-cards>
-        </ng-container>
-        <div
-            class="recommendedProds"
-            [hidden]="recommendedProductsError || (recommendedProds && recommendedProds.length !== 0)">
-            <app-skeleton [variant]="'products'"></app-skeleton>
-        </div>
-        <div *ngIf="recommendedProductsError" class="errorWrapper">
-            <mat-icon>error_outline</mat-icon>
-            <h4>Вибачте, сервіс тимчасово не працює</h4>
-        </div>
         <!-- video cards -->
         <app-video-cards></app-video-cards>
     </main>

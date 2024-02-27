@@ -191,9 +191,11 @@
         </div>
     </div>
     <!-- відгуки -->
-    <div class="comments info__desc">
+    <div class="comments info__desc" *ngIf="comments$ | async as comments">
         <app-comments-panel
-            [comments]="product.reviews_data"
+            (commentsPanelLikeBtnClick)="onCommentsPanelLikeBtnClick($event)"
+            (commentsPanelDislikeBtnClick)="onCommentsPanelDislikeBtnClick($event)"
+            [comments]="comments"
             [link]="'/' + product.engName + '/' + product._id + '/comments'" >
         </app-comments-panel>
     </div>

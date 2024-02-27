@@ -1,0 +1,19 @@
+@import 'variables'
+
+.icon-like
+    font-size: 2.4rem
+    color: $main-blue
+    cursor: pointer
+    transition-duration: .2s
+    transition-property: fill
+    transition-timing-function: ease-in-out
+    &:hover
+        color: $main-light-red
+.icon-like
+    &--active
+        color: $main-green
+        cursor: auto
+        &:hover
+            color: $main-green
+.likes-number
+    font-size: 1.4rem

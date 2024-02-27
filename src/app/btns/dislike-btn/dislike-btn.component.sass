@@ -1,0 +1,19 @@
+@import 'variables'
+
+.icon-dislike
+    font-size: 2.4rem
+    color: $main-blue
+    cursor: pointer
+    transition-duration: .2s
+    transition-property: fill
+    transition-timing-function: ease-in-out
+    &:hover
+        color: $main-light-red
+.icon-dislike
+    &--active
+        color: $main-red
+        cursor: auto
+        &:hover
+            color: $main-red
+.likes-number
+    font-size: 1.4rem

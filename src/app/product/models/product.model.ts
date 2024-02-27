@@ -1,6 +1,4 @@
-import { ICategory } from "src/app/categories/models/categories.model"
 import { IComment } from "src/app/comment/models/comment.model"
-import { Slide } from "src/app/carousel/carousel.component"
 
 interface Img {
     url: string

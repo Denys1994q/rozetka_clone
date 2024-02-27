@@ -1,96 +1,99 @@
-<div *ngIf="loading$ | async">
-    <app-skeleton [variant]="'category'"></app-skeleton>
-</div>
-<div *ngIf="error$ | async">
-    <app-error [errorMsg]="productService.getOneProductErrorMsg"></app-error>
-</div>
-<article *ngIf="!(loading$ | async) && (product$ | async) as product" class="product" >
-    <!-- url товару: категорія, підкатегорія... -->
-    <ng-container *ngIf="product.category && product.subCategory">
-        <app-breadcrumbs [data]="[product.category, product.subCategory]"></app-breadcrumbs>
-    </ng-container>
-    <!-- назва товару -->
-    <h1 class="product__title">
-        {{ product.title }}
-    </h1>
-    <!-- панель рейтингу -->
-    <section class="product__rating">
-        <app-rating
-            [fixed]="true"
-            [activeIconIndex]="product.raiting">
-        </app-rating>
-        <a
-            routerLink="{{ '/' + product.engName + '/' + product._id + '/comments' }}">
-            {{ product.reviews_data.length }} відгуків
-        </a>
-        <p class="product__code">
-            <span> Код: </span>
-            {{ deviceService.isMobileView ? (product._id | slice:0:10) + '...' : product._id }}
-        </p>
-    </section>
-    <!-- таби: коментарі, відгуки, фото, відео -->
-    <app-tabs
-        [data]="productService.productTabs"
-        [startRoute]="product.engName + '/' + product._id">
-    </app-tabs>
-    <!-- контент для табів з роутер-аутлету -->
-    <ng-container>
-        <section [class.product-section]="!mainPage">
-            <div [class.product-section__info]="!mainPage">
-                <!-- роути під конкретний таб -->
-                <!-- ліва частина сторінки -->
-                <router-outlet></router-outlet>
-            </div>
-            <!-- права частина сторінки -->
-            <div *ngIf="!mainPage" class="product-section__card">
-                <section class="info__item mb16 card">
-                    <div class="card__image">
-                        <img
-                            src="{{ product.image }}"
-                            alt="good" />
+<ng-container *ngIf="product$ | async as product">
+    <div *ngIf="product.isLoading">
+        <app-skeleton [variant]="'category'"></app-skeleton>
+    </div>
+    <div *ngIf="error$ | async">
+        <app-error [errorMsg]="errorMsg$ | async"></app-error>
+    </div>
+    <article class="product" >
+        <ng-container *ngIf="!product.isLoading && product.value">
+            <ng-container *ngIf="product.value.category && product.value.subCategory">
+                <app-breadcrumbs [data]="[product.value.category, product.value.subCategory]"></app-breadcrumbs>
+            </ng-container>
+            <!-- назва товару -->
+            <h1 class="product__title">
+                {{ product.value.title }}
+            </h1>
+            <!-- панель рейтингу -->
+            <section class="product__rating">
+                <app-rating
+                    [fixed]="true"
+                    [activeIconIndex]="product.value.raiting">
+                </app-rating>
+                <a
+                    routerLink="{{ '/' + product.value.engName + '/' + product.value._id + '/comments' }}">
+                    {{ product.value.reviews_data.length }} відгуків
+                </a>
+                <p class="product__code">
+                    <span> Код: </span>
+                    {{ deviceService.isMobileView ? (product.value._id | slice:0:10) + '...' : product.value._id }}
+                </p>
+            </section>
+            <!-- таби: коментарі, відгуки, фото, відео -->
+            <app-tabs
+                [data]="productTabs$ | async"
+                [startRoute]="product.value.engName + '/' + product.value._id">
+            </app-tabs>
+            <!-- контент для табів з роутер-аутлету -->
+            <ng-container>
+                <section [class.product-section]="!mainPage">
+                    <div [class.product-section__info]="!mainPage">
+                        <!-- роути під конкретний таб -->
+                        <!-- ліва частина сторінки -->
+                        <router-outlet></router-outlet>
                     </div>
-                    <p class="card__title">
-                        {{ product.title }}
-                    </p>
-                </section>
-                <div class="info__item mb16">
-                    <section class="price">
-                        <div class="trade__price">
-                            <app-price [price]="product.price" [big]="true"></app-price>
-                            <p class="trade__price-status">
-                                {{ product.sellStatus }}
+                    <!-- права частина сторінки -->
+                    <div *ngIf="!mainPage" class="product-section__card">
+                        <section class="info__item mb16 card">
+                            <div class="card__image">
+                                <img
+                                    src="{{ product.value.image }}"
+                                    alt="good" />
+                            </div>
+                            <p class="card__title">
+                                {{ product.value.title }}
                             </p>
+                        </section>
+                        <div class="info__item mb16">
+                            <section class="price">
+                                <div class="trade__price">
+                                    <app-price [price]="product.value.price" [big]="true"></app-price>
+                                    <p class="trade__price-status">
+                                        {{ product.value.sellStatus }}
+                                    </p>
+                                </div>
+                                <div class="trade__btns">
+                                    <button class="btn btn-icon btn-icon-grey">
+                                        <mat-icon class="btn-icon__icon">balance</mat-icon>
+                                    </button>
+                                    <app-wishlist-btn [productId]="product.value._id"></app-wishlist-btn>
+                                </div>
+                            </section>
+                            <section class="trade__buy">
+                                <app-buy-btn [textBtn]="true" [product]="product.value"></app-buy-btn>
+                            </section>
                         </div>
-                        <div class="trade__btns">
-                            <button class="btn btn-icon btn-icon-grey">
-                                <mat-icon class="btn-icon__icon">balance</mat-icon>
-                            </button>
-                            <app-wishlist-btn [productId]="product._id"></app-wishlist-btn>
-                        </div>
-                    </section>
-                    <section class="trade__buy">
-                        <app-buy-btn [textBtn]="true" [product]="product"></app-buy-btn>
-                    </section>
-                </div>
-                <section class="info__item mb16 seller">
-                    <p class="seller__title">Продавець: <span>{{ product.seller }}</span></p>
-                    <div class="seller__image" *ngIf="product.seller === 'Rozetka'">
-                        <img src="../../../assets/rozetka-seller.svg" alt="rozetka" />
+                        <section class="info__item mb16 seller">
+                            <p class="seller__title">Продавець: <span>{{ product.value.seller }}</span></p>
+                            <div class="seller__image" *ngIf="product.value.seller === 'Rozetka'">
+                                <img src="../../../assets/rozetka-seller.svg" alt="rozetka" />
+                            </div>
+                        </section>
                     </div>
                 </section>
-            </div>
-        </section>
-        <!-- адаптив: панель продукту -->
-        <section class="product-panel">
-            <img
-                src="{{ product.image }}"
-                alt="product-panel__img"
-                class="product-panel__img" />
-            <p class="product-panel__title">{{ product.title }}</p>
-            <app-price [price]="product.price"> </app-price>
-            <div class="trade__buy">
-                <app-buy-btn [textBtn]="true" [product]="product"></app-buy-btn>
-            </div>
-        </section>
-    </ng-container>
-</article>
+                <!-- адаптив: панель продукту -->
+                <section class="product-panel">
+                    <img
+                        src="{{ product.value.image }}"
+                        alt="product-panel__img"
+                        class="product-panel__img" />
+                    <p class="product-panel__title">{{ product.value.title }}</p>
+                    <app-price [price]="product.value.price"> </app-price>
+                    <div class="trade__buy">
+                        <app-buy-btn [textBtn]="true" [product]="product.value"></app-buy-btn>
+                    </div>
+                </section>
+            </ng-container>
+        </ng-container>
+    </article>
+</ng-container>

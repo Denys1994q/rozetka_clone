@@ -19,7 +19,11 @@ export class BuyBtnComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.cartService.products$.pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: products => this.isInCart = products.findIndex((prod: IProduct) => prod._id === this.product._id) > -1
+            next: products => {
+                if (products) {
+                    this.isInCart = products.findIndex((prod: IProduct) => prod._id === this.product._id) > -1
+                }
+            } 
         })
     }
 

@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { ProductService } from 'src/app/product/services/product.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ProductsSearchService } from 'src/app/product/services/products-search.service';
 
 @Component({
   selector: 'app-input-searchBox',
@@ -14,8 +14,9 @@ export class InputSearchBoxComponent {
     showOverlay: boolean = false
     getAllProductsLoading: boolean = false
 
-    constructor(private router: Router,  public ProductService: ProductService) {
-        this.ProductService.getAllProductsLoading$.subscribe(data => {
+    constructor(private router: Router, public productsSearchService: ProductsSearchService) {
+        
+        this.productsSearchService.getAllProductsLoading$.subscribe(data => {
             this.getAllProductsLoading = data
         })
     }
@@ -31,7 +32,7 @@ export class InputSearchBoxComponent {
             debounceTime(300),
             distinctUntilChanged(),
         ).subscribe({
-            next: (value) => this.ProductService.findProduct(value)
+            next: (value) => this.productsSearchService.findProduct(value)
         });
     }
 
@@ -46,6 +47,6 @@ export class InputSearchBoxComponent {
 
     closeAndReset() {
         this.searchInpValue = ''
-        this.ProductService.resetFoundedProducts()
+        this.productsSearchService.resetFoundedProducts()
     }
 }

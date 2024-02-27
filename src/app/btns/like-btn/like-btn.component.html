@@ -1,0 +1,7 @@
+<mat-icon 
+    (click)="addLike()" 
+    [class.icon-like--active]="isLiked === 1"
+    class="icon-like flex-center">
+        thumb_up_off_alt
+</mat-icon>
+<span class="likes-number">{{ totalLikes }}</span>

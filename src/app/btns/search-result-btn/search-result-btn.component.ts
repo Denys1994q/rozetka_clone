@@ -19,8 +19,7 @@ export class SearchResultBtnComponent {
     cancelAll() {
         this.clearAllClicked.emit();
         if (this.CommentsService.comments$) {
-            this.CommentsService.resetSortType()
-            this.CommentsService.filterProdComments()
+            this.CommentsService.setActiveFilter(0)
         }
         this.SearchResultsService.removeAll()
     }
@@ -28,8 +27,8 @@ export class SearchResultBtnComponent {
     cancelOne(input: string) {
         // якщо запускаємо сервіс зі сторінки відгуків продукту, розділу фільтрів 
         if (input.indexOf('Оцінка користувачів') > -1) {
-            this.CommentsService.resetSortType()
-            this.CommentsService.filterProdComments()
+            this.CommentsService.setActiveFilter(0)
+            // this.CommentsService.resetSortType()
             this.SearchResultsService.removeOne(input, true)
         } 
         this.SearchResultsService.removeOne(input)

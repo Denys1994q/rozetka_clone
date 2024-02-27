@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./error.component.sass']
 })
 export class ErrorComponent {
-  @Input() errorMsg!: string
+  @Input() errorMsg!: string | null
 }

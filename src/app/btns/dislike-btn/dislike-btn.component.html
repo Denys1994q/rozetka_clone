@@ -1,0 +1,7 @@
+<mat-icon 
+    (click)="addDislike()"
+    class="icon-dislike flex-center"
+    [class.icon-dislike--active]="isLiked === -1">
+        thumb_down_off_alt
+</mat-icon> 
+<span class="likes-number">{{ totalDislikes }}</span>

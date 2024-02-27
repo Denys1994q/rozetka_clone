@@ -6,11 +6,12 @@ import { ModalService } from 'src/app/modals/modal.service';
 import { ActivatedRoute } from '@angular/router';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ScrollService } from 'src/app/core/services/scroll.service';
-import { Observable, Subject, takeUntil, filter } from 'rxjs';
+import { Subject, takeUntil, filter } from 'rxjs';
 import { Router } from '@angular/router';
 import { NavigationEnd } from '@angular/router';
 import { RecentlyViewedApiService } from 'src/app/cabinet/services/recently-viewed-api.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { ProductApiService } from '../../services/product-api.service';
 
 @Component({
   selector: 'app-product',
@@ -18,10 +19,10 @@ import { ActivatedRouteSnapshot } from '@angular/router';
   styleUrls: ['./product.component.sass']
 })
 export class ProductComponent {
-    product$!: Observable<IProduct | null>
-    loading$!: Observable<boolean>
-    error$!: Observable<boolean>
-    isInWishlist!: boolean
+    product$ = this.productService.product$
+    productTabs$ = this.productService.productTabs$
+    error$ = this.productApiService.getOneProductError$
+    errorMsg$ = this.productApiService.getOneProductErrorMsg$
     unsubscribe$ = new Subject<void>()
     mainPage: boolean = true
 
@@ -30,29 +31,38 @@ export class ProductComponent {
         public route:ActivatedRoute, 
         private router: Router,
         public productService: ProductService, 
+        private productApiService: ProductApiService,
         public cartService: CartService,
         public modalService: ModalService,
         private recentlyViewedApiService: RecentlyViewedApiService,
-        private scrollService: ScrollService) {
-            this.product$ = this.productService.product$
-            this.loading$ = this.productService.getOneProductLoading$
-            this.error$ = this.productService.getOneProductError$
-        }
+        private scrollService: ScrollService) {}
 
     ngOnInit() {
         const snapshot: ActivatedRouteSnapshot = this.route.snapshot;
-        snapshot.firstChild && snapshot.firstChild?.url.length > 0 ? this.mainPage = false : null
-        this.route.params.subscribe(params => {
+        if ( snapshot.firstChild && snapshot.firstChild?.url.length > 0 ) {
+            this.mainPage = false
+            const path = snapshot.firstChild?.url[0].path
+            this.productService.checkActiveTab(path)
+        } else {
+            this.productService.checkActiveTab('')
+        }
+        this.route.params.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
             const productId = params['productId'];
-            this.productService.getCurrentProduct(productId)
+            this.productService.getProduct(productId)
             this.recentlyViewedApiService.addToRecentlyViewedProds(productId).pipe(takeUntil(this.unsubscribe$)).subscribe({
                 next: () => {},
                 error: err => console.log(err)
             })
         })
-        this.router.events.pipe(
+        this.router.events.pipe(takeUntil(this.unsubscribe$)).pipe(
             filter(event => event instanceof NavigationEnd)
           ).subscribe(() => {
+            if (this.route.snapshot.children[0].url[0]) {
+                const path = this.route.snapshot.children[0].url[0].path
+                this.productService.checkActiveTab(path)
+            } else {
+                this.productService.checkActiveTab('')
+            }
             this.mainPage = !this.route.snapshot.children[0].url.length
         });
     }
@@ -66,10 +76,8 @@ export class ProductComponent {
     }
 
     ngOnDestroy() {
-        this.productService.resetProduct()
         this.unsubscribe$.next()
         this.unsubscribe$.complete()
     }
 
- 
 }

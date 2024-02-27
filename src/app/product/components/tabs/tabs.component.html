@@ -1,4 +1,4 @@
-<div class="tabs">
+<div class="tabs" *ngIf="data">
     <ul class="tabs__list">
         <li
             class="tabs__item"
@@ -6,7 +6,7 @@
             <a
                 *ngIf="item"
                 class="tab-link"
-                [class.activeLink]="i === productService.tab"
+                [class.activeLink]="i === (productService.activeTab$ | async)"
                 routerLink="/{{ startRoute }}/{{ item.link }}">
                 {{ item.name }}
             </a>
